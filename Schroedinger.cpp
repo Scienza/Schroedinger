@@ -5,33 +5,36 @@
 
 using namespace std;
 
-//  this function defines the function of the potential
+//  this function defines the potential in function of position
 double potential(double x)
 {
-  double value = -x*x;
+  double value = 10. - x*x;
   return value;
 } // end of function to evaluate
 
 void solve_Numerov ( double, double, double , int , double (*pot)(double), double *);
 void fsol_Numerov ( double , int , double (*pot)(double), double * );
-
 double bisec_Numer (double, double, int , double (*pot)(double), double *);
 
+// Integrate with the trapezoidal rule method, from a to b position in a function array
 double trap_array(int a, int b, double stepx, double *func)
 {
       double trapez_sum = 0.;
 
-      for (int j=a; j <= b; j++){
+      for (int j=a+1; j < b; j++){
          trapez_sum+=func[j];
       }
 
+      trapez_sum += (func[a] + func[b])/2.
+
       trapez_sum=(trapez_sum)*stepx;
       return trapez_sum;
-} 
+}
 
-int main(){
+int main()
+{
    int nbox = 1000;
-   double step = 0.01,norm;
+   double step = 0.01, norm;
 
    double *fsol = new double [nbox];
    fsol[0] = 0.;
@@ -42,9 +45,9 @@ int main(){
 }
 
 
-//Numerov Algorithm solves 
+//Numerov Algorithm solves
 // f''(x) + v(x)f(x) = 0,
-// by considering 
+// by considering
 //\left( 1+ \frac{h^2}{12} v(x+h) \right) f(x+h) = 2 \left( 1 - \frac{5h^2}{12} v(x) \right) f(x) - \left( 1 + \frac{h^2}{12} v(x-h) \right) f(x-h).
 
 void fsol_Numerov ( double En, int nbox, double (*pot)(double), double *fsol ){
@@ -54,9 +57,9 @@ void fsol_Numerov ( double En, int nbox, double (*pot)(double), double *fsol ){
 
    //Build Numerov f(x) solution from left.
    for(int i=2;i<=nbox;i++){
-    x = (-nbox/2+i)*dx; 
+    x = (-nbox/2+i)*dx;
 
-    fsol[i] = 2*( 1. - (5*c)*(- En + (*pot)(x-dx))   ) * fsol[i-1] 
+    fsol[i] = 2*( 1. - (5*c)*(- En + (*pot)(x-dx))   ) * fsol[i-1]
               - ( 1. + (  c)*(- En + (*pot)(x-2*dx)) ) * fsol[i-2];
     fsol[i] /=  ( 1. + (  c)*(- En + (*pot)(x)) );
    }
@@ -76,8 +79,9 @@ void fsol_Numerov ( double En, int nbox, double (*pot)(double), double *fsol ){
 return;
 }
 
-
-void solve_Numerov ( double Emin, double Emax, double dE, 
+// solve_Numerov solves the pointed potential using the Numerov algorithm and
+// renormalizing the output wavefunction to 1
+void solve_Numerov ( double Emin, double Emax, double dE,
               int nbox, double (*pot)(double), double *fsol ){
 
    double c,x, first_step, norm, En, Ex;
@@ -96,7 +100,7 @@ void solve_Numerov ( double Emin, double Emax, double dE,
 
       fsol_Numerov ( En, nbox, *pot, fsol );
 
-  //    cout << "# En = " << En << "  " << fsol[nbox]<< endl;      
+  //    cout << "# En = " << En << "  " << fsol[nbox]<< endl;
 
       if( abs(fsol[nbox]) < dE/10. ){
          Ex = En;
