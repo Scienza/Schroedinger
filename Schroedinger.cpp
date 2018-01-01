@@ -2,13 +2,16 @@
 #include <cmath>
 
 #define dx 0.01
+#define err 1E-12
 
 using namespace std;
 
 //  this function defines the potential in function of position
 double potential(double x)
 {
-  double value = 10. - x*x;
+  double value = x*x;
+  // double value = 0;
+  // if(fabs(x) < 2.) value = 1.;
   return value;
 } // end of function to evaluate
 
@@ -25,7 +28,7 @@ double trap_array(int a, int b, double stepx, double *func)
          trapez_sum+=func[j];
       }
 
-      trapez_sum += (func[a] + func[b])/2.
+      trapez_sum += (func[a] + func[b])/2.;
 
       trapez_sum=(trapez_sum)*stepx;
       return trapez_sum;
@@ -39,7 +42,7 @@ int main()
    double *fsol = new double [nbox];
    fsol[0] = 0.;
    fsol[1] = 0.2;
-   solve_Numerov(-10, -1.1, step, nbox, &potential, fsol);
+   solve_Numerov(0., 2., step, nbox, &potential, fsol);
 
    return 0;
 }
@@ -50,6 +53,7 @@ int main()
 // by considering
 //\left( 1+ \frac{h^2}{12} v(x+h) \right) f(x+h) = 2 \left( 1 - \frac{5h^2}{12} v(x) \right) f(x) - \left( 1 + \frac{h^2}{12} v(x-h) \right) f(x-h).
 
+//for the Shroedinger equation v(x) = V(x) - E, where V(x) is the potential and E the eigenenergy
 void fsol_Numerov ( double En, int nbox, double (*pot)(double), double *fsol ){
    double c,x;
 
@@ -59,9 +63,9 @@ void fsol_Numerov ( double En, int nbox, double (*pot)(double), double *fsol ){
    for(int i=2;i<=nbox;i++){
     x = (-nbox/2+i)*dx;
 
-    fsol[i] = 2*( 1. - (5*c)*(- En + (*pot)(x-dx))   ) * fsol[i-1]
-              - ( 1. + (  c)*(- En + (*pot)(x-2*dx)) ) * fsol[i-2];
-    fsol[i] /=  ( 1. + (  c)*(- En + (*pot)(x)) );
+    fsol[i] = 2*( 1. - (5*c)*(En - (*pot)(x-dx))   ) * fsol[i-1]
+              - ( 1. + (  c)*(En - (*pot)(x-2*dx)) ) * fsol[i-2];
+    fsol[i] /=  ( 1. + (  c)*(En - (*pot)(x)) );
    }
 
       /* //right solution
@@ -89,20 +93,20 @@ void solve_Numerov ( double Emin, double Emax, double dE,
 
    double *probab = new double [nbox];
 
-   fsol[0]=0.;fsol[nbox]=0.;
-
-   first_step = dx*dx;
+   // fsol[0]=0.;fsol[nbox]=0.;
+   //
+   // first_step = dx*dx;
 // scan energies to find when the Numerov solution is =0 at the right extreme of the box.
    for(n=0;n<(Emax-Emin)/dE;n++)
    {
       En = Emax - n*dE;
-      fsol[1] = first_step;
+      // fsol[1] = first_step;
 
       fsol_Numerov ( En, nbox, *pot, fsol );
 
   //    cout << "# En = " << En << "  " << fsol[nbox]<< endl;
 
-      if( abs(fsol[nbox]) < dE/10. ){
+      if( abs(fsol[nbox]) < err ){
          Ex = En;
          break;
       }
@@ -125,13 +129,14 @@ void solve_Numerov ( double Emin, double Emax, double dE,
    for(int i=0; i <= nbox ; i++)fsol[i]=fsol[i]/sqrt(norm);
 
 
-   for(int i=0; i <= nbox ; i++)cout << (-nbox/2+i)*dx << "  " << fsol[i] << endl;
+   for(int i=0; i <= nbox ; i++)
+    cout << (-nbox/2+i)*dx << "  " << fsol[i] << " " << (*pot)((-nbox/2+i)*dx) << endl;
    return;
 }
 
 //Applies bisection routine to Numerov function. (to be improved)
 double bisec_Numer(double a,double b,int nbox, double (*pot)(double), double *fsol){
-    double x1, err=1E-12;
+    double x1;
     double fx1, fb, fa;
     cout.precision(17);
 
@@ -143,13 +148,17 @@ double bisec_Numer(double a,double b,int nbox, double (*pot)(double), double *fs
         fsol_Numerov ( b , nbox, *pot, fsol );
         fb  = fsol[nbox];
 
-        if(fb*fx1<0){
+        if(abs(fx1) < err){
+          return x1;
+        }
+
+        if(fb*fx1<0.){
             a=x1;
         }else{
         fsol_Numerov ( a , nbox, *pot, fsol );
         fa  = fsol[nbox];
 
-        if(fa*fx1<0)
+        if(fa*fx1<0.)
             b=x1;
         }
         bisec_Numer(a,b,nbox,*pot, fsol);
