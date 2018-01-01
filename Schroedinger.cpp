@@ -11,7 +11,7 @@ double potential(double x)
 {
   double value = x*x;
   // double value = 0;
-  // if(fabs(x) < 2.) value = 1.;
+  // if(fabs(x) < 2.) value = -1.;
   return value;
 } // end of function to evaluate
 
@@ -93,18 +93,15 @@ void solve_Numerov ( double Emin, double Emax, double dE,
 
    double *probab = new double [nbox];
 
-   // fsol[0]=0.;fsol[nbox]=0.;
-   //
-   // first_step = dx*dx;
 // scan energies to find when the Numerov solution is =0 at the right extreme of the box.
    for(n=0;n<(Emax-Emin)/dE;n++)
    {
-      En = Emax - n*dE;
+      En = Emin + n*dE;
       // fsol[1] = first_step;
 
       fsol_Numerov ( En, nbox, *pot, fsol );
 
-  //    cout << "# En = " << En << "  " << fsol[nbox]<< endl;
+      cout << "# En = " << En << "  " << fsol[nbox]<< endl;
 
       if( abs(fsol[nbox]) < err ){
          Ex = En;
@@ -115,7 +112,7 @@ void solve_Numerov ( double Emin, double Emax, double dE,
         if(fsol[nbox] > 0){sign=1;}else{sign=-1;}
 
       if( sign*fsol[nbox]<0){ // when the sign changes, means that the solution for f[nbox] =0 is in in the middle, thus calls bisection rule.
-        Ex = bisec_Numer(En,En+dE,nbox,*pot, fsol);
+        Ex = bisec_Numer(En-dE,En+dE,nbox,*pot, fsol);
         break;
       }
    }
