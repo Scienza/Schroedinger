@@ -96,10 +96,10 @@ void solve_Numerov(double Emin, double Emax, double dE,
         }
 
         if (n == 0)
-            if (fsol[nbox] > 0) { sign = 1; } else { sign = -1; }
+            sign = (fsol[nbox] > 0) ? 1 : -1;
 
-        if (sign * fsol[nbox] <
-            0) { // when the sign changes, means that the solution for f[nbox] =0 is in in the middle, thus calls bisection rule.
+        // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus calls bisection rule.
+        if (sign * fsol[nbox] < 0) {
             Ex = bisec_Numer(En - dE, En + dE, nbox, *pot, fsol);
             break;
         }
@@ -124,9 +124,12 @@ void solve_Numerov(double Emin, double Emax, double dE,
 double bisec_Numer(double a, double b, int nbox, double (*pot)(double), double *fsol) {
     double x1, fx1, fb, fa;
     cout.precision(17);
-    x1 = (b + a) / 2.;
 
-    if (abs(x1 - a) > err) {
+    // The number of iterations that the bisection routine needs can be evaluated in advance
+    int itmax = ceil(log2(b-a) - log2(err)) - 1;
+
+    for (int i = 0; i < itmax; i++) {
+        x1 = (b + a) / 2.;
         fsol_Numerov(x1, nbox, *pot, fsol);
         fx1 = fsol[nbox];
         fsol_Numerov(b, nbox, *pot, fsol);
@@ -145,7 +148,6 @@ double bisec_Numer(double a, double b, int nbox, double (*pot)(double), double *
             if (fa * fx1 < 0.)
                 b = x1;
         }
-        bisec_Numer(a, b, nbox, *pot, fsol);
     }
     return x1;
 }
