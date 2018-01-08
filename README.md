@@ -7,3 +7,7 @@ Output are the energy and technical results of the algorithm, plus the resulting
 
 ### Numerov Solver
 Numerov solver takes in input an energy bracket in which to look for solution. Increasing from the minimum energy, it takes the lowest energy non-trivial solution as the one that respects boundary conditions.
+
+### Contribute
+To contribute, watch the introduction video [https://www.youtube.com/watch?v=KH8xd0TKkz4](video \(IT\)) 
+and contact [andrea.idini@gmail.com](Andrea Idini)

@@ -139,7 +139,7 @@ the energy that gives the non-trivial (non-exponential) solution
 with the correct boundary conditions (@param wavefunction[0] == @param wavefunction[@param nbox] == 0)
 */
 double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(double), double *wavefunction) {
-    double x1, fx1, fb, fa;
+    double Emiddle, fx1, fb, fa;
     cout.precision(17);
 
     // The number of iterations that the bisection routine needs can be evaluated in advance
