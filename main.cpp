@@ -1,8 +1,7 @@
 #include <iostream>
-#include <Schroedinger>
+#include "Schroedinger"
 
 double potential(double);
-void solve_Numerov(double, double, double, int, double (*potential)(double), double *);
 
 int main() {
     int nbox = 1000;
