@@ -1,14 +1,6 @@
-#include <cmath>
-
-#define dx 0.01
-#define err 1E-12
+#include "Schroedinger"
 
 using namespace std;
-
-double trap_array(int a, int b, double stepx, double *func);
-void fsol_Numerov(double, int, double (*pot)(double), double *);
-void solve_Numerov(double, double, double, int, double (*pot)(double), double *);
-double bisec_Numer(double, double, int, double (*pot)(double), double *);
 
 /*! Integrate with the trapezoidal rule method, from a to b position in a function array
 */
