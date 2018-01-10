@@ -4,6 +4,5 @@ To contribute, watch the introduction video [video \(IT\)](https://www.youtube.c
 and contact [Andrea Idini](andrea.idini@gmail.com).
 Priviledge channel for contributions is the telegram group [@scienza](t.me/Scienza).
 ### Guideline
-*Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live
-
--J. F. Woods*
+*Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live*
+*-J. F. Woods*
