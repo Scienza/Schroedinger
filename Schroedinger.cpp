@@ -1,4 +1,4 @@
-#include "Schroedinger"
+#include "Schroedinger.h"
 
 /*! Integrate with the trapezoidal rule method, from a to b position in a function array
 */

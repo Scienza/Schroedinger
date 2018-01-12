@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Schroedinger"
+#include "Schroedinger.h"
 
 double potential(double);
 
