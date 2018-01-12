@@ -2,6 +2,7 @@
 #define SCHROEDINGER
 
 #include <cmath>
+#include <iostream>
 
 #define dx 0.01
 #define err 1E-12

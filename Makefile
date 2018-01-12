@@ -4,7 +4,7 @@ LDFLAGS =
 
 all: Schroedinger.x clean
 
-Schroedinger.x: Schroedinger.o
+Schroedinger.x: Schroedinger.o main.cpp
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 Schroedinger.o: Schroedinger.cpp
@@ -16,4 +16,4 @@ clean:
 	rm *.o
 
 veryclean: clean
-	rm octhecdec
+	rm *.x

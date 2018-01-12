@@ -1,7 +1,5 @@
 #include "Schroedinger"
 
-using namespace std;
-
 /*! Integrate with the trapezoidal rule method, from a to b position in a function array
 */
 double trap_array(int a, int b, double stepx, double *func) {
@@ -74,7 +72,7 @@ void solve_Numerov(double Emin, double Emax, double Estep,
         // wavefunction[1] = first_step;
 
         fsol_Numerov(Energy, nbox, *potential, wavefunction);
-        // coutS << "# Energy = " << Energy << "  " << wavefunction[nbox] << endl;
+        // std::coutS << "# Energy = " << Energy << "  " << wavefunction[nbox] << std::endl;
 
         if (abs(wavefunction[nbox]) < err) {
             Solution_Energy = Energy;
@@ -91,18 +89,18 @@ void solve_Numerov(double Emin, double Emax, double Estep,
         }
     }
 
-    cout << "# iteration " << n << "  Energy = " << Solution_Energy << endl;
+    std::cout << "# iteration " << n << "  Energy = " << Solution_Energy << std::endl;
 
     for (int i = 0; i <= nbox; i++)
         probab[i] = wavefunction[i] * wavefunction[i];
 
     norm = trap_array(0., nbox, dx, probab);
-    cout << "# norm=" << norm << endl;
+    std::cout << "# norm=" << norm << std::endl;
 
     for (int i = 0; i <= nbox; i++)
         wavefunction[i] = wavefunction[i] / sqrt(norm);
     for (int i = 0; i <= nbox; i++)
-        cout << (-nbox / 2 + i) * dx << "  " << wavefunction[i] << " " << (*potential)((-nbox / 2 + i) * dx) << endl;
+        std::cout << (-nbox / 2 + i) * dx << "  " << wavefunction[i] << " " << (*potential)((-nbox / 2 + i) * dx) << std::endl;
     return;
 }
 
@@ -112,7 +110,7 @@ with the correct boundary conditions (@param wavefunction[0] == @param wavefunct
 */
 double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(double), double *wavefunction) {
     double Emiddle, fx1, fb, fa;
-    cout.precision(17);
+    std::cout.precision(17);
 
     // The number of iterations that the bisection routine needs can be evaluated in advance
     int itmax = ceil(log2(Emax - Emin) - log2(err)) - 1;
