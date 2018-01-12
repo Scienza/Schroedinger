@@ -11,4 +11,4 @@ Numerov solver takes in input an energy bracket in which to look for solution. I
 ### Contribute
 To contribute, considers the [issues](https://github.com/AndreaIdini/Schroedinger/issues) and the [to-do](https://github.com/AndreaIdini/Schroedinger/projects) lists.
 Watch the introduction video [video \(IT\)](https://www.youtube.com/watch?v=KH8xd0TKkz4) and contact [Andrea Idini](andrea.idini@gmail.com).
-Priviledge channel for contributions is the telegram group [@scienza](t.me/Scienza).
+Priviledge channel for contributions is the telegram group [@scienza](https://t.me/Scienza).
