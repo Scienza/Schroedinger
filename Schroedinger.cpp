@@ -1,34 +1,6 @@
-#include <iostream>
-#include <cmath>
-
-#define dx 0.01
-#define err 1E-12
+#include "Schroedinger"
 
 using namespace std;
-
-double trap_array(int a, int b, double stepx, double *func);
-double potential(double x);
-void fsol_Numerov(double, int, double (*pot)(double), double *);
-void solve_Numerov(double, double, double, int, double (*pot)(double), double *);
-double bisec_Numer(double, double, int, double (*pot)(double), double *);
-
-int main() {
-    int nbox = 1000;
-    double step = 0.01, norm;
-    double *wavefunction = new double[nbox];
-    //wavefunction initialization
-    wavefunction[0] = 0.;
-    wavefunction[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-
-    solve_Numerov(0., 2., step, nbox, &potential, wavefunction);
-    return 0;
-}
-
-/* potential function defines the potential in function of position */
-double potential(double x) {
-    double value = x * x;
-    return value;
-} // end of function to evaluate
 
 /*! Integrate with the trapezoidal rule method, from a to b position in a function array
 */
