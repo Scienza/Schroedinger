@@ -1,13 +1,14 @@
 CC      = g++
 CFLAGS  =
 LDFLAGS =
+SRCDIR = ./src/
 
 all: Schroedinger.x clean
 
-Schroedinger.x: Schroedinger.o main.cpp
+Schroedinger.x: Schroedinger.o ${SRCDIR}/main.cpp
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-Schroedinger.o: Schroedinger.cpp
+Schroedinger.o: ${SRCDIR}/Schroedinger.cpp
 	$(CC) -c $(CFLAGS) $<
 
 .PHONY: clean veryclean
