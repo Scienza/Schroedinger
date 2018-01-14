@@ -138,3 +138,10 @@ double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(doubl
     }
     return Emiddle;
 }
+
+/*! Calculates the wavefunction of a particle in a box
+$A*sin(\sqrt{8π^2*m*E/h^2}x)$
+*/
+double box_wavefun(double Energy){
+  //
+}
