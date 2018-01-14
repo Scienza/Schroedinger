@@ -140,8 +140,21 @@ double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(doubl
 }
 
 /*! Calculates the wavefunction of a particle in a box
-$A*sin(\sqrt{8π^2*m*E/h^2}x)$
+allowed energy levels :   $E_n = n^2 \pi^2 \hbar^2 / (2 m L)$
+wavefcuntion: $A*sin(n \pi/L * x)$
 */
-double box_wavefun(double Energy){
+double* box_wavefun(double nlevel, int nbox){
+  double boxLength = nbox * dx;
+  double Energy = nlevel * nlevel * pi * pi * hbar * hbar / 2 / mass / boxLength;
+  double wavefunction [nbox];
+
+  for(int i=0; i<nbox; i++){
+    double x = i * dx;
+    wavefunction[i] = sin(nlevel * pi * x/boxLength);
+    //remember to translate by half box length, eventually
+    std::cout << x - boxLength/2. << " " << wavefunction[i] << std::endl;
+  }
+
+  return wavefunction;
   //
 }
