@@ -146,11 +146,12 @@ wavefcuntion: $A*sin(n \pi/L * x)$
 double* box_wavefun(double nlevel, int nbox){
   double boxLength = nbox * dx;
   double Energy = nlevel * nlevel * pi * pi * hbar * hbar / 2 / mass / boxLength;
+  double norm = sqrt(2/boxLength);
   double wavefunction [nbox];
 
   for(int i=0; i<nbox; i++){
     double x = i * dx;
-    wavefunction[i] = sin(nlevel * pi * x/boxLength);
+    wavefunction[i] = norm * sin(nlevel * pi * x/boxLength);
     //remember to translate by half box length, eventually
     std::cout << x - boxLength/2. << " " << wavefunction[i] << std::endl;
   }
