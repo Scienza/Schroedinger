@@ -15,7 +15,7 @@ int main() {
     if (mode == "TEST") {
       // wavefunction = box_wf(2,nbox);
       // wavefunction = finite_well_wf(2, nbox, 3., 10.);
-      wavefunction = harmonic_wf(0.);
+      wavefunction = harmonic_wf(2,nbox, 1.);
 
     }else{
       wavefunction[0] = 0.;
