@@ -139,13 +139,15 @@ double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(doubl
     return Emiddle;
 }
 
-/*! Calculates the wavefunction of a particle in a box
+/*! Calculates the analytical wavefunction of a particle in a box
 allowed energy levels :   $E_n = n^2 \pi^2 \hbar^2 / (2 m L)$
 wavefcuntion: $A*sin(n \pi/L * x)$
+Analytically exact
+nlevel > 0,
 */
-double* box_wavefun(double nlevel, int nbox){
+double* box_wf(int nlevel, int nbox){
   double boxLength = nbox * dx;
-  double Energy = nlevel * nlevel * pi * pi * hbar * hbar / 2 / mass / boxLength;
+  double Energy = nlevel * nlevel * pi * pi * hbar * hbar / 2. / mass / boxLength;
   double norm = sqrt(2/boxLength);
   double wavefunction [nbox];
 
@@ -155,6 +157,88 @@ double* box_wavefun(double nlevel, int nbox){
     //remember to translate by half box length, eventually
     std::cout << x - boxLength/2. << " " << wavefunction[i] << std::endl;
   }
+
+  return wavefunction;
+  //
+}
+
+/*! Calculates the analytical wavefunction of a particle in a finite potential
+allowed energy levels : $E_n = n^2 \pi^2 \hbar^2 / (2 m L)$
+wavefcuntion: $A*sin(n \pi/L * x)$
+This will not correspond exactly to a numerical solution in a box, since the
+box is a finite overlay on top of the finite well, instead of an exact contiuum.
+Check by expanding the box, and/or deepening the potential.
+nlevel > 1
+*/
+double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height){
+  // double boxLength = nbox * dx;
+
+  double xi = pot_width/2.*sqrt(2 * mass * pot_height / hbar / hbar);
+
+  double k, alpha, G, H, A, B, E_n;
+  double wavefunction [nbox];
+  double eta_new, eta = 1.0;
+  double tolerance = 1e-10;
+  int counter = 0;
+
+  if(nlevel % 2 == 0){ //looking for solution has n even, thus is antisymmetric
+    alpha = -k* 1. / tan(k * pot_width / 2.);
+    A = 1.; B = 0.;
+    H = A * sin (k * pot_width / 2.) * exp( -alpha * pot_width / 2. );
+    G = -H;
+
+  }else{             //looking for has n odd, thus is symmetric
+    alpha =  k*tan(k * pot_width / 2.);
+    A = 0.; B = 1.;
+    H = B * cos (k * pot_width / 2.) * exp( alpha * pot_width / 2. );
+    G = H;
+  }
+
+  do{
+    counter++;
+    if(nlevel % 2 == 0){ //looking for solution has n even, thus is odd parity
+      eta_new = 1./atan(-sqrt(xi*xi/eta/eta - 1) );
+    }else{             //looking for has n odd, thus is even parity
+      eta_new = atan( sqrt(xi*xi/eta/eta - 1) );
+    }
+    eta = eta_new;
+  } while ( fabs((eta_new - eta)/eta) > tolerance && counter < 100 );
+
+  if(counter == 100){
+    std::cerr << "transcendent equation in finite_well_wf() not converging" << std::endl;
+    exit;
+  }else{
+    E_n = 2. / pot_width / pot_width * hbar * hbar / mass;
+  }
+
+  for(int i=0; i<nbox; i++){
+    double x = (- nbox/2 + i) * dx;
+
+    if( x <= - pot_width/2.){
+      k = sqrt(2. * mass * (pot_height - E_n)) / hbar;
+      wavefunction[i] = G * exp( k*x );
+    }else if( x > -pot_width/2. && x < pot_width/2.){
+      k = sqrt(2. * mass * E_n) / hbar;
+      wavefunction[i] = A * sin(k * x) + B * cos(k * x);
+    }else{
+      k = sqrt(2. * mass * (pot_height - E_n)) / hbar;
+      // std::cout << k << " " << H << " " << exp( -k * x ) << std::endl;
+      wavefunction[i] = H * exp( -k * x );
+    }
+
+    std::cout << x << " " << wavefunction[i] << std::endl;
+  }
+
+
+// Final Normalization
+  double *probab = new double[nbox];
+
+  for (int i = 0; i <= nbox; i++)
+      probab[i] = wavefunction[i] * wavefunction[i];
+
+  double norm = trap_array(0., nbox, dx, probab);
+  for (int i = 0; i <= nbox; i++)
+      wavefunction[i] = wavefunction[i] / sqrt(norm);
 
   return wavefunction;
   //

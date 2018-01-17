@@ -15,5 +15,6 @@ double trap_array(int, int, double, double *);
 void fsol_Numerov(double, int, double (*pot)(double), double *);
 void solve_Numerov(double, double, double, int, double (*pot)(double), double *);
 double bisec_Numer(double, double, int, double (*pot)(double), double *);
-double* box_wavefun(double, int);
+double* box_wf(int, int);
+double* finite_well_wf(int, int, double, double);
 #endif
