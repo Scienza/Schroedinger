@@ -119,6 +119,9 @@ double H3(double x) { return 8*std::pow(x,3) - 12*x; }
 double H4(double x) { return 16*std::pow(x,4)-48*x*x+12; }
 
 double* harmonic_wf(double omega){
-  std::cout << std::hermite(3, 10) << '=' << H3(10) << '\n'
-             << std::hermite(4, 10) << '=' << H4(10) << '\n';
+  
+  //example of test
+  if(fabs(std::hermite(3, 10.) - H3(10.)) + fabs(std::hermite(4, 4.3) - H4(4.3)) < 1e-10){
+    std:cerr << "Hermite polynomials not correctly implemented" << std::endl;
+  }
 }
