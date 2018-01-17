@@ -125,6 +125,7 @@ inline int factorial(int x, int result = 1) {
 double* harmonic_wf(int nlevel, int nbox, double omega){
   double c = mass*omega/hbar;
   double wavefunction [nbox];
+  double E_n = hbar * omega * (nlevel+0.5);
 
   //example of test
   if(fabs(std::hermite(3, 10.) - H3(10.)) + fabs(std::hermite(4, 4.3) - H4(4.3)) > 1e-10){
