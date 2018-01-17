@@ -12,7 +12,7 @@ int main() {
 
     if (mode == "TEST") {
       // wavefunction = box_wf(2,nbox);
-      wavefunction = finite_well_wf(1, nbox, 3., 10.);
+      wavefunction = finite_well_wf(2, nbox, 3., 10.);
     }else{
       wavefunction[0] = 0.;
       wavefunction[1] = 0.2; //later on it gets renormalized, so is just a conventional number

@@ -181,19 +181,6 @@ double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height
   double tolerance = 1e-10;
   int counter = 0;
 
-  if(nlevel % 2 == 0){ //looking for solution has n even, thus is antisymmetric
-    alpha = -k* 1. / tan(k * pot_width / 2.);
-    A = 1.; B = 0.;
-    H = A * sin (k * pot_width / 2.) * exp( -alpha * pot_width / 2. );
-    G = -H;
-
-  }else{             //looking for has n odd, thus is symmetric
-    alpha =  k*tan(k * pot_width / 2.);
-    A = 0.; B = 1.;
-    H = B * cos (k * pot_width / 2.) * exp( alpha * pot_width / 2. );
-    G = H;
-  }
-
   do{
     counter++;
     if(nlevel % 2 == 0){ //looking for solution has n even, thus is odd parity
@@ -209,6 +196,20 @@ double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height
     exit;
   }else{
     E_n = 2. / pot_width / pot_width * hbar * hbar / mass;
+  }
+
+
+  if(nlevel % 2 == 0){ //looking for solution has n even, thus is antisymmetric
+    k = sqrt(2. * mass * (pot_height - E_n)) / hbar;
+    A = 1.; B = 0.;
+    H = A * sin (sqrt(2. * mass * E_n) * pot_width / 2.) * exp( -k * pot_width / 2. );
+    G = -H;
+
+  }else{             //looking for has n odd, thus is symmetric
+    k = sqrt(2. * mass * (pot_height - E_n)) / hbar;
+    A = 0.; B = 1.;
+    H = B * cos (sqrt(2. * mass * E_n) * pot_width / 2.) * exp( k * pot_width / 2. );
+    G = H;
   }
 
   for(int i=0; i<nbox; i++){
