@@ -8,6 +8,9 @@ Output are the energy and technical results of the algorithm, plus the resulting
 ### Numerov Solver
 Numerov solver takes in input an energy bracket in which to look for solution. Increasing from the minimum energy, it takes the lowest energy non-trivial solution as the one that respects boundary conditions.
 
+### Requisites
+At the moment g++ compiler in a version newer than 6.0, due to src implementation of Hermite polynomials. Makefile for version 7 implemented.
+
 ### Contribute
 To contribute, considers the [issues](https://github.com/AndreaIdini/Schroedinger/issues) and the [to-do](https://github.com/AndreaIdini/Schroedinger/projects) lists.
 Watch the introduction video [video \(IT\)](https://www.youtube.com/watch?v=KH8xd0TKkz4) and contact [Andrea Idini](andrea.idini@gmail.com).
