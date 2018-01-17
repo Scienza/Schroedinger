@@ -1,8 +1,7 @@
+#define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
+
 #ifndef SCHROEDINGER
 #define SCHROEDINGER
-
-#include <cmath>
-#include <iostream>
 
 #define dx 0.01
 #define err 1E-12
@@ -10,6 +9,9 @@
 #define pi 3.14159265359
 #define hbar 1
 #define mass 1
+
+#include <cmath>
+#include <iostream>
 
 double trap_array(int, int, double, double *);
 void fsol_Numerov(double, int, double (*pot)(double), double *);

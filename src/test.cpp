@@ -43,7 +43,7 @@ double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height
   int counter = 0;
 
   eta_old = 1. + pi/2. * (nlevel-1);
-  std::cout << "#" << eta_old << std::endl;
+  // std::cout << "#" << eta_old << std::endl;
   do{
     counter++;
     eta = eta_old;
@@ -53,7 +53,7 @@ double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height
     }else{             //looking for has n odd, thus is even parity
       eta_old = atan( sqrt(xi*xi/eta/eta - 1) ) + pi/2. * (nlevel-1);
     }
-    std::cout << "#" << eta << std::endl;
+    // std::cout << "#" << eta << std::endl;
   } while ( fabs((eta_old - eta)/eta) > tolerance && counter < 100 );
 
   if(counter == 100){
@@ -61,7 +61,7 @@ double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height
     exit;
   }else{
     E_n = 2. / pot_width / pot_width * hbar * hbar / mass * eta * eta;
-    std::cout << "#" << nlevel << " solution for eta = " << eta << "  E_n =" << E_n << std::endl;
+    // std::cout << "#" << nlevel << " solution for eta = " << eta << "  E_n =" << E_n << std::endl;
   }
 
 
@@ -113,4 +113,12 @@ double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height
 
   return wavefunction;
   //
+}
+
+double H3(double x) { return 8*std::pow(x,3) - 12*x; }
+double H4(double x) { return 16*std::pow(x,4)-48*x*x+12; }
+
+double* harmonic_wf(double omega){
+  std::cout << std::hermite(3, 10) << '=' << H3(10) << '\n'
+             << std::hermite(4, 10) << '=' << H4(10) << '\n';
 }
