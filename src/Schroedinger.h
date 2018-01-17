@@ -7,7 +7,7 @@
 #define dx 0.01
 #define err 1E-12
 
-#define pi 3.141
+#define pi 3.14159265359
 #define hbar 1
 #define mass 1
 

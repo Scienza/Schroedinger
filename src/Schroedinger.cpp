@@ -177,38 +177,47 @@ double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height
 
   double k, alpha, G, H, A, B, E_n;
   double wavefunction [nbox];
-  double eta_new, eta = 1.0;
+  double eta_old, eta;
   double tolerance = 1e-10;
   int counter = 0;
 
+  eta_old = 1. + pi/2. * (nlevel-1);
+  std::cout << "#" << eta_old << std::endl;
   do{
     counter++;
+    eta = eta_old;
+
     if(nlevel % 2 == 0){ //looking for solution has n even, thus is odd parity
-      eta_new = 1./atan(-sqrt(xi*xi/eta/eta - 1) );
+      eta_old = atan( sqrt(xi*xi/eta/eta - 1) + pi/2. ) + pi/2. * (nlevel-1);
     }else{             //looking for has n odd, thus is even parity
-      eta_new = atan( sqrt(xi*xi/eta/eta - 1) );
+      eta_old = atan( sqrt(xi*xi/eta/eta - 1) ) + pi/2. * (nlevel-1);
     }
-    eta = eta_new;
-  } while ( fabs((eta_new - eta)/eta) > tolerance && counter < 100 );
+    std::cout << "#" << eta << std::endl;
+  } while ( fabs((eta_old - eta)/eta) > tolerance && counter < 100 );
 
   if(counter == 100){
     std::cerr << "transcendent equation in finite_well_wf() not converging" << std::endl;
     exit;
   }else{
-    E_n = 2. / pot_width / pot_width * hbar * hbar / mass;
+    E_n = 2. / pot_width / pot_width * hbar * hbar / mass * eta * eta;
+    std::cout << "#" << nlevel << " solution for eta = " << eta << "  E_n =" << E_n << std::endl;
   }
 
 
   if(nlevel % 2 == 0){ //looking for solution has n even, thus is antisymmetric
     k = sqrt(2. * mass * (pot_height - E_n)) / hbar;
+    double x = pot_width / 2.;
     A = 1.; B = 0.;
-    H = A * sin (sqrt(2. * mass * E_n) * pot_width / 2.) * exp( -k * pot_width / 2. );
+    H = A * sin (sqrt(2. * mass * E_n) * x) * exp( k * x );
     G = -H;
-
+    // std::cout << A * sin (sqrt(2. * mass * E_n) * x) << " "
+    // << H*exp( -k * x ) << std::endl;
   }else{             //looking for has n odd, thus is symmetric
     k = sqrt(2. * mass * (pot_height - E_n)) / hbar;
+    double x = -pot_width / 2.;
+
     A = 0.; B = 1.;
-    H = B * cos (sqrt(2. * mass * E_n) * pot_width / 2.) * exp( k * pot_width / 2. );
+    H = B * cos (sqrt(2. * mass * E_n) * x) * exp( -k * x);
     G = H;
   }
 
