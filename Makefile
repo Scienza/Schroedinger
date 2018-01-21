@@ -1,18 +1,21 @@
-CC      = g++-7
+CPP     = g++-7
 CFLAGS  =
-LDFLAGS =
-SRCDIR = ./src/
+LDFLAGS = 
+SRCDIR  = ./src/
+
+GTEST_DIR= ./googletest/googletest
+CPPFLAGS = -I$(GTEST_DIR)/include
 
 all: Schroedinger.x clean
 
 Schroedinger.x: Schroedinger.o test.o ${SRCDIR}/main.cpp
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CPP) -o $@ $^ $(LDFLAGS) $(CPPFLAGS)
 
 test.o: ${SRCDIR}/test.cpp
-	$(CC) -c $(CFLAGS) $<
+	$(CPP) -c $(CPPFLAGS) $<
 
 Schroedinger.o: ${SRCDIR}/Schroedinger.cpp
-	$(CC) -c $(CFLAGS) $<
+	$(CPP) -c $(CPPFLAGS) $<
 
 .PHONY: clean veryclean
 

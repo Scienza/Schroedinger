@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Schroedinger.h"
 #include "test.h"
-
+#include "gtest/gtest.h"
 
 double potential(double);
 
