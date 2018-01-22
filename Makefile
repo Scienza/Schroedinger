@@ -1,16 +1,16 @@
 CPP     = g++-7
 CFLAGS  =
-LDFLAGS = 
+LDFLAGS = -lgtest
 SRCDIR  = ./src/
 OBJ_DIR= ./obj
 CXXFLAGS = -g -Wall
-GTEST_DIR= ../googletest/googletest
-CPPFLAGS = -I$(GTEST_DIR)/include
+GTEST_DIR= ./googletest/googletest
+CPPFLAGS = -I$(GTEST_DIR)/include -L$(GTEST_DIR)/mybuild
 
 all: Schroedinger.x clean
 
 CPPFLAGS += -isystem $(GTEST_DIR)/include
-CXXFLAGS = -g -Wall -Wextra -pthread
+CXXFLAGS = -g -Wall -Wextra -pthread 
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
