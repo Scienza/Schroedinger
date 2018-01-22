@@ -1,14 +1,14 @@
 #include <iostream>
 #include "Schroedinger.h"
 #include "test.h"
-#include "gtest/gtest.h"
+//#include "gtest/gtest.h"
 
 #include <string>
 
 double potential(double);
 
 int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
+    //::testing::InitGoogleTest(&argc, argv);
     int nbox = 1000;
     double step = 0.01, norm;
     double *wavefunction = new double[nbox];
@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     }
     //wavefunction initialization
 
-    return RUN_ALL_TESTS();
+   //return RUN_ALL_TESTS();
 }
 
 
