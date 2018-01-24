@@ -1,9 +1,9 @@
 #include <iostream>
-#include "Schroedinger.h"
+#include <string>
 #include "test.h"
 #include "gtest/gtest.h"
+#include "Schroedinger.h"
 
-#include <string>
 
 /* potential function defines the potential in function of position */
 double potential(double x) {
