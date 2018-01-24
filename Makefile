@@ -1,6 +1,6 @@
 CPP     = g++-7
 CFLAGS  =
-LDFLAGS = -lgtest
+LDFLAGS = -lgtest -lpthread
 SRCDIR  = ./src/
 OBJ_DIR= ./obj
 CXXFLAGS = -g -Wall
