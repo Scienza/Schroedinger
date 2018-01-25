@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include "../include/Schroedinger.h"
+#include "../include/test.h"
+
 namespace {
     
     TEST(WfTest,HarmonicOscillator){
