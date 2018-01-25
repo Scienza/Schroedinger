@@ -1,0 +1,32 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: debian:stretch
+    steps:
+      - run:
+          name: Dependencies
+          command: |
+              apt-get -y update 
+              apt-get -y install build-essential 
+              apt-get -y install cmake
+              apt-get -y install git
+              
+      - run:
+          name: Avoid hosts unknown for github
+          command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+          
+      - checkout
+      - run:
+          name: Build
+          working_directory: ~/project/
+          command: |
+              mkdir build
+              cd build
+              cmake ..
+              make
+      
+      - run:
+          name: Test
+          working_directory: ~/project/build/bin
+          command: ./unit_tests
