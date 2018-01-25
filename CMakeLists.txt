@@ -1,13 +1,27 @@
 cmake_minimum_required(VERSION 3.0)
 project(Schroedinger)
 
+# Require git to download submodules
+find_package(Git)
+if (GIT_FOUND)
+	message("git found: ${GIT_EXECUTABLE}")
+else()
+	message(FATAL_ERROR "Git not installed. ")
+endif()
+
+# Download submodules
+execute_process(COMMAND git submodule init
+		COMMAND git submodule update
+		WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+)
+
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    # require at least gcc 4.8
+    # Require at least gcc  6.0
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
         message(FATAL_ERROR "GCC version must be at least 6.0!")
     endif()
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
-    # require at least clang 3.2
+    # Clang actually not supported
     message(FATAL_ERROR "Clang not supported!")
 else()
     message(FATAL_ERROR "You are using an unsupported compiler! Compilation has only been tested with GCC.")
