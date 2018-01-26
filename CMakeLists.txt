@@ -54,6 +54,7 @@ add_library(googletest ${GOOGLETEST_SOURCES})
 add_executable (Schroedinger ${SOURCES})
 add_executable(
     unit_tests
+    src/potentials.cpp
     tests/main.cpp
 )
 add_dependencies(unit_tests googletest)
