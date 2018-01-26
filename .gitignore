@@ -1,7 +1,11 @@
 out
 *.x
+*.a
+*.tcl
 bin
 
+
+build/
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
