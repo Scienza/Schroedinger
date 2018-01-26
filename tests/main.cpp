@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
 #include "../include/Schroedinger.h"
 #include "../include/test.h"
+#include "../include/potentials.h"
 
 namespace {
-    
+
     TEST(WfTest,HarmonicOscillator){
         int nbox = 1000;
         double *numerov_Wf = new double[nbox];
