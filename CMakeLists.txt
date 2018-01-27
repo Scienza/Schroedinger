@@ -11,38 +11,38 @@ execute_process(
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
 
-# Check for compiler
+# Check for compiler: requires  gcc (version > 6.0)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    # Require at least gcc  6.0
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
         message(FATAL_ERROR "GCC version must be at least 6.0!")
     endif()
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
-    # Clang actually not supported
-    message(FATAL_ERROR "Clang not supported!")
 else()
     message(FATAL_ERROR "You are using an unsupported compiler! Compilation has only been tested with GCC.")
 endif()
 
-
-# Add all sources file
-file(GLOB_RECURSE SOURCES src/*.cpp)
-include_directories (include)
-set(TESTS ${SOURCES})
-list(REMOVE_ITEM TESTS src/main.cpp)
-list(APPEND TESTS tests/main.cpp)
-
-set(GOOGLETEST_ROOT external/googletest/googletest)
+# Main directories
+set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/)
+set(TEST_DIR ${PROJECT_SOURCE_DIR}/tests/)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+set(GOOGLETEST_DIR external/googletest/googletest)
+set(GOOGLETEST_SOURCES
+        ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/src/gtest-all.cc
+        ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/src/gtest_main.cc
+)
 
 include_directories(
-    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}
-    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/include
+        ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}
+        ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/include
+        ${PROJECT_SOURCE_DIR}/include
 )
-set(
-    GOOGLETEST_SOURCES
-    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/src/gtest-all.cc
-    ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/src/gtest_main.cc
-)
+
+# Fetch all sources, creating ${SOURCES}
+file(GLOB_RECURSE SOURCES ${SOURCE_DIR}/*.cpp)
+
+# Create ${TESTS}, using test's main.cpp instead of ${SOURCE}'s one
+set(TESTS ${SOURCES})
+list(REMOVE_ITEM TESTS ${SOURCE_DIR}/main.cpp)
+list(APPEND TESTS ${TEST_DIR}/main.cpp)
 
 foreach(_source ${GOOGLETEST_SOURCES})
     set_source_files_properties(${_source} PROPERTIES GENERATED 1)
@@ -50,10 +50,13 @@ endforeach()
 
 add_library(googletest ${GOOGLETEST_SOURCES})
 
+# Main executable
 add_executable (
     Schroedinger 
     ${SOURCES}
 )
+
+# Test executable
 add_executable(
     unit_tests
     ${TESTS}
@@ -70,4 +73,3 @@ target_link_libraries(
 include(CTest)
 enable_testing()
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
