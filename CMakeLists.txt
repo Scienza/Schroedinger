@@ -10,9 +10,9 @@ else()
 endif()
 
 # Download submodules
-execute_process(COMMAND git submodule init
-		COMMAND git submodule update
-		WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+execute_process(
+	COMMAND git submodule update --init
+	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
