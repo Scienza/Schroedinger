@@ -2,17 +2,13 @@ cmake_minimum_required(VERSION 3.0)
 project(Schroedinger)
 
 # Require git to download submodules
-find_package(Git)
-if (GIT_FOUND)
-	message("git found: ${GIT_EXECUTABLE}")
-else()
-	message(FATAL_ERROR "Git not installed. ")
-endif()
+find_package(Git REQUIRED)
+find_package(Threads REQUIRED)
 
 # Download submodules
 execute_process(
-	COMMAND git submodule update --init
-	WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    COMMAND git submodule update --init
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -28,7 +24,6 @@ else()
 endif()
 
 
-find_package(Threads REQUIRED)
 # Add all sources file
 file(GLOB_RECURSE SOURCES src/*.cpp)
 include_directories (include)
@@ -51,7 +46,10 @@ endforeach()
 
 add_library(googletest ${GOOGLETEST_SOURCES})
 
-add_executable (Schroedinger ${SOURCES})
+add_executable (
+    Schroedinger 
+    ${SOURCES}
+)
 add_executable(
     unit_tests
     src/potentials.cpp
@@ -59,6 +57,7 @@ add_executable(
     src/test.cpp
     tests/main.cpp
 )
+
 add_dependencies(unit_tests googletest)
 
 target_link_libraries(
