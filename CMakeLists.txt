@@ -28,7 +28,9 @@ endif()
 # Add all sources file
 file(GLOB_RECURSE SOURCES src/*.cpp)
 include_directories (include)
-list(REMOVE_ITEM SOURCES main.cpp)
+set(TESTS ${SOURCES})
+list(REMOVE_ITEM TESTS src/main.cpp)
+list(APPEND TESTS tests/main.cpp)
 
 set(GOOGLETEST_ROOT external/googletest/googletest)
 
@@ -51,12 +53,10 @@ add_library(googletest ${GOOGLETEST_SOURCES})
 add_executable (
     Schroedinger 
     ${SOURCES}
-    src/main.cpp
 )
 add_executable(
     unit_tests
-    ${SOURCES}
-    tests/main.cpp
+    ${TESTS}
 )
 
 add_dependencies(unit_tests googletest)
