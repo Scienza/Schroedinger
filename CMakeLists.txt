@@ -11,6 +11,7 @@ execute_process(
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
 
+# Check for compiler
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # Require at least gcc  6.0
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
@@ -26,7 +27,8 @@ endif()
 
 # Add all sources file
 file(GLOB_RECURSE SOURCES src/*.cpp)
-include_directories (include)
+file(GLOB_RECURSE include_directories (include)
+list(REMOVE_ITEM SOURCES "src/main.cpp")
 
 set(GOOGLETEST_ROOT external/googletest/googletest)
 
@@ -34,8 +36,8 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/include
 )
-
-set(GOOGLETEST_SOURCES
+set(
+    GOOGLETEST_SOURCES
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/src/gtest-all.cc
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/src/gtest_main.cc
 )
@@ -49,12 +51,11 @@ add_library(googletest ${GOOGLETEST_SOURCES})
 add_executable (
     Schroedinger 
     ${SOURCES}
+    src/main.cpp
 )
 add_executable(
     unit_tests
-    src/potentials.cpp
-    src/Schroedinger.cpp
-    src/test.cpp
+    ${SOURCES}
     tests/main.cpp
 )
 
