@@ -28,7 +28,7 @@ endif()
 # Add all sources file
 file(GLOB_RECURSE SOURCES src/*.cpp)
 include_directories (include)
-list(REMOVE_ITEM SOURCES "src/main.cpp")
+list(REMOVE_ITEM SOURCES src/main.cpp)
 
 set(GOOGLETEST_ROOT external/googletest/googletest)
 
