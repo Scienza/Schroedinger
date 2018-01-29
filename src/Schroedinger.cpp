@@ -99,9 +99,9 @@ void solve_Numerov(double Emin, double Emax, double Estep,
 
     for (int i = 0; i <= nbox; i++)
         wavefunction[i] = wavefunction[i] / sqrt(norm);
-    for (int i = 0; i <= nbox; i++)
-        std::cout << (-nbox / 2 + i) * dx << "  " << wavefunction[i] << " " << (*potential)((-nbox / 2 + i) * dx) << std::endl;
-    return;
+    // for (int i = 0; i <= nbox; i++)
+    //     std::cout << (-nbox / 2 + i) * dx << "  " << wavefunction[i] << " " << (*potential)((-nbox / 2 + i) * dx) << std::endl;
+    // return;
 }
 
 /*! Applies a bisection algorith to the numerov method to find

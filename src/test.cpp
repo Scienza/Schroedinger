@@ -6,20 +6,17 @@ wavefcuntion: $A*sin(n \pi/L * x)$
 Analytically exact
 nlevel > 0,
 */
-double* box_wf(int nlevel, int nbox){
+void box_wf(int nlevel, int nbox, double* wavefunction){
   double boxLength = nbox * dx;
   double Energy = nlevel * nlevel * pi * pi * hbar * hbar / 2. / mass / boxLength;
   double norm = sqrt(2/boxLength);
-  double wavefunction [nbox];
 
   for(int i=0; i<nbox; i++){
     double x = i * dx;
     wavefunction[i] = norm * sin(nlevel * pi * x/boxLength);
     //remember to translate by half box length, eventually
-    std::cout << x - boxLength/2. << " " << wavefunction[i] << std::endl;
+    // std::cout << x - boxLength/2. << " " << wavefunction[i] << std::endl;
   }
-
-  return wavefunction;
   //
 }
 
@@ -31,13 +28,12 @@ box is a finite overlay on top of the finite well, instead of an exact contiuum.
 Check by expanding the box, and/or deepening the potential.
 nlevel > 1
 */
-double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height){
+void finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height, double* wavefunction){
   // double boxLength = nbox * dx;
 
   double xi = pot_width/2.*sqrt(2 * mass * pot_height / hbar / hbar);
 
   double k, alpha, G, H, A, B, E_n;
-  double wavefunction [nbox];
   double eta_old, eta;
   double tolerance = 1e-10;
   int counter = 0;
@@ -97,7 +93,7 @@ double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height
       wavefunction[i] = H * exp( -k * x );
     }
 
-    std::cout << x << " " << wavefunction[i] << std::endl;
+    // std::cout << x << " " << wavefunction[i] << std::endl;
   }
 
 
@@ -110,8 +106,6 @@ double* finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height
   double norm = trap_array(0., nbox, dx, probab);
   for (int i = 0; i <= nbox; i++)
       wavefunction[i] = wavefunction[i] / sqrt(norm);
-
-  return wavefunction;
   //
 }
 
@@ -122,9 +116,8 @@ inline int factorial(int x, int result = 1) {
   if (x == 1 || x == 0) return result; else return factorial(x - 1, x * result);
 }
 
-double* harmonic_wf(int nlevel, int nbox, double omega){
+void harmonic_wf(int nlevel, int nbox, double omega, double* wavefunction){
   double c = mass*omega/hbar;
-  double wavefunction [nbox];
   double E_n = hbar * omega * (nlevel+0.5);
 
   //example of test
@@ -139,8 +132,7 @@ double* harmonic_wf(int nlevel, int nbox, double omega){
     wavefunction[i] = sqrt(1/pow(2,nlevel) / factorial(nlevel) * sqrt(1/pi) )
                     * exp(-c/2. * x*x) * std::hermite(nlevel,sqrt(c)*x);
     //remember to translate by half box length, eventually
-    std::cout << x << " " << wavefunction[i] << std::endl;
+    // std::cout << x << " " << wavefunction[i] << std::endl;
   }
-
 
 }

@@ -1,3 +1,3 @@
-double* box_wf(int, int);
-double* finite_well_wf(int, int, double, double);
-double* harmonic_wf(int, int, double);
+void box_wf(int, int, double*);
+void finite_well_wf(int, int, double, double, double*);
+void harmonic_wf(int, int, double, double*);

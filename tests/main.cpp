@@ -14,8 +14,10 @@ namespace {
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
         solve_Numerov(0., 2., 0.01, nbox, &ho_potential, numerov_Wf);
 
-        analytic_Wf = harmonic_wf(1,nbox, 1.);
-        for(int i; i < nbox; i++){
+        harmonic_wf(1,nbox, 1., analytic_Wf);
+
+        for(int i=0; i < nbox; i++){
+            // std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
             ASSERT_FLOAT_EQ(numerov_Wf[i],analytic_Wf[i]);
         }
     }
@@ -29,8 +31,8 @@ namespace {
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
         solve_Numerov(0., 2., 0.01, nbox, &box_potential, numerov_Wf);
 
-        analytic_Wf = box_wf(1,nbox);
-        for(int i; i < nbox; i++){
+        box_wf(1,nbox, analytic_Wf);
+        for(int i=0; i < nbox; i++){
             ASSERT_FLOAT_EQ(numerov_Wf[i],analytic_Wf[i]);
         }
     }
@@ -45,8 +47,8 @@ namespace {
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
         solve_Numerov(0., 2., 0.01, nbox, &finite_well_potential, numerov_Wf);
 
-        analytic_Wf = finite_well_wf(2, nbox, width, height);
-        for(int i; i < nbox; i++){
+        finite_well_wf(2, nbox, width, height, analytic_Wf);
+        for(int i=0; i < nbox; i++){
             ASSERT_FLOAT_EQ(numerov_Wf[i],analytic_Wf[i]);
         }
     }
