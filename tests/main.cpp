@@ -33,6 +33,8 @@ namespace {
 
         box_wf(1,nbox, analytic_Wf);
         for(int i=0; i < nbox; i++){
+          // std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
+          // Check that the box is of the same dimension for numerov and analytical
             ASSERT_FLOAT_EQ(numerov_Wf[i],analytic_Wf[i]);
         }
     }
@@ -49,6 +51,7 @@ namespace {
 
         finite_well_wf(2, nbox, width, height, analytic_Wf);
         for(int i=0; i < nbox; i++){
+          // std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
             ASSERT_FLOAT_EQ(numerov_Wf[i],analytic_Wf[i]);
         }
     }
