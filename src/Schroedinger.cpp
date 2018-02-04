@@ -74,7 +74,7 @@ void solve_Numerov(double Emin, double Emax, double Estep,
         fsol_Numerov(Energy, nbox, *potential, wavefunction);
         // std::coutS << "# Energy = " << Energy << "  " << wavefunction[nbox] << std::endl;
 
-        if (abs(wavefunction[nbox]) < err) {
+        if (fabs(wavefunction[nbox]) < err) {
             Solution_Energy = Energy;
             break;
         }
@@ -115,6 +115,7 @@ double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(doubl
     // The number of iterations that the bisection routine needs can be evaluated in advance
     int itmax = ceil(log2(Emax - Emin) - log2(err)) - 1;
 
+    std::cout << "#itmax=" << itmax << std::endl;
     for (int i = 0; i < itmax; i++) {
         Emiddle = (Emax + Emin) / 2.;
         fsol_Numerov(Emiddle, nbox, *potential, wavefunction);
@@ -122,7 +123,8 @@ double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(doubl
         fsol_Numerov(Emax, nbox, *potential, wavefunction);
         fb = wavefunction[nbox];
 
-        if (abs(fx1) < err) {
+        if (fabs(fx1) < err) {
+            std::cout << "#Numerov E=" << Emiddle << "f(nbox=" << nbox << ") = " << fx1 << " " << wavefunction[nbox] << std::endl;
             return Emiddle;
         }
 

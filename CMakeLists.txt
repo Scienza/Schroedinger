@@ -14,10 +14,12 @@ execute_process(
 # Check for compiler: requires  gcc (version > 6.0)
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
-        message(FATAL_ERROR "GCC version must be at least 6.0!")
+        message(FATAL_ERROR "GCC version must be at least 6.0! 'n
+                setup -DCMAKE_CXX_COMPILER=g++ using a version > 6.0")
     endif()
 else()
-    message(FATAL_ERROR "You are using an unsupported compiler! Compilation has only been tested with GCC.")
+    message(FATAL_ERROR "You are using an unsupported compiler! Compilation has only been tested with GCC. \n
+            Setup -DCMAKE_CXX_COMPILER=g++ using a version > 6.0")
 endif()
 
 # Main directories

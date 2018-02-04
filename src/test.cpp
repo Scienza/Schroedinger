@@ -7,7 +7,7 @@ Analytically exact
 nlevel > 0,
 */
 void box_wf(int nlevel, int nbox, double* wavefunction){
-  double boxLength = nbox * dx;
+  double boxLength = (nbox) * dx;
   double Energy = nlevel * nlevel * pi * pi * hbar * hbar / 2. / mass / boxLength;
   double norm = sqrt(2/boxLength);
 
@@ -15,7 +15,7 @@ void box_wf(int nlevel, int nbox, double* wavefunction){
     double x = i * dx;
     wavefunction[i] = norm * sin(nlevel * pi * x/boxLength);
     //remember to translate by half box length, eventually
-    // std::cout << x - boxLength/2. << " " << wavefunction[i] << std::endl;
+//    std::cout << x - boxLength/2. << " " << wavefunction[i] << std::endl;
   }
   //
 }

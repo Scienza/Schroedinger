@@ -3,7 +3,8 @@ out
 *.a
 *.tcl
 bin
-
+.idea
+cmake-*
 
 build/
 CMakeCache.txt

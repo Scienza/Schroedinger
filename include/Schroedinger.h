@@ -4,7 +4,7 @@
 #define SCHROEDINGER
 
 #define dx 0.01
-#define err 1E-12
+#define err 1E-10
 
 #define pi 3.14159265359
 #define hbar 1
