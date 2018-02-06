@@ -21,7 +21,7 @@ for the Shroedinger equation v(x) = V(x) - E, where V(x) is the potential and E 
 */
 void fsol_Numerov(double Energy, int nbox, double (*potential)(double), double *wavefunction) {
     double c, x;
-    c = dx * dx / 12.;
+    c = (2. * mass / hbar / hbar) * (dx * dx / 12.);
     //Build Numerov f(x) solution from left.
     for (int i = 2; i <= nbox; i++) {
         x = (-nbox / 2 + i) * dx;
@@ -75,6 +75,7 @@ void solve_Numerov(double Emin, double Emax, double Estep,
         // std::coutS << "# Energy = " << Energy << "  " << wavefunction[nbox] << std::endl;
 
         if (fabs(wavefunction[nbox]) < err) {
+          std::cout << "#solution found" << wavefunction[nbox] << std::endl;
             Solution_Energy = Energy;
             break;
         }
@@ -84,7 +85,8 @@ void solve_Numerov(double Emin, double Emax, double Estep,
 
         // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus calls bisection rule.
         if (sign * wavefunction[nbox] < 0) {
-            Solution_Energy = bisec_Numer(Energy - Estep, Energy + Estep, nbox, *potential, wavefunction);
+          std::cout << "#bisection " << wavefunction[nbox] << std::endl;
+          Solution_Energy = bisec_Numer(Energy - Estep, Energy + Estep, nbox, *potential, wavefunction);
             break;
         }
     }
@@ -138,5 +140,8 @@ double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(doubl
                 Emax = Emiddle;
         }
     }
+
+    std::cerr<< "ERROR: Solution not found in bisec_Numer " << wavefunction[nbox] << " > " << err << std::endl;
+//    exit(9);
     return Emiddle;
 }

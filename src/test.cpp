@@ -8,7 +8,7 @@ nlevel > 0,
 */
 void box_wf(int nlevel, int nbox, double* wavefunction){
   double boxLength = (nbox) * dx;
-  double Energy = nlevel * nlevel * pi * pi * hbar * hbar / 2. / mass / boxLength;
+  double Energy = nlevel * nlevel * pi * pi * hbar * hbar / 2. / mass / boxLength / boxLength;
   double norm = sqrt(2/boxLength);
 
   for(int i=0; i<nbox; i++){
@@ -31,7 +31,8 @@ nlevel > 1
 void finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height, double* wavefunction){
   // double boxLength = nbox * dx;
 
-  double xi = pot_width/2.*sqrt(2 * mass * pot_height / hbar / hbar);
+  std::cout << "width: "<< pot_width << " height: " << pot_height << std::endl;
+  double xi = pot_width/2.*sqrt(2. * mass * pot_height / hbar / hbar);
 
   double k, alpha, G, H, A, B, E_n;
   double eta_old, eta;
@@ -49,7 +50,7 @@ void finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height, d
     }else{             //looking for has n odd, thus is even parity
       eta_old = atan( sqrt(xi*xi/eta/eta - 1) ) - pi/2. * (nlevel-1);
     }
-    // std::cout << "#" << eta << std::endl;
+    std::cout << "#" << eta << " - " << eta_old << std::endl;
   } while ( fabs((eta_old - eta)/eta) > tolerance && counter < 100 );
 
   if(counter == 100){
@@ -132,7 +133,6 @@ void harmonic_wf(int nlevel, int nbox, double omega, double* wavefunction){
     wavefunction[i] = sqrt(1/pow(2,nlevel) / factorial(nlevel) * sqrt(1/pi) )
                     * exp(-c/2. * x*x) * std::hermite(nlevel,sqrt(c)*x);
     //remember to translate by half box length, eventually
-    // std::cout << x << " " << wavefunction[i] << std::endl;
   }
 
 }
