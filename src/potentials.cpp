@@ -15,5 +15,5 @@ double box_potential(double x) {
 double finite_well_potential(double x) {
   const  double width = 3.0;
   const  double height = 10.0;
-  return (x > -width && x < width) ? 0.0 : height;
+  return (x > -width/2. && x < width/2.) ? 0.0 : height;
 }

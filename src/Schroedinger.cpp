@@ -123,7 +123,7 @@ double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(doubl
         fsol_Numerov(Emax, nbox, *potential, wavefunction);
         fb = wavefunction[nbox];
 
-        if (fabs(fx1) < err) {
+        if (std::abs(fx1) < err) {
             std::cout << "#Numerov E=" << Emiddle << "f(nbox=" << nbox << ") = " << fx1 << " " << wavefunction[nbox] << std::endl;
             return Emiddle;
         }

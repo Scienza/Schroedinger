@@ -47,7 +47,7 @@ void finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height, d
     if(nlevel % 2 == 0){ //looking for solution has n even, thus is odd parity
       eta_old = atan( sqrt(xi*xi/eta/eta - 1) + pi/2. ) + pi/2. * (nlevel-1);
     }else{             //looking for has n odd, thus is even parity
-      eta_old = atan( sqrt(xi*xi/eta/eta - 1) ) + pi/2. * (nlevel-1);
+      eta_old = atan( sqrt(xi*xi/eta/eta - 1) ) - pi/2. * (nlevel-1);
     }
     // std::cout << "#" << eta << std::endl;
   } while ( fabs((eta_old - eta)/eta) > tolerance && counter < 100 );
@@ -56,8 +56,8 @@ void finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height, d
     std::cerr << "transcendent equation in finite_well_wf() not converging" << std::endl;
     exit;
   }else{
-    E_n = 2. / pot_width / pot_width * hbar * hbar / mass * eta * eta;
-    // std::cout << "#" << nlevel << " solution for eta = " << eta << "  E_n =" << E_n << std::endl;
+    E_n = 2. * hbar * hbar * eta * eta / pot_width / pot_width / mass;
+    std::cout << "#" << nlevel << " solution for eta = " << eta << "  E_n =" << E_n << std::endl;
   }
 
 

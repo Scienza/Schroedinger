@@ -9,7 +9,7 @@ Output are the energy and technical results of the algorithm, plus the resulting
 Numerov solver takes in input an energy bracket in which to look for solution. Increasing from the minimum energy, it takes the lowest energy non-trivial solution as the one that respects boundary conditions.
 
 ### Requisites
-- g++ (version newer than 6.0, due to src implementation of Hermite polynomials)
+- g++ (version newer than 6.0, due to src implementation of Hermite polynomials in std available in C++17)
 - git 
 - CMake
 
