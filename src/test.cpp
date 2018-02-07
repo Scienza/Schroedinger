@@ -6,9 +6,9 @@ wavefcuntion: $A*sin(n \pi/L * x)$
 Analytically exact
 nlevel > 0,
 */
-void box_wf(int nlevel, int nbox, double* wavefunction){
+double box_wf(int nlevel, int nbox, double* wavefunction){
   double boxLength = (nbox) * dx;
-  double Energy = nlevel * nlevel * pi * pi * hbar * hbar / 2. / mass / boxLength / boxLength;
+  double E_n = nlevel * nlevel * pi * pi * hbar * hbar / 2. / mass / boxLength / boxLength;
   double norm = sqrt(2/boxLength);
 
   for(int i=0; i<nbox; i++){
@@ -18,6 +18,7 @@ void box_wf(int nlevel, int nbox, double* wavefunction){
 //    std::cout << x - boxLength/2. << " " << wavefunction[i] << std::endl;
   }
   //
+  return E_n;
 }
 
 /*! Calculates the analytical wavefunction of a particle in a finite potential
@@ -28,7 +29,7 @@ box is a finite overlay on top of the finite well, instead of an exact contiuum.
 Check by expanding the box, and/or deepening the potential.
 nlevel > 1
 */
-void finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height, double* wavefunction){
+double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height, double* wavefunction){
   // double boxLength = nbox * dx;
 
   std::cout << "width: "<< pot_width << " height: " << pot_height << std::endl;
@@ -108,6 +109,8 @@ void finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height, d
   for (int i = 0; i <= nbox; i++)
       wavefunction[i] = wavefunction[i] / sqrt(norm);
   //
+
+  return E_n;
 }
 
 double H3(double x) { return 8*std::pow(x,3) - 12*x; }
@@ -117,7 +120,7 @@ inline int factorial(int x, int result = 1) {
   if (x == 1 || x == 0) return result; else return factorial(x - 1, x * result);
 }
 
-void harmonic_wf(int nlevel, int nbox, double omega, double* wavefunction){
+double harmonic_wf(int nlevel, int nbox, double omega, double* wavefunction){
   double c = mass*omega/hbar;
   double E_n = hbar * omega * (nlevel+0.5);
 
@@ -134,5 +137,5 @@ void harmonic_wf(int nlevel, int nbox, double omega, double* wavefunction){
                     * exp(-c/2. * x*x) * std::hermite(nlevel,sqrt(c)*x);
     //remember to translate by half box length, eventually
   }
-
+  return E_n;
 }

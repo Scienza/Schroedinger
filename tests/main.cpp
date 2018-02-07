@@ -12,14 +12,16 @@ namespace {
 
         numerov_Wf[0] = 0.;
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-        solve_Numerov(0., 2., 0.01, nbox, &ho_potential, numerov_Wf);
+        double E_numerov = solve_Numerov(0., 2., 0.01, nbox, &ho_potential, numerov_Wf);
 
-        harmonic_wf(0,nbox, 1., analytic_Wf);
+        double E_analytic = harmonic_wf(0,nbox, 1., analytic_Wf);
 
         for(int i=0; i < nbox; i++){
 //          std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
           ASSERT_TRUE(fabs(numerov_Wf[i] - analytic_Wf[i]) < 1e-5 );
         }
+
+        ASSERT_TRUE(fabs(E_numerov - E_analytic) < 1e-5 );
     }
 
     TEST(WfTest,Box){
@@ -29,14 +31,17 @@ namespace {
 
         numerov_Wf[0] = 0.;
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-        solve_Numerov(0., 2., 0.01, nbox, &box_potential, numerov_Wf);
+        double E_numerov = solve_Numerov(0., 2., 0.01, nbox, &box_potential, numerov_Wf);
 
-        box_wf(1,nbox, analytic_Wf);
+        double E_analytic = box_wf(1,nbox, analytic_Wf);
         for(int i=0; i <= nbox; i++){
-            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
+//            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
           // Check that the box is of the same dimension for numerov and analytical
             ASSERT_TRUE(fabs(numerov_Wf[i] - analytic_Wf[i]) < err*10 );
         }
+
+        ASSERT_TRUE(fabs(E_numerov - E_analytic) < 1e-5 );
+
     }
 
     TEST(WfTest,FiniteWell){
@@ -47,13 +52,16 @@ namespace {
 
         numerov_Wf[0] = 0.;
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-        solve_Numerov(0., 2., 0.01, nbox, &finite_well_potential, numerov_Wf);
+        double E_numerov = solve_Numerov(0., 2., 0.01, nbox, &finite_well_potential, numerov_Wf);
 
-        finite_well_wf(1, nbox, width, height, analytic_Wf);
+        double E_analytic = finite_well_wf(1, nbox, width, height, analytic_Wf);
         for(int i=0; i < nbox; i++){
 //            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << finite_well_potential((-nbox/2 + i)*dx) << std::endl;
             ASSERT_TRUE(fabs(numerov_Wf[i] - analytic_Wf[i]) < 1e-2 );
         }
+
+        ASSERT_TRUE(fabs(E_numerov - E_analytic) < 1e-3 );
+
     }
 }
 

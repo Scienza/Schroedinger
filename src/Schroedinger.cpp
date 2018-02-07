@@ -42,8 +42,6 @@ void fsol_Numerov(double Energy, int nbox, double (*potential)(double), double *
 
       wavefunction[i]/= ( 1. + (  c)*(- Energy + (*potential)(x)) );
     }*/
-
-    return;
 }
 
 /*! \brief a solver of differential equation using Numerov algorithm and selecting non-trivial solutions.
@@ -58,7 +56,7 @@ is the exponential. But my boundary conditions impose 0 at both beginning and en
 of the wavefunction, so you have to try until you find such solution by finding
  where the exponential solution changes sign.
 */
-void solve_Numerov(double Emin, double Emax, double Estep,
+double solve_Numerov(double Emin, double Emax, double Estep,
                    int nbox, double (*potential)(double), double *wavefunction) {
 
     double c, x, first_step, norm, Energy, Solution_Energy;
@@ -103,7 +101,7 @@ void solve_Numerov(double Emin, double Emax, double Estep,
         wavefunction[i] = wavefunction[i] / sqrt(norm);
     // for (int i = 0; i <= nbox; i++)
     //     std::cout << (-nbox / 2 + i) * dx << "  " << wavefunction[i] << " " << (*potential)((-nbox / 2 + i) * dx) << std::endl;
-    // return;
+    return Solution_Energy;
 }
 
 /*! Applies a bisection algorith to the numerov method to find
