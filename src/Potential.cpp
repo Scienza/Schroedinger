@@ -12,8 +12,9 @@ Potential::Potential(std::vector<double> coord, std::string name){
 Potential::Potential(std::vector<double> coord, std::string name, double k)
 {
     this->x = coord;
-    std::transform(name.begin(), name.end(), name.begin(),::tolower); //make pot_name lowercase
+    this->v = x;
 
+    std::transform(name.begin(), name.end(), name.begin(),::tolower); //make pot_name lowercase
     if(name.compare("box potential") == 0 || name.compare("box") == 0 || name.compare("0") == 0)
         this->box_potential();
     else if(name.compare("harmonic oscillator") == 0 || name.compare("ho") == 0 ||  name.compare("1") == 0)
@@ -48,9 +49,8 @@ std::vector<double> Potential::get_v() {
 
 void Potential::ho_potential(double k)
 {
-  for(std::vector<int>::size_type i = 0; i < x.size(); i++) {
-      this->v[i] = this->x[i] * this->x[i] * k;
-  }
+    for(std::vector<int>::size_type i = 0; i < x.size(); i++)
+        this->v[i] = this->x[i] * this->x[i] * k;
 }
 
 void Potential::box_potential()
