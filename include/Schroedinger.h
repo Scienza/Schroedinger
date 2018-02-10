@@ -15,9 +15,11 @@
 #include <vector>
 #include <string>
 
+#include "Potential.h"
+
 
 double trap_array(int, int, double, double *);
-void fsol_Numerov(double, int, double (*pot)(double), double *);
-double solve_Numerov(double, double, double, int, double (*pot)(double), double *);
-double bisec_Numer(double, double, int, double (*pot)(double), double *);
+void fsol_Numerov(double, int, Potential, double *);
+double solve_Numerov(double, double, double, int, Potential, double *);
+double bisec_Numer(double, double, int, Potential, double *);
 #endif

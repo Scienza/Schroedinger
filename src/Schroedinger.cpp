@@ -19,16 +19,18 @@ by considering
 \left( 1+ \frac{h^2}{12} v(x+h) \right) f(x+h) = 2 \left( 1 - \frac{5h^2}{12} v(x) \right) f(x) - \left( 1 + \frac{h^2}{12} v(x-h) \right) f(x-h).
 for the Shroedinger equation v(x) = V(x) - E, where V(x) is the potential and E the eigenenergy
 */
-void fsol_Numerov(double Energy, int nbox, double (*potential)(double), double *wavefunction) {
+void fsol_Numerov(double Energy, int nbox, Potential V, double *wavefunction) {
     double c, x;
+    std::vector<double> potential = V.get_v();
+
     c = (2. * mass / hbar / hbar) * (dx * dx / 12.);
     //Build Numerov f(x) solution from left.
     for (int i = 2; i <= nbox; i++) {
         x = (-nbox / 2 + i) * dx;
 
-        wavefunction[i] = 2 * (1. - (5 * c) * (Energy - (*potential)(x - dx))) * wavefunction[i - 1]
-                  - (1. + (c) * (Energy - (*potential)(x - 2 * dx))) * wavefunction[i - 2];
-        wavefunction[i] /= (1. + (c) * (Energy - (*potential)(x)));
+        wavefunction[i] = 2 * (1. - (5 * c) * (Energy - potential[i-1])) * wavefunction[i - 1]
+                  - (1. + (c) * (Energy - potential[i-2])) * wavefunction[i - 2];
+        wavefunction[i] /= (1. + (c) * (Energy - potential[i]));
     }
 
     /* //right solution
@@ -57,7 +59,7 @@ of the wavefunction, so you have to try until you find such solution by finding
  where the exponential solution changes sign.
 */
 double solve_Numerov(double Emin, double Emax, double Estep,
-                   int nbox, double (*potential)(double), double *wavefunction) {
+                   int nbox, Potential V, double *wavefunction) {
 
     double c, x, first_step, norm, Energy, Solution_Energy;
     int n, sign;
@@ -69,8 +71,9 @@ double solve_Numerov(double Emin, double Emax, double Estep,
         Energy = Emin + n * Estep;
         // wavefunction[1] = first_step;
 
-        fsol_Numerov(Energy, nbox, *potential, wavefunction);
+        fsol_Numerov(Energy, nbox, V, wavefunction);
         // std::coutS << "# Energy = " << Energy << "  " << wavefunction[nbox] << std::endl;
+
 
         if (fabs(wavefunction[nbox]) < err) {
           std::cout << "#solution found" << wavefunction[nbox] << std::endl;
@@ -84,7 +87,7 @@ double solve_Numerov(double Emin, double Emax, double Estep,
         // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus calls bisection rule.
         if (sign * wavefunction[nbox] < 0) {
           std::cout << "#bisection " << wavefunction[nbox] << std::endl;
-          Solution_Energy = bisec_Numer(Energy - Estep, Energy + Estep, nbox, *potential, wavefunction);
+          Solution_Energy = bisec_Numer(Energy - Estep, Energy + Estep, nbox, V, wavefunction);
             break;
         }
     }
@@ -108,7 +111,7 @@ double solve_Numerov(double Emin, double Emax, double Estep,
 the energy that gives the non-trivial (non-exponential) solution
 with the correct boundary conditions (@param wavefunction[0] == @param wavefunction[@param nbox] == 0)
 */
-double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(double), double *wavefunction) {
+double bisec_Numer(double Emin, double Emax, int nbox, Potential V, double *wavefunction) {
     double Emiddle, fx1, fb, fa;
     std::cout.precision(17);
 
@@ -118,9 +121,9 @@ double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(doubl
     std::cout << "#itmax=" << itmax << std::endl;
     for (int i = 0; i < itmax; i++) {
         Emiddle = (Emax + Emin) / 2.;
-        fsol_Numerov(Emiddle, nbox, *potential, wavefunction);
+        fsol_Numerov(Emiddle, nbox, V, wavefunction);
         fx1 = wavefunction[nbox];
-        fsol_Numerov(Emax, nbox, *potential, wavefunction);
+        fsol_Numerov(Emax, nbox, V, wavefunction);
         fb = wavefunction[nbox];
 
         if (std::abs(fx1) < err) {
@@ -131,7 +134,7 @@ double bisec_Numer(double Emin, double Emax, int nbox, double (*potential)(doubl
         if (fb * fx1 < 0.) {
             Emin = Emiddle;
         } else {
-            fsol_Numerov(Emin, nbox, *potential, wavefunction);
+            fsol_Numerov(Emin, nbox, V, wavefunction);
             fa = wavefunction[nbox];
 
             if (fa * fx1 < 0.)

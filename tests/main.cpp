@@ -67,5 +67,14 @@ namespace {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
+    int nbox = 1000;
+    std::vector x(nbox), pot;
+
+    for(std::vector<int>::size_type i = 0; i < x.size(); i++)
+        x[i] = dx*i;
+
+    Potential v(x);
+
+    pot = v.get_v();
     return RUN_ALL_TESTS();
 }

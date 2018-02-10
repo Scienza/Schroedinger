@@ -1,4 +1,4 @@
- #ifndef POTENTIAL
+#ifndef POTENTIAL
 #define POTENTIAL
 
 #include <iostream>
@@ -6,7 +6,7 @@
 #include <string>
 #include <algorithm>
 
- class Potential {
+class Potential {
 private:
     std::vector<double> x;
     std::vector<double> v;
@@ -14,7 +14,7 @@ private:
 
     void ho_potential(double);
     void box_potential();
-    void finite_well_potential();
+    void finite_well_potential(double, double);
 
 public:
     Potential(std::vector<double>);

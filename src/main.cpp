@@ -2,16 +2,24 @@
 #include <string>
 #include "test.h"
 #include "Schroedinger.h"
-#include "potentials.h"
+#include "Potential.h"
 
 int main(int argc, char **argv) {
     int nbox = 1000;
     double step = 0.01, norm;
     double *wavefunction = new double[nbox];
+    std::vector x(nbox), pot;
+
+    for(std::vector<int>::size_type i = 0; i < x.size(); i++)
+        x[i] = dx*i;
+
+    Potential v(x);
+    pot = v.get_v();
+
 
     wavefunction[0] = 0.;
     wavefunction[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-    solve_Numerov(0., 2., step, nbox, &potential, wavefunction);
+    solve_Numerov(0., 2., step, nbox, pot, wavefunction);
 
    return 0;
 }
