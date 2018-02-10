@@ -12,6 +12,10 @@ private:
     std::vector<double> v;
     std::string pot_name;
 
+    void ho_potential(double);
+    void box_potential();
+    void finite_well_potential();
+
 public:
     Potential(std::vector<double>);
     Potential(std::vector<double>, std::string);
@@ -19,10 +23,6 @@ public:
     Potential(std::vector<double>, std::string, double, double);
 
     std::vector<double> get_v();
-
-    void box_potential();
-    void ho_potential(double);
-    void finite_well_potential(double, double);
 };
 
 #endif
