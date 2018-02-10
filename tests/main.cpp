@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "../include/Schroedinger.h"
 #include "../include/test.h"
-#include "../include/potentials.h"
+#include "../include/Potential.h"
 
 namespace {
 //
