@@ -12,6 +12,9 @@
 
 #include <cmath>
 #include <iostream>
+#include <vector>
+#include <string>
+
 
 double trap_array(int, int, double, double *);
 void fsol_Numerov(double, int, double (*pot)(double), double *);
