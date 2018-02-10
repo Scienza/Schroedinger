@@ -13,7 +13,7 @@ namespace {
         std::vector<double> x(nbox), pot;
 
         for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            x[i] = dx*i;
+            x[i] = dx*(i-nbox/2);
 
         Potential V(x);
         std::cout << "Calculating Numerov" << std::endl;
@@ -26,11 +26,11 @@ namespace {
         double E_analytic = harmonic_wf(0,nbox, 1., analytic_Wf);
 
         for(std::vector<int>::size_type i = 0; i < x.size(); i++){
-            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
-            ASSERT_TRUE(fabs(numerov_Wf[i] - analytic_Wf[i]) < 1e-5 );
+            std::cout << i << " " << x[i] << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
+//            EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], 1e-5 );
         }
 
-        ASSERT_TRUE(fabs(E_numerov - E_analytic) < 1e-5 );
+        ASSERT_NEAR(E_numerov, E_analytic, 1e-5 );
     }
 
 //    TEST(WfTest,Box){

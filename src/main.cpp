@@ -5,13 +5,13 @@
 #include "Potential.h"
 
 int main(int argc, char **argv) {
-    int nbox = 1000;
+    unsigned int nbox = 1000;
     double step = 0.01, norm;
     double *wavefunction = new double[nbox];
     std::vector<double> x(nbox);
 
     for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-        x[i] = dx*i;
+        x[i] = dx*(i-nbox/2);
 
     Potential V(x);
 

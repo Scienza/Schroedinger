@@ -61,7 +61,7 @@ of the wavefunction, so you have to try until you find such solution by finding
 double solve_Numerov(double Emin, double Emax, double Estep,
                    int nbox, Potential V, double *wavefunction) {
 
-    double c, x, first_step, norm, Energy, Solution_Energy;
+    double c, x, first_step, norm, Energy, Solution_Energy = 0.;
     int n, sign;
 
     double *probab = new double[nbox];
