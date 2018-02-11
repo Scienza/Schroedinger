@@ -42,7 +42,7 @@ namespace {
             x[i] = dx * (int) (i - nbox / 2);
         }
 
-        Potential V(x, "box");
+        Potential V(x, "box", 0.5);
         V.get_v(); //ERRORE, get_v() appare vuoto!!
 
         numerov_Wf[0] = 0.;
