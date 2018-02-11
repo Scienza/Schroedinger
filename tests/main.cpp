@@ -43,7 +43,6 @@ namespace {
         }
 
         Potential V(x, "box", 0.5);
-        V.get_v(); //ERRORE, get_v() appare vuoto!!
 
         numerov_Wf[0] = 0.;
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number

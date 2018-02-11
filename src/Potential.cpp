@@ -1,5 +1,9 @@
 #include "../include/Potential.h"
 
+std::vector<double> Potential::get_v() {
+    return this->v;
+}
+
 
 Potential::Potential(std::vector<double> coord) : Potential(coord, "harmonic oscillator", 0.5) {}
 Potential::Potential(std::vector<double> coord, std::string name){
@@ -52,14 +56,6 @@ Potential::Potential(std::vector<double> coord, std::string name, double height,
     }
 }
 
-
-std::vector<double> Potential::get_v() {
-    for (auto i = this->v.begin(); i != this->v.end(); ++i)
-        std::cout << *i << ' ';
-    std::cout << "machecazz" << std::endl;
-    return this->v;
-}
-
 void Potential::ho_potential(double k)
 {
     for(std::vector<int>::size_type i = 0; i < x.size(); i++)
@@ -69,10 +65,6 @@ void Potential::ho_potential(double k)
 void Potential::box_potential()
 {
     std::fill(this->v.begin(), this->v.end(), 0.);
-    for (auto i = this->v.begin(); i != this->v.end(); ++i)
-        std::cout << *i << ' ';
-    std::cout << "end" << std::endl;
-
 }
 
 void Potential::finite_well_potential(double height, double width)
