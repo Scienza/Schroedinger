@@ -39,7 +39,7 @@ std::vector<double> Potential::get_v() {
 //    }
 //}
 
-Potential::Potential(Builder builder){
+Potential::Potential(Potential::Builder* builder){
     std::cout << this->pot_name << " ?" << this->x.size() << std::endl;
     std::string name = this->pot_name;
 //    this->x = coord;

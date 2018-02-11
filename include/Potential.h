@@ -52,7 +52,7 @@ private:
 
     };
 
-    Potential(Builder);
+    Potential(Builder*);
 
 //    Potential(std::vector<double>);
 //    Potential(std::vector<double>, std::string);
