@@ -3,7 +3,8 @@
 
 Potential::Potential(std::vector<double> coord) : Potential(coord, "harmonic oscillator", 0.5) {}
 Potential::Potential(std::vector<double> coord, std::string name){
-    if(name.compare("finite well potential") || name.compare("well") || name.compare("2") )
+
+    if(name.compare("finite well potential") == 0 || name.compare("well") == 0|| name.compare("2") == 0 )
         Potential(coord, name, 10., 5.);
     else
         Potential(coord, name, 0.5);
@@ -11,15 +12,18 @@ Potential::Potential(std::vector<double> coord, std::string name){
 
 Potential::Potential(std::vector<double> coord, std::string name, double k)
 {
+    std::cout << name << " " << coord.size() << std::endl;
+
     this->x = coord;
     this->v = x;
+    this->pot_name = name;
 
     std::transform(name.begin(), name.end(), name.begin(),::tolower); //make pot_name lowercase
     if(name.compare("box potential") == 0 || name.compare("box") == 0 || name.compare("0") == 0)
         this->box_potential();
     else if(name.compare("harmonic oscillator") == 0 || name.compare("ho") == 0 ||  name.compare("1") == 0)
         this->ho_potential(k);
-    else if(name.compare("finite well potential") || name.compare("well") || name.compare("2") ) {
+    else if(name.compare("finite well potential") == 0 || name.compare("well") == 0|| name.compare("2") == 0 ) {
         //        this->finite_well_potential();
         std::cerr << "! ERROR: wrong initialization !\n"
                 << "! finite well potential needs two variables, not one! " << std::endl;
@@ -32,6 +36,12 @@ Potential::Potential(std::vector<double> coord, std::string name, double k)
 }
 
 Potential::Potential(std::vector<double> coord, std::string name, double height, double width){
+    std::cout << name << " ?" << coord.size() << std::endl;
+
+    this->x = coord;
+    this->v = x;
+    this->pot_name = name;
+
     if(name.compare("finite well potential") || name.compare("well") || name.compare("2") ){
       this->finite_well_potential(height, width);
     }
@@ -44,6 +54,9 @@ Potential::Potential(std::vector<double> coord, std::string name, double height,
 
 
 std::vector<double> Potential::get_v() {
+    for (auto i = this->v.begin(); i != this->v.end(); ++i)
+        std::cout << *i << ' ';
+    std::cout << "machecazz" << std::endl;
     return this->v;
 }
 
@@ -55,7 +68,11 @@ void Potential::ho_potential(double k)
 
 void Potential::box_potential()
 {
-  std::fill(this->v.begin(), this->v.end(), 0);
+    std::fill(this->v.begin(), this->v.end(), 0.);
+    for (auto i = this->v.begin(); i != this->v.end(); ++i)
+        std::cout << *i << ' ';
+    std::cout << "end" << std::endl;
+
 }
 
 void Potential::finite_well_potential(double height, double width)

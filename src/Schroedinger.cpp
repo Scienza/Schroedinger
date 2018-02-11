@@ -76,7 +76,7 @@ double solve_Numerov(double Emin, double Emax, double Estep,
 
 
         if (fabs(wavefunction[nbox]) < err) {
-          std::cout << "#solution found" << wavefunction[nbox] << std::endl;
+            std::cout << "#solution found" << wavefunction[nbox] << std::endl;
             Solution_Energy = Energy;
             break;
         }
