@@ -16,7 +16,7 @@ private:
     void box_potential();
     void finite_well_potential(double, double);
 
-    class Builder{
+private: class Builder{
 
     public:
         std::vector<double> x;
@@ -52,13 +52,13 @@ private:
 
     };
 
-    Potential(Builder*);
+private: Potential(Builder);
 
 //    Potential(std::vector<double>);
 //    Potential(std::vector<double>, std::string);
 //    Potential(std::vector<double>, std::string, double);
 
-
+public:
     std::vector<double> get_v();
 };
 

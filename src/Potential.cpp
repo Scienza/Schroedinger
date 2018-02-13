@@ -39,7 +39,7 @@ std::vector<double> Potential::get_v() {
 //    }
 //}
 
-Potential::Potential(Potential::Builder* builder){
+Potential::Potential(Potential::Builder builder){
     std::cout << this->pot_name << " ?" << this->x.size() << std::endl;
     std::string name = this->pot_name;
 //    this->x = coord;
@@ -47,7 +47,7 @@ Potential::Potential(Potential::Builder* builder){
 //    this->pot_name = name;
 
     if(name.compare("finite well potential") || name.compare("well") || name.compare("2") ){
-      this->finite_well_potential(builder->height, builder->width);
+      this->finite_well_potential(builder.height, builder.width);
     }
     else{
         std::cerr << "! ERROR: wrong potential name!\n! Potential" << name << "not known!\n"
