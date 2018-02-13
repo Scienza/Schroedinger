@@ -47,7 +47,6 @@ namespace {
 //        Potential V(x, "box", 0.5);
         Potential::Builder b(x);
         Potential V = b.addName("box")
-                        .addK(0.5)
                         .build();
 
         numerov_Wf[0] = 0.;
