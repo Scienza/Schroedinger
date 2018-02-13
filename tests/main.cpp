@@ -15,7 +15,9 @@ namespace {
         for(std::vector<int>::size_type i = 0; i < x.size(); i++)
             x[i] = dx * (int) (i - nbox / 2);
 
-        Potential V(x);
+        Potential::Builder b(x);
+        Potential V = b.build();
+
 
         numerov_Wf[0] = 0.;
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
@@ -42,7 +44,11 @@ namespace {
             x[i] = dx * (int) (i - nbox / 2);
         }
 
-        Potential V(x, "box", 0.5);
+//        Potential V(x, "box", 0.5);
+        Potential::Builder b(x);
+        Potential V = b.addName("box")
+                        .addK(0.5)
+                        .build();
 
         numerov_Wf[0] = 0.;
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
@@ -72,7 +78,10 @@ namespace {
         for(std::vector<int>::size_type i = 0; i < x.size(); i++)
             x[i] = dx * (int) (i - nbox / 2);
 
-        Potential V(x, "well", 10., 5.);
+//        Potential V(x, "well", 10., 5.);
+        Potential::Builder b(x);
+        Potential V = b.addName("well")
+                        .build();
 
         numerov_Wf[0] = 0.;
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number

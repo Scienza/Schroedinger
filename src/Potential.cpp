@@ -39,15 +39,21 @@ std::vector<double> Potential::get_v() {
 //    }
 //}
 
-Potential::Potential(Potential::Builder builder){
+Potential::Potential(std::vector<double> coord, std::string name, double k, double width, double height){
     std::cout << this->pot_name << " ?" << this->x.size() << std::endl;
-    std::string name = this->pot_name;
-//    this->x = coord;
-//    this->v = x;
-//    this->pot_name = name;
+    this->x = coord;
+    this->v = x;
+    this->k = k;
+    this->width = width;
+    this->height = height;
+    this->pot_name = name;
 
-    if(name.compare("finite well potential") || name.compare("well") || name.compare("2") ){
-      this->finite_well_potential(builder.height, builder.width);
+    if(name.compare("box potential") == 0 || name.compare("box") == 0 || name.compare("0") == 0)
+        this->box_potential();
+    else if(name.compare("harmonic oscillator") == 0 || name.compare("ho") == 0 ||  name.compare("1") == 0)
+        this->ho_potential(k);
+    else if(name.compare("finite well potential") || name.compare("well") || name.compare("2") ){
+      this->finite_well_potential(this->height, this->width);
     }
     else{
         std::cerr << "! ERROR: wrong potential name!\n! Potential" << name << "not known!\n"

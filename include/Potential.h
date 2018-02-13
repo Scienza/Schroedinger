@@ -10,36 +10,39 @@ class Potential {
 private:
     std::vector<double> x;
     std::vector<double> v;
+    double k;
+    double width;
+    double height;
     std::string pot_name;
 
     void ho_potential(double);
     void box_potential();
     void finite_well_potential(double, double);
 
-private: class Builder{
+public: class Builder{
 
-    public:
+    private:
         std::vector<double> x;
-        std::vector<double> v;
         double k = 0.5;
         double width = 5.;
-        double height = 10;
-        std::string pot_name;
+        double height = 10.;
+        std::string pot_name = "ho";
 
-        Builder(std::vector<double> x) {
-            this->x = x;
+    public:
+        Builder(std::vector<double> x_new) {
+            this->x = x_new;
         }
 
-        Builder addK(double k){
-            this->k = k;
+        Builder addK(double k_new){
+            this->k = k_new;
         }
 
-        Builder addWidth(double width){
-            this->width = width;
+        Builder addWidth(double width_new){
+            this->width = width_new;
         }
 
-        Builder addHeight(double height){
-            this->height = height;
+        Builder addHeight(double height_new){
+            this->height = height_new;
         }
 
         Builder addName(std::string name){
@@ -47,12 +50,14 @@ private: class Builder{
         }
 
         Potential build(){
-            return new Potential(this);
+            std::cout << this->k << std::endl;// here u loose the presetting
+            std::cout << "lol" << std::endl;
+            return Potential(this->x,this->pot_name,this->k,this->width,this->height);
         }
 
     };
 
-private: Potential(Builder);
+    Potential(std::vector<double>, std::string, double, double, double);
 
 //    Potential(std::vector<double>);
 //    Potential(std::vector<double>, std::string);

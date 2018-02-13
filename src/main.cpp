@@ -13,7 +13,8 @@ int main(int argc, char **argv) {
     for(std::vector<int>::size_type i = 0; i < x.size(); i++)
         x[i] = dx*(i-nbox/2);
 
-    Potential V(x);
+    Potential::Builder b(x);
+    Potential V = b.build();
 
     wavefunction[0] = 0.;
     wavefunction[1] = 0.2; //later on it gets renormalized, so is just a conventional number
