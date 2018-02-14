@@ -40,7 +40,7 @@ std::vector<double> Potential::get_v() {
 //}
 
 Potential::Potential(std::vector<double> coord, std::string name, double k, double width, double height){
-    std::cout << this->pot_name << " ?" << this->x.size() << std::endl;
+//    std::cout << this->pot_name << " ?" << this->x.size() << std::endl;
     this->x = coord;
     this->v = x;
     this->k = k;
@@ -57,7 +57,7 @@ Potential::Potential(std::vector<double> coord, std::string name, double k, doub
     }
     else{
         std::cerr << "! ERROR: wrong potential name!\n! Potential" << name << "not known!\n"
-                  << "! or initialization with two variables meaningless" << std::endl;
+                  << "! or initialization meaningless" << std::endl;
         exit(8);
     }
 }

@@ -26,36 +26,34 @@ public: class Builder{
         double k = 0.5;
         double width = 5.;
         double height = 10.;
-        std::string pot_name = "ho";
+        std::string pot_name = "box";
 
     public:
         Builder(std::vector<double> x_new) {
             this->x = x_new;
         }
 
-        Builder addK(double k_new){
+        Builder setK(double k_new){
             this->k = k_new;
             return *this;
         }
 
-        Builder addWidth(double width_new){
+        Builder setWidth(double width_new){
             this->width = width_new;
             return *this;
         }
 
-        Builder addHeight(double height_new){
+        Builder setHeight(double height_new){
             this->height = height_new;
             return *this;
         }
 
-        Builder addName(std::string name){
+        Builder setType(std::string name){
             this->pot_name = name;
             return *this;
         }
 
         Potential build(){
-            std::cout << this->k << " K" << std::endl;// here u loose the presetting
-            std::cout << "lol" << std::endl;
             return Potential(this->x,this->pot_name,this->k,this->width,this->height);
         }
 

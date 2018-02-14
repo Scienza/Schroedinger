@@ -1,10 +1,20 @@
+#define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
+
 #include <gtest/gtest.h>
+
 #include "../include/Schroedinger.h"
 #include "../include/test.h"
-#include "../include/Potential.h"
+
+double H3(double x) { return 8*std::pow(x,3) - 12*x; }
+double H4(double x) { return 16*std::pow(x,4)-48*x*x+12; }
 
 namespace {
 //
+    TEST(NumTest,Hermite){
+        ASSERT_NEAR(std::hermite(3, 10.), H3(10.),err);
+        ASSERT_NEAR(std::hermite(4, 4.3), H4(4.3),err);
+    }
+
     TEST(WfTest,HarmonicOscillator){
         unsigned int nbox = 1000;
         double *numerov_Wf = new double[nbox];
@@ -16,7 +26,9 @@ namespace {
             x[i] = dx * (int) (i - nbox / 2);
 
         Potential::Builder b(x);
-        Potential V = b.build();
+        Potential V = b.setType("ho")
+                        .setK(0.5)
+                        .build();
 
 
         numerov_Wf[0] = 0.;
@@ -46,12 +58,11 @@ namespace {
 
 //        Potential V(x, "box", 0.5);
         Potential::Builder b(x);
-        Potential V = b.addName("box")
+        Potential V = b.setType("box")
                         .build();
 
         numerov_Wf[0] = 0.;
         numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-        std::cout << "asd numm" << std::endl;
 
         double E_numerov = solve_Numerov(0., 2., 0.01, nbox, V, numerov_Wf);
 
@@ -79,7 +90,9 @@ namespace {
 
 //        Potential V(x, "well", 10., 5.);
         Potential::Builder b(x);
-        Potential V = b.addName("well")
+        Potential V = b.setType("well")
+                        .setHeight(height)
+                        .setWidth(width)
                         .build();
 
         numerov_Wf[0] = 0.;
