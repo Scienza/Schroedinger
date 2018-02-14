@@ -8,18 +8,17 @@
 double H3(double x) { return 8*std::pow(x,3) - 12*x; }
 double H4(double x) { return 16*std::pow(x,4)-48*x*x+12; }
 
-void testWf(unsigned int nbox, double k, double width, double height,
-            std::vector<double> x, std::vector<double> pot,
+void testWf(unsigned int nbox, std::string potType, double k, double width, double height,
+            std::vector<double> x, std::vector<double>* pot,
             double* numerov_Wf, double* analytic_Wf){
 
-//        Potential V(x, "well", 10., 5.);
     Potential::Builder b(x);
-    Potential V = b.setType("well")
+    Potential V = b.setType(potType)
             .setHeight(height)
             .setWidth(width)
             .build();
 
-    pot = V.get_v();
+    *pot = V.get_v();
 
     numerov_Wf[0] = 0.;
     numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
@@ -27,7 +26,6 @@ void testWf(unsigned int nbox, double k, double width, double height,
 
     double E_analytic = finite_well_wf(1, nbox, width, height, analytic_Wf);
     for(int i=0; i < nbox; i++){
-//            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << finite_well_potential((-nbox/2 + i)*dx) << std::endl;
         EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], 1e-2 );
      }
 
@@ -136,39 +134,32 @@ namespace {
     }
 
 //
-    TEST(WfTest,FiniteWell){
-        unsigned int nbox = 1000;
-        double width = 5., height = 10.;
+    TEST(WfTest,FiniteWell1){
+        unsigned int nbox = 1500;
+        std::string s = "well";
+
+        double width = 10., height = 3.;
         double *numerov_Wf = new double[nbox];
         double *analytic_Wf = new double[nbox];
-        std::vector<double> x(nbox), pot;
+        std::vector<double> x(nbox), pot(nbox);
 
         for(std::vector<int>::size_type i = 0; i < x.size(); i++)
             x[i] = dx * (int) (i - nbox / 2);
 
-//        Potential V(x, "well", 10., 5.);
-        Potential::Builder b(x);
-        Potential V = b.setType("well")
-                        .setHeight(height)
-                        .setWidth(width)
-                        .build();
+        testWf(nbox, s, 0., width, height, x, &pot, numerov_Wf, analytic_Wf);
 
-        numerov_Wf[0] = 0.;
-        numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-        double E_numerov = solve_Numerov(0., 2., 0.01, nbox, V, numerov_Wf);
-
-        double E_analytic = finite_well_wf(1, nbox, width, height, analytic_Wf);
-        for(int i=0; i < nbox; i++){
-//            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << finite_well_potential((-nbox/2 + i)*dx) << std::endl;
-            EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], 1e-2 );
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
         }
-
-        ASSERT_NEAR(E_numerov, E_analytic, 1e-3 );
 
     }
 
     TEST(WfTest,FiniteWell2){
         unsigned int nbox = 1000;
+        std::string s = "well";
+
         double width = 7., height = 5.;
         double *numerov_Wf = new double[nbox];
         double *analytic_Wf = new double[nbox];
@@ -177,7 +168,7 @@ namespace {
         for(std::vector<int>::size_type i = 0; i < x.size(); i++)
             x[i] = dx * (int) (i - nbox / 2);
 
-        testWf(nbox, 0., width, height, x, pot, numerov_Wf, analytic_Wf);
+        testWf(nbox, s,  0., width, height, x, &pot, numerov_Wf, analytic_Wf);
 
         if(HasFailure()){
             for(int i=0; i < nbox; i++)
