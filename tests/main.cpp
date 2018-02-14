@@ -5,8 +5,8 @@
 #include "../include/Schroedinger.h"
 #include "../include/test.h"
 
-double H3(double x) { return 8*std::pow(x,3) - 12*x; }
-double H4(double x) { return 16*std::pow(x,4)-48*x*x+12; }
+double H3(double x) { return  8*std::pow(x,3) - 12*x; }
+double H4(double x) { return 16*std::pow(x,4) - 48*x*x+12; }
 
 void testWf(unsigned int nbox, std::string potType, double k, double width, double height,
             std::vector<double> x, std::vector<double>* pot,
@@ -14,17 +14,28 @@ void testWf(unsigned int nbox, std::string potType, double k, double width, doub
 
     Potential::Builder b(x);
     Potential V = b.setType(potType)
-            .setHeight(height)
-            .setWidth(width)
-            .build();
+                    .setK(k)
+                    .setHeight(height)
+                    .setWidth(width)
+                    .build();
 
     *pot = V.get_v();
 
     numerov_Wf[0] = 0.;
     numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
     double E_numerov = solve_Numerov(0., 2., 0.01, nbox, V, numerov_Wf);
+    double E_analytic =0.;
 
-    double E_analytic = finite_well_wf(1, nbox, width, height, analytic_Wf);
+    if(potType == "box"){
+        E_analytic = box_wf(1, nbox, analytic_Wf);
+    }else if(potType == "harmonic oscillator"){
+        E_analytic = harmonic_wf(0,nbox, 1., analytic_Wf);
+    }else if(potType == "well") {
+        E_analytic = finite_well_wf(1, nbox, width, height, analytic_Wf);
+    }else{
+        std::cerr << "ERROR! Wrong potential name in set" << std::endl;
+        exit(8);
+    }
     for(int i=0; i < nbox; i++){
         EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], 1e-2 );
      }
@@ -42,95 +53,63 @@ namespace {
 
     TEST(WfTest,HarmonicOscillator){
         unsigned int nbox = 1000;
+        std::string s = "harmonic oscillator";
+
         double *numerov_Wf = new double[nbox];
         double *analytic_Wf = new double[nbox];
-
-        std::vector<double> x(nbox), pot;
+        std::vector<double> x(nbox), pot(nbox);
 
         for(std::vector<int>::size_type i = 0; i < x.size(); i++)
             x[i] = dx * (int) (i - nbox / 2);
 
-        Potential::Builder b(x);
-        Potential V = b.setType("ho")
-                        .setK(0.5)
-                        .build();
+        testWf(nbox, s,  0.5, 0., 0., x, &pot, numerov_Wf, analytic_Wf);
 
-        numerov_Wf[0] = 0.;
-        numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-
-        double E_numerov = solve_Numerov(0., 2., 0.01, nbox, V, numerov_Wf);
-
-        double E_analytic = harmonic_wf(0,nbox, 1., analytic_Wf);
-
-        for(std::vector<int>::size_type i = 0; i < x.size(); i++){
-//            std::cout << i << " " << x[i] << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
-            EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], 1e-5 );
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
         }
 
-        ASSERT_NEAR(E_numerov, E_analytic, 1e-5 );
     }
 
     TEST(WfTest,Box){
         unsigned int nbox = 500;
-        double *numerov_Wf = new double[nbox+1];
-        double *analytic_Wf = new double[nbox+1];
-        std::vector<double> x(nbox), pot;
+        std::string s = "box";
 
-        for(std::vector<int>::size_type i = 0; i < x.size(); i++){
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> x(nbox), pot(nbox);
+
+        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
             x[i] = dx * (int) (i - nbox / 2);
+
+        testWf(nbox, s,  0., 0., 0., x, &pot, numerov_Wf, analytic_Wf);
+
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
         }
-
-//        Potential V(x, "box", 0.5);
-        Potential::Builder b(x);
-        Potential V = b.setType("box")
-                        .build();
-
-        numerov_Wf[0] = 0.;
-        numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-
-        double E_numerov = solve_Numerov(0., 2., 0.01, nbox, V, numerov_Wf);
-
-        double E_analytic = box_wf(1,nbox, analytic_Wf);
-
-        for(int i=0; i < nbox; i++){
-//            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
-          // Check that the box is of the same dimension for numerov and analytical
-            EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], err*10 );
-        }
-
-        ASSERT_NEAR(E_numerov, E_analytic, err*10 );
-
     }
 
     TEST(WfTest,Box2){
         unsigned int nbox = 1000;
-        double *numerov_Wf = new double[nbox+1];
-        double *analytic_Wf = new double[nbox+1];
-        std::vector<double> x(nbox), pot;
+        std::string s = "box";
 
-        for(std::vector<int>::size_type i = 0; i < x.size(); i++){
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> x(nbox), pot(nbox);
+
+        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
             x[i] = dx * (int) (i - nbox / 2);
+
+        testWf(nbox, s,  0., 0., 0., x, &pot, numerov_Wf, analytic_Wf);
+
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
         }
-
-//        Potential V(x, "box", 0.5);
-        Potential::Builder b(x);
-        Potential V = b.setType("box")
-                .build();
-
-        numerov_Wf[0] = 0.;
-        numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-
-        double E_numerov = solve_Numerov(0., 2., 0.01, nbox, V, numerov_Wf);
-
-        double E_analytic = box_wf(1,nbox, analytic_Wf);
-
-        for(int i=0; i < nbox; i++){
-//            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
-            // Check that the box is of the same dimension for numerov and analytical
-            EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], err*100 );
-        }
-
-        ASSERT_NEAR(E_numerov, E_analytic, err*10 );
     }
 
 //
@@ -153,7 +132,6 @@ namespace {
                 std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
                           << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
         }
-
     }
 
     TEST(WfTest,FiniteWell2){
@@ -175,7 +153,6 @@ namespace {
                 std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
                           << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
         }
-
     }
 }
 
