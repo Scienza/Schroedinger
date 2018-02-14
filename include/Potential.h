@@ -6,6 +6,21 @@
 #include <string>
 #include <algorithm>
 
+/*! Class Potential contains the potential used in the Schroedinger equation.
+ * takes the necessary input: std::vector x at definition Builder(x),
+ * it is as vector of position (or base states) to initialize the corresponding calculation.
+ * The initialization uses the Builder design pattern. So after creating Potential::Builder object, you can set the
+ * attributes and building using Potential V = object.setType("...").setK(0.).build()
+ * Other inputs:
+ * - string::pot_name, setType(string), sets the potential type that define a certain shape of the potential
+ *   ("box", "finite well", "harmonic oscillator")
+ * - double k, setK(double), sets the harmonic oscillator strength parameter
+ * - double width, setWidth(double), sets the finite well width.
+ * - double height, setHeight(double), set the finite well depth.
+ * Outputs:
+ * - v, the std::vector of output, the value of the potential for every value of x.
+ */
+
 class Potential {
 private:
     std::vector<double> x;
