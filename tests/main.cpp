@@ -68,7 +68,7 @@ namespace {
 
         double E_analytic = box_wf(1,nbox, analytic_Wf);
 
-        for(int i=0; i <= nbox; i++){
+        for(int i=0; i < nbox; i++){
 //            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
           // Check that the box is of the same dimension for numerov and analytical
             EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], err*10 );
@@ -100,14 +100,17 @@ namespace {
 
         double E_analytic = box_wf(1,nbox, analytic_Wf);
 
-        for(int i=0; i <= nbox; i++){
+        for(int i=0; i < nbox; i++){
 //            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << std::endl;
             // Check that the box is of the same dimension for numerov and analytical
             EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], err*100 );
         }
 
         ASSERT_NEAR(E_numerov, E_analytic, err*10 );
-
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
     }
 
 //
