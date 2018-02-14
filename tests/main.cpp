@@ -23,25 +23,26 @@ void testWf(unsigned int nbox, std::string potType, double k, double width, doub
 
     numerov_Wf[0] = 0.;
     numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
+
     double E_numerov = solve_Numerov(0., 2., 0.01, nbox, V, numerov_Wf);
-    double E_analytic =0.;
+    double E_analytic;
 
     if(potType == "box"){
         E_analytic = box_wf(1, nbox, analytic_Wf);
     }else if(potType == "harmonic oscillator"){
-        E_analytic = harmonic_wf(0,nbox, 1., analytic_Wf);
+        E_analytic = harmonic_wf(0,nbox, sqrt(2.*k), analytic_Wf);
     }else if(potType == "well") {
         E_analytic = finite_well_wf(1, nbox, width, height, analytic_Wf);
     }else{
         std::cerr << "ERROR! Wrong potential name in set" << std::endl;
         exit(8);
     }
+
     for(int i=0; i < nbox; i++){
-        EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], 1e-2 );
+        EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], 1e-2 ); //improve error definition
      }
 
     ASSERT_NEAR(E_numerov, E_analytic, 1e-3 );
-
 }
 
 namespace {
@@ -62,15 +63,35 @@ namespace {
         for(std::vector<int>::size_type i = 0; i < x.size(); i++)
             x[i] = dx * (int) (i - nbox / 2);
 
-        testWf(nbox, s,  0.5, 0., 0., x, &pot, numerov_Wf, analytic_Wf);
+        testWf(nbox, s,  0.500, 0., 0., x, &pot, numerov_Wf, analytic_Wf);
 
         if(HasFailure()){
             for(int i=0; i < nbox; i++)
                 std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
                           << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
         }
-
     }
+
+    TEST(WfTest,HarmonicOscillator2){
+        unsigned int nbox = 1000;
+        std::string s = "harmonic oscillator";
+
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> x(nbox), pot(nbox);
+
+        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
+            x[i] = dx * (int) (i - nbox / 2);
+
+        testWf(nbox, s,  1., 0., 0., x, &pot, numerov_Wf, analytic_Wf);
+
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
+
 
     TEST(WfTest,Box){
         unsigned int nbox = 500;
@@ -114,7 +135,7 @@ namespace {
 
 //
     TEST(WfTest,FiniteWell1){
-        unsigned int nbox = 1500;
+        unsigned int nbox = 2000;
         std::string s = "well";
 
         double width = 10., height = 3.;

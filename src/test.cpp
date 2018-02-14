@@ -118,14 +118,13 @@ inline int factorial(int x, int result = 1) {
 }
 
 double harmonic_wf(int nlevel, int nbox, double omega, double* wavefunction){
-  double c = mass*omega/hbar;
+  double c = mass * omega / hbar;
   double E_n = hbar * omega * (nlevel+0.5);
 
   for(int i=0; i<nbox; i++){
     double x = (- nbox/2 + i) * dx;
-    wavefunction[i] = sqrt(1/pow(2,nlevel) / factorial(nlevel) * sqrt(1/pi) )
-                    * exp(-c/2. * x*x) * std::hermite(nlevel,sqrt(c)*x);
-    //remember to translate by half box length, eventually
+    wavefunction[i] = sqrt(1 / pow(2,nlevel) / factorial(nlevel) * sqrt( c / pi) )
+                    * exp(- c/2. * x*x) * std::hermite(nlevel,sqrt(c)*x);
   }
   return E_n;
 }
