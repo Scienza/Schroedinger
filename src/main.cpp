@@ -1,8 +1,7 @@
 #include <iostream>
 #include <string>
-#include "test.h"
-#include "Schroedinger.h"
 #include "Potential.h"
+#include "Schroedinger.h"
 
 int main(int argc, char **argv) {
     unsigned int nbox = 1000;

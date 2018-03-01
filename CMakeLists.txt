@@ -1,5 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 project(Schroedinger)
+
+# Force C++17 standard
+set(CMAKE_CXX_STANDARD              17)
+set(CMAKE_CXX_STANDARD_REQUIRED     ON)
+set(CMAKE_CXX_FLAGS -D_EMULATE_GLIBC=0)
 
 # Require git to download submodules
 find_package(Git REQUIRED)
@@ -10,17 +15,6 @@ execute_process(
     COMMAND git submodule update --init
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
 )
-
-# Check for compiler: requires  gcc (version > 6.0)
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
-        message(FATAL_ERROR "GCC version must be at least 6.0! 'n
-                setup -DCMAKE_CXX_COMPILER=g++ using a version > 6.0")
-    endif()
-else()
-    message(FATAL_ERROR "You are using an unsupported compiler! Compilation has only been tested with GCC. \n
-            Setup -DCMAKE_CXX_COMPILER=g++ using a version > 6.0")
-endif()
 
 # Main directories
 set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/)
@@ -35,7 +29,9 @@ set(GOOGLETEST_SOURCES
 include_directories(
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/include
-        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/src/Basis
+        ${PROJECT_SOURCE_DIR}/src/Potential
+        ${PROJECT_SOURCE_DIR}/src/Schroedinger
 )
 
 # Fetch all sources, creating ${SOURCES}
@@ -44,12 +40,16 @@ file(GLOB_RECURSE SOURCES ${SOURCE_DIR}/*.cpp)
 # Create ${TESTS}, using test's main.cpp instead of ${SOURCE}'s one
 set(TESTS ${SOURCES})
 list(REMOVE_ITEM TESTS ${SOURCE_DIR}/main.cpp)
-list(APPEND TESTS ${TEST_DIR}/main.cpp)
+list(APPEND TESTS
+        ${TEST_DIR}/main.cpp
+        ${TEST_DIR}/test.cpp
+        ${TEST_DIR}/test.h
+)
 
+# Google test things
 foreach(_source ${GOOGLETEST_SOURCES})
     set_source_files_properties(${_source} PROPERTIES GENERATED 1)
 endforeach()
-
 add_library(googletest ${GOOGLETEST_SOURCES})
 
 # Main executable
@@ -59,19 +59,17 @@ add_executable (
 )
 
 # Test executable
-add_executable(
-    unit_tests
-    ${TESTS}
-)
-
-add_dependencies(unit_tests googletest)
-
-target_link_libraries(
-    unit_tests
-    googletest
-    pthread
-)
-
+#add_executable(
+#    unit_tests
+#    ${TESTS}
+#)
+#
+#add_dependencies(unit_tests googletest)
+#target_link_libraries(
+#    unit_tests
+#    googletest
+#    pthread
+#)
 include(CTest)
 enable_testing()
 

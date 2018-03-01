@@ -2,8 +2,8 @@
 
 #include <gtest/gtest.h>
 
-#include "../include/Schroedinger.h"
-#include "../include/test.h"
+#include "../src/Schroedinger/Schroedinger.h"
+#include "test.h"
 
 double H3(double x) { return  8*std::pow(x,3) - 12*x; }
 double H4(double x) { return 16*std::pow(x,4) - 48*x*x+12; }

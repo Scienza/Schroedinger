@@ -1,7 +1,7 @@
 #define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
 
-#ifndef SCHROEDINGER
-#define SCHROEDINGER
+#ifndef SCHROEDINGER_H
+#define SCHROEDINGER_H
 
 #define dx 0.01
 #define err 1E-10
@@ -15,11 +15,12 @@
 #include <vector>
 #include <string>
 
-#include "Potential.h"
+#include "../Potential/Potential.h"
 
 
 double trap_array(int, int, double, double *);
 void fsol_Numerov(double, int, Potential, double *);
 double solve_Numerov(double, double, double, int, Potential, double *);
 double bisec_Numer(double, double, int, Potential, double *);
+
 #endif
