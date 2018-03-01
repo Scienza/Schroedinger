@@ -59,17 +59,17 @@ add_executable (
 )
 
 # Test executable
-#add_executable(
-#    unit_tests
-#    ${TESTS}
-#)
-#
-#add_dependencies(unit_tests googletest)
-#target_link_libraries(
-#    unit_tests
-#    googletest
-#    pthread
-#)
+add_executable(
+    unit_tests
+    ${TESTS}
+)
+
+add_dependencies(unit_tests googletest)
+target_link_libraries(
+    unit_tests
+    googletest
+    pthread
+)
 include(CTest)
 enable_testing()
 
