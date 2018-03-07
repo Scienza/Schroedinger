@@ -27,6 +27,7 @@ ContinuousBase::ContinuousBase(double starting, double end, std::vector<double> 
     // Due to the fact that Basis->coords is vector<double>
     // here's the conversion from vector<int> to vector<double>
     this->coords.reserve(nbox);
-    for(std::vector<int>::size_type i = 0; i < nbox; i++)
-        this->coords[i] = starting + mesh[0] * i;
+    for(std::vector<double>::size_type i = 0; i < coords.size(); i++)
+        this->coords[i][0] = starting + mesh[0] * i;
+
 }

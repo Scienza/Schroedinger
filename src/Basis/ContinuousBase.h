@@ -5,7 +5,7 @@
 
 class ContinuousBase : public Base {
 public:
-    ContinuousBase::ContinuousBase(double, double, std::vector<double>, unsigned int);
+    ContinuousBase(double, double, std::vector<double>, unsigned int);
 
 //    void combine() {} // @TODO implement
 //    void change(base_type t) {} // @TODO implement
