@@ -24,7 +24,7 @@ set(GOOGLETEST_DIR external/googletest/googletest)
 set(GOOGLETEST_SOURCES
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/src/gtest-all.cc
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/src/gtest_main.cc
-)
+        src/Basis/ContinuousBase.h)
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}
