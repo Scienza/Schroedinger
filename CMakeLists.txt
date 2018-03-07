@@ -38,7 +38,7 @@ include_directories(
 file(GLOB_RECURSE SOURCES ${SOURCE_DIR}/*.cpp)
 
 # Create ${TESTS}, using test's main.cpp instead of ${SOURCE}'s one
-set(TESTS ${SOURCES})
+set(TESTS ${SOURCES} src/Basis/ContinuousBase.cpp)
 list(REMOVE_ITEM TESTS ${SOURCE_DIR}/main.cpp)
 list(APPEND TESTS
         ${TEST_DIR}/main.cpp
