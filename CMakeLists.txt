@@ -6,14 +6,6 @@ set(CMAKE_CXX_STANDARD              17)
 set(CMAKE_CXX_STANDARD_REQUIRED     ON)
 set(CMAKE_CXX_FLAGS -D_EMULATE_GLIBC=0)
 
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
-if(COMPILER_SUPPORTS_CXX17)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-else()
-    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
-endif()
-
 # Require git to download submodules
 find_package(Git REQUIRED)
 find_package(Threads REQUIRED)
@@ -32,7 +24,7 @@ set(GOOGLETEST_DIR external/googletest/googletest)
 set(GOOGLETEST_SOURCES
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/src/gtest-all.cc
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/src/gtest_main.cc
-)
+        src/Basis/ContinuousBase.h)
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}
@@ -46,7 +38,7 @@ include_directories(
 file(GLOB_RECURSE SOURCES ${SOURCE_DIR}/*.cpp)
 
 # Create ${TESTS}, using test's main.cpp instead of ${SOURCE}'s one
-set(TESTS ${SOURCES})
+set(TESTS ${SOURCES} src/Basis/ContinuousBase.cpp)
 list(REMOVE_ITEM TESTS ${SOURCE_DIR}/main.cpp)
 list(APPEND TESTS
         ${TEST_DIR}/main.cpp
@@ -62,23 +54,22 @@ add_library(googletest ${GOOGLETEST_SOURCES})
 
 # Main executable
 add_executable (
-    Schroedinger
+    Schroedinger 
     ${SOURCES}
 )
 
 # Test executable
-if (NOT WIN32)
-    add_executable(
-        unit_tests
-        ${TESTS}
-    )
+add_executable(
+    unit_tests
+    ${TESTS}
+)
 
-    add_dependencies(unit_tests googletest)
-    target_link_libraries(
-        unit_tests
-        googletest
-        pthread
-    )
-    include(CTest)
-    enable_testing()
-endif()
+add_dependencies(unit_tests googletest)
+target_link_libraries(
+    unit_tests
+    googletest
+    pthread
+)
+include(CTest)
+enable_testing()
+
