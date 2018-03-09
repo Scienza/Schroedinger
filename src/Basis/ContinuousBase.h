@@ -7,6 +7,8 @@ class ContinuousBase : public Base {
 public:
     ContinuousBase(double, double, std::vector<double>, unsigned int);
 
+    std::vector<double> coord;
+
 //    void combine() {} // @TODO implement
 //    void change(base_type t) {} // @TODO implement
 //    void set_potential() {} // @TODO implement

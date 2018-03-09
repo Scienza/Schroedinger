@@ -1,15 +1,20 @@
 #include "DiscreteBase.h"
 
-DiscreteBase::DiscreteBase(std::vector< std::vector<int> > dimensions, Potential potential)
+DiscreteBase::DiscreteBase(int start, int end, int step)
 {
-    if (dimensions.size() == 0)
-        throw std::invalid_argument("Empty dimensions vector given.");
+    //if not integer division of the basis
+    if((start-end)/step % 1 !=0)
+        throw std::invalid_argument("invalid discrete basis given (check interval and step).");
 
-    // Due to the fact that Basis->coords is vector<double>
-    // here's the conversion from vector<int> to vector<double>
-    this->coords.reserve(dimensions.size());
-    for(auto&& dimension : dimensions) {
-        this->coords.emplace_back(dimension.begin(), dimension.end());
+    unsigned int base_value = (start-end)/step;
+    if (base_value == 0)
+        throw std::invalid_argument("Empty dimensions basis given.");
+
+    this->quantum_numbers.reserve(base_value);
+
+    int j=0;
+    for(int i = start; i < end; i++ ) {
+        this->quantum_numbers[j] = i;
+        j++;
     }
-    this->potential = &potential;
 }

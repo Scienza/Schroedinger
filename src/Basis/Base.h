@@ -11,10 +11,10 @@ enum base_type { discrete, continuous };
 
 class Base {
 protected:
+
     // About coords: maybe should not exist in this manner. It's better to evaluate at run-time.
     // Instead of a vector of coords it's better to have a vector of Dimensions, where Dimensions are structs
     // with parameters related to basis type.
-    std::vector< std::vector<double> > coords;
 
 public:
     Potential *potential;
