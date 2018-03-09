@@ -1,6 +1,6 @@
 #include "DiscreteBase.h"
 
-DiscreteBase::DiscreteBase(std::vector< std::vector<int> > dimensions, Potential potential)
+DiscreteBase::DiscreteBase(std::vector< std::vector<int> > dimensions)
 {
     if (dimensions.size() == 0)
         throw std::invalid_argument("Empty dimensions vector given.");
@@ -11,5 +11,4 @@ DiscreteBase::DiscreteBase(std::vector< std::vector<int> > dimensions, Potential
     for(auto&& dimension : dimensions) {
         this->coords.emplace_back(dimension.begin(), dimension.end());
     }
-    this->potential = &potential;
 }

@@ -17,7 +17,6 @@ protected:
     std::vector< std::vector<double> > coords;
 
 public:
-    Potential *potential;
     Base() {};
     virtual ~Base() = default;
     virtual void combine() = 0;

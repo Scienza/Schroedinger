@@ -5,7 +5,7 @@
 
 class DiscreteBase : public Base {
 public:
-    DiscreteBase(std::vector< std::vector<int> > dimensions, Potential potential);
+    DiscreteBase(std::vector< std::vector<int> > dimensions);
 
     void combine() {} // @TODO implement
     void change(base_type t) {} // @TODO implement
@@ -17,7 +17,6 @@ public:
         Potential potential;
     public:
         Builder addDimension(int min_value, int max_value, int step);
-        Builder addPotential(Potential p);
         DiscreteBase build();
     };
 };

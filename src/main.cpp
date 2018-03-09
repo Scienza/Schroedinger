@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "Potential.h"
-#include "Schroedinger.h"
+#include "../src/Potential/Potential.h"
+#include "../src/Schroedinger/Schroedinger.h"
 
 int main(int argc, char **argv) {
     unsigned int nbox = 1000;
@@ -19,5 +19,5 @@ int main(int argc, char **argv) {
     wavefunction[1] = 0.2; //later on it gets renormalized, so is just a conventional number
     solve_Numerov(0., 2., step, nbox, V, wavefunction);
 
-   return 0;
+    return 0;
 }
