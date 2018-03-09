@@ -1,7 +1,7 @@
 #include"ContinuousBase.h"
 
 //TODO: convert the arguments in class private properties
-ContinuousBase::ContinuousBase(double starting, double end, std::vector<double> mesh, unsigned int nbox)
+Base::ContinuousBase::ContinuousBase(double starting, double end, std::vector<double> mesh, unsigned int nbox)
 {
     if (mesh.size() < 1 && nbox == 0)
         throw std::invalid_argument("Empty mesh given.");

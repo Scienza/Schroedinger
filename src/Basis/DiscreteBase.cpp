@@ -1,12 +1,12 @@
 #include "DiscreteBase.h"
 
-DiscreteBase::DiscreteBase(int start, int end, int step)
+Base::DiscreteBase::DiscreteBase(int start, int end, int step)
 {
     //if not integer division of the basis
-    if((start-end)/step % 1 !=0)
+    if((end-start)/step % 1 != 0)
         throw std::invalid_argument("invalid discrete basis given (check interval and step).");
 
-    unsigned int base_value = (start-end)/step;
+    unsigned int base_value = (end-start)/step;
     if (base_value == 0)
         throw std::invalid_argument("Empty dimensions basis given.");
 

@@ -22,7 +22,25 @@ public:
     virtual ~Base() = default;
     virtual void combine() = 0;
     virtual void change(base_type t) = 0;
-    virtual void set_potential() = 0;
+
+    class DiscreteBase {
+    private:
+        DiscreteBase(int, int, int);
+
+        std::vector<int> quantum_numbers;
+    };
+
+    class ContinuousBase {
+    public:
+        ContinuousBase(double, double, std::vector<double>, unsigned int);
+
+        std::vector<double> coord;
+    };
+
+
+
+    std::vector<DiscreteBase> quantumNumbers;
+    std::vector<ContinuousBase> coords;
 };
 
 #endif
