@@ -35,9 +35,14 @@ Potential::Builder Potential::Builder::setType(std::string type)
     else throw std::invalid_argument("Empty type given as parameter.");
 }
 
+Potential::Builder Potential::Builder::setBase(Base b)
+{
+    this->base = &b;
+}
+
 Potential Potential::Builder::build(){
     try {
-        return Potential(this->x,this->type,this->k,this->width,this->height);
+        return Potential(this->x,this->type,this->k,this->width,this->height, this->base);
     }
     catch(const std::invalid_argument& e){
         throw;

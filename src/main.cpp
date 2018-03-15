@@ -13,6 +13,7 @@ int main(int argc, char **argv) {
         x[i] = dx*(i-nbox/2);
 
     Potential::Builder b(x);
+
     Potential V = b.build();
 
     wavefunction[0] = 0.;

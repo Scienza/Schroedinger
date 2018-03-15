@@ -6,6 +6,7 @@
 #include <string>
 #include <algorithm>
 #include <stdexcept>
+#include "../Basis/Base.h"
 
 /*! Class Potential contains the potential used in the Schroedinger equation.
  * takes the necessary input: std::vector x at definition Builder(x),
@@ -40,8 +41,9 @@ private:
     void finite_well_potential();
 
 public:
-    Potential(std::vector<double>, std::string, double, double, double);
+    Potential(std::vector<double>, std::string, double, double, double, Base *base);
     std::vector<double> get_v();
+    Base *base;
 
     class Builder{
         private:
@@ -50,6 +52,7 @@ public:
             double k             = 0.5;
             double width         = 5.0;
             double height        = 10.0;
+            Base *base;
 
         public:
             Builder(std::vector<double> x_new);
@@ -57,6 +60,7 @@ public:
             Builder setWidth(double width_new);
             Builder setHeight(double height_new);
             Builder setType(std::string type);
+            Builder setBase(Base b);
             Potential build();
     };
 };

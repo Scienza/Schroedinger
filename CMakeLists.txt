@@ -24,7 +24,7 @@ set(GOOGLETEST_DIR external/googletest/googletest)
 set(GOOGLETEST_SOURCES
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/src/gtest-all.cc
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/src/gtest_main.cc
-        src/Basis/ContinuousBase.h)
+)
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}
@@ -38,7 +38,7 @@ include_directories(
 file(GLOB_RECURSE SOURCES ${SOURCE_DIR}/*.cpp)
 
 # Create ${TESTS}, using test's main.cpp instead of ${SOURCE}'s one
-set(TESTS ${SOURCES} src/Basis/ContinuousBase.cpp)
+set(TESTS ${SOURCES})
 list(REMOVE_ITEM TESTS ${SOURCE_DIR}/main.cpp)
 list(APPEND TESTS
         ${TEST_DIR}/main.cpp
@@ -58,18 +58,20 @@ add_executable (
     ${SOURCES}
 )
 
-# Test executable
-add_executable(
-    unit_tests
-    ${TESTS}
-)
 
-add_dependencies(unit_tests googletest)
-target_link_libraries(
-    unit_tests
-    googletest
-    pthread
-)
-include(CTest)
-enable_testing()
+if (NOT WIN32)
+    # Test executable
+    add_executable(
+            unit_tests
+            ${TESTS}
+    )
 
+    add_dependencies(unit_tests googletest)
+    target_link_libraries(
+        unit_tests
+        googletest
+        pthread
+    )
+    include(CTest)
+    enable_testing()
+endif()

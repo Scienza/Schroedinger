@@ -4,7 +4,6 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
-#include "Potential.h"
 
 class Base {
 private:
@@ -33,8 +32,8 @@ private:
 public:
     Base() {};
     ~Base() = default;
-    void combine() = 0;
-    void change(base_type t) = 0;
+    void combine() {};
+    void change() {};
 
     std::vector<DiscreteBase> quantumNumbers;
     std::vector<ContinuousBase> coords;
