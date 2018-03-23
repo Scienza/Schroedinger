@@ -6,7 +6,7 @@ Base::ContinuousBase::ContinuousBase(double start, double end, double mesh)
         std::invalid_argument("CountinousBase starting-end = 0");
     }
     //constant mesh
-    unsigned int nbox = unsigned int( (end-start)/mesh );
+    unsigned int nbox = (unsigned int)( (end-start)/mesh );
 
     this-> start = start;
     this-> end   = end;
