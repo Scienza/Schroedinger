@@ -20,12 +20,15 @@ private:
 
     class ContinuousBase {
     private:
-        double starting;
+        double start;
         double end;
-        std::vector<double> mesh;
+        double mesh;
         unsigned int nbox;
     public:
-        ContinuousBase(double, double, std::vector<double>, unsigned int);
+        ContinuousBase(double, double, double);
+        ContinuousBase(double, double, unsigned int);
+        ContinuousBase(double, double, double, unsigned int);
+
         std::vector<double> coord;
     };
 

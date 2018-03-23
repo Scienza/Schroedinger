@@ -1,34 +1,41 @@
 #include "Base.h"
 
-Base::ContinuousBase::ContinuousBase(double starting, double end, std::vector<double> mesh, unsigned int nbox)
+Base::ContinuousBase::ContinuousBase(double start, double end, double mesh)
 {
-    if (mesh.size() < 1 && nbox == 0)
-        throw std::invalid_argument("Empty mesh given.");
-
-//  TODO:correct in a way that you know at least one between mesh and nbox, and three defined arguments
-//    if (starting = None)
-//        throw std::invalid_argument("starting point not defined");
-//    if(end-starting < 0.)
-//        throw std::invalid_argument("Mesh boundaries not correctly specified");
-
+    if( end - start == 0){
+        std::invalid_argument("CountinousBase starting-end = 0");
+    }
     //constant mesh
-    if (mesh.size() == 1){
-        nbox = (unsigned int) (end-starting)/mesh[0];
-    }
-    else if(mesh.size() > 1){
-        throw std::invalid_argument("non--constant mesh to be developed");
-    }
-//    else if(nbox != 0){
-//
-//    }
+    unsigned int nbox = unsigned int( (end-start)/mesh );
 
-    this-> starting = starting;
-    this-> end      = end;
-    this-> mesh     = mesh;
-    this-> nbox     = nbox;
+    this-> start = start;
+    this-> end   = end;
+    this-> mesh  = mesh;
+    this-> nbox  = nbox;
 
     this->coord.reserve(nbox);
     for(std::vector<double>::size_type i = 0; i < coord.size(); i++)
-        this->coord[i] = starting + mesh[0] * i;
+        this->coord[i] = start + mesh * i;
 
 }
+
+
+Base::ContinuousBase::ContinuousBase(double start, double end, unsigned int nbox)
+{
+    if( end - start == 0){
+        std::invalid_argument("CountinousBase starting-end = 0");
+    }
+    //constant mesh
+    double mesh = (end-start)/nbox;
+
+    this-> start = start;
+    this-> end   = end;
+    this-> mesh  = mesh;
+    this-> nbox  = nbox;
+
+    this->coord.reserve(nbox);
+    for(std::vector<double>::size_type i = 0; i < coord.size(); i++)
+        this->coord[i] = start + mesh * i;
+
+}
+
