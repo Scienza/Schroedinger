@@ -27,7 +27,6 @@ private:
     public:
         ContinuousBase(double, double, double);
         ContinuousBase(double, double, unsigned int);
-        ContinuousBase(double, double, double, unsigned int);
 
         std::vector<double> coord;
     };

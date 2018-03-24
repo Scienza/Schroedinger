@@ -22,6 +22,8 @@ else()
             Setup -DCMAKE_CXX_COMPILER=g++ using a version > 6.0")
 endif()
 
+SET(CMAKE_CXX_FLAGS "--std=c++17")
+
 # Main directories
 set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/)
 set(TEST_DIR ${PROJECT_SOURCE_DIR}/tests/)
