@@ -31,16 +31,16 @@ void testWf(unsigned int nbox, std::string potType, double k, double width, doub
     if(potType == "box") {
         E_analytic = box_wf(1, nbox, analytic_Wf);
     }
-//    else if(potType == "harmonic oscillator") {
-//        E_analytic = harmonic_wf(0,nbox, sqrt(2.*k), analytic_Wf);
-//    }
-//    else if(potType == "well") {
-//        E_analytic = finite_well_wf(1, nbox, width, height, analytic_Wf);
-//    }
-//    else {
-//        std::cerr << "ERROR! Wrong potential name in set" << std::endl;
-//        exit(8);
-//    }
+    else if(potType == "harmonic oscillator") {
+        E_analytic = harmonic_wf(0,nbox, sqrt(2.*k), analytic_Wf);
+    }
+    else if(potType == "well") {
+        E_analytic = finite_well_wf(1, nbox, width, height, analytic_Wf);
+    }
+    else {
+        std::cerr << "ERROR! Wrong potential name in set" << std::endl;
+        exit(8);
+    }
 
     for(int i=0; i < nbox; i++) {
         EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], 1e-2 ); //improve error definition
@@ -81,7 +81,7 @@ namespace {
         }
         catch (std::invalid_argument e) {}
     }
-}
+
 
     TEST(WfTest,HarmonicOscillator){
         unsigned int nbox = 1000;

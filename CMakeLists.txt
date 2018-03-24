@@ -5,6 +5,7 @@ project(Schroedinger)
 set(CMAKE_CXX_STANDARD              17)
 set(CMAKE_CXX_STANDARD_REQUIRED     ON)
 set(CMAKE_CXX_FLAGS -D_EMULATE_GLIBC=0)
+set(CMAKE_CXX_FLAGS "--std=c++17") 
 
 # Require git to download submodules
 find_package(Git REQUIRED)
