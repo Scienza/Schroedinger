@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "../src/Schroedinger/Schroedinger.h"
+
 #include "test.h"
 
 double H3(double x) { return  8*std::pow(x,3) - 12*x; }
@@ -81,130 +82,130 @@ namespace {
         catch (std::invalid_argument e) {}
     }
 }
-//
-//    TEST(WfTest,HarmonicOscillator){
-//        unsigned int nbox = 1000;
-//        std::string s = "harmonic oscillator";
-//
-//        double *numerov_Wf = new double[nbox];
-//        double *analytic_Wf = new double[nbox];
-//        std::vector<double> x(nbox), pot(nbox);
-//
-//        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-//            x[i] = dx * (int) (i - nbox / 2);
-//
-//        testWf(nbox, s,  0.500, 0., 0., x, &pot, numerov_Wf, analytic_Wf);
-//
-//        if(HasFailure()){
-//            for(int i=0; i < nbox; i++)
-//                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-//                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-//        }
-//    }
-//
-//    TEST(WfTest,HarmonicOscillator2){
-//        unsigned int nbox = 1000;
-//        std::string s = "harmonic oscillator";
-//
-//        double *numerov_Wf = new double[nbox];
-//        double *analytic_Wf = new double[nbox];
-//        std::vector<double> x(nbox), pot(nbox);
-//
-//        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-//            x[i] = dx * (int) (i - nbox / 2);
-//
-//        testWf(nbox, s,  1.0, 0.0, 0.0, x, &pot, numerov_Wf, analytic_Wf);
-//
-//        if(HasFailure()){
-//            for(int i=0; i < nbox; i++)
-//                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-//                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-//        }
-//    }
-//
-//
-//    TEST(WfTest,Box){
-//        unsigned int nbox = 500;
-//        std::string s = "box";
-//
-//        double *numerov_Wf = new double[nbox];
-//        double *analytic_Wf = new double[nbox];
-//        std::vector<double> x(nbox), pot(nbox);
-//
-//        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-//            x[i] = dx * (int) (i - nbox / 2);
-//
-//        testWf(nbox, s,  0.0, 0.0, 0.0, x, &pot, numerov_Wf, analytic_Wf);
-//
-//        if(HasFailure()){
-//            for(int i=0; i < nbox; i++)
-//                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-//                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-//        }
-//    }
-//
-//    TEST(WfTest,Box2){
-//        unsigned int nbox = 1000;
-//        std::string s = "box";
-//
-//        double *numerov_Wf = new double[nbox];
-//        double *analytic_Wf = new double[nbox];
-//        std::vector<double> x(nbox), pot(nbox);
-//
-//        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-//            x[i] = dx * (int) (i - nbox / 2);
-//
-//        testWf(nbox, s,  0.0, 0.0, 0.0, x, &pot, numerov_Wf, analytic_Wf);
-//
-//        if(HasFailure()){
-//            for(int i=0; i < nbox; i++)
-//                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-//                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-//        }
-//    }
-//
-//    TEST(WfTest,FiniteWell1){
-//        unsigned int nbox = 2000;
-//        std::string s = "well";
-//
-//        double width = 10., height = 3.;
-//        double *numerov_Wf = new double[nbox];
-//        double *analytic_Wf = new double[nbox];
-//        std::vector<double> x(nbox), pot(nbox);
-//
-//        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-//            x[i] = dx * (int) (i - nbox / 2);
-//
-//        testWf(nbox, s, 0., width, height, x, &pot, numerov_Wf, analytic_Wf);
-//
-//        if(HasFailure()){
-//            for(int i=0; i < nbox; i++)
-//                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-//                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-//        }
-//    }
-//
-//    TEST(WfTest,FiniteWell2){
-//        unsigned int nbox = 1000;
-//        std::string s = "well";
-//
-//        double width = 7.0, height = 5.0;
-//        double *numerov_Wf = new double[nbox];
-//        double *analytic_Wf = new double[nbox];
-//        std::vector<double> x(nbox), pot(nbox);
-//
-//        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-//            x[i] = dx * (int) (i - nbox / 2);
-//
-//        testWf(nbox, s,  0.0, width, height, x, &pot, numerov_Wf, analytic_Wf);
-//
-//        if(HasFailure()){
-//            for(int i=0; i < nbox; i++)
-//                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-//                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-//        }
-//    }
-//}
+
+    TEST(WfTest,HarmonicOscillator){
+        unsigned int nbox = 1000;
+        std::string s = "harmonic oscillator";
+
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> x(nbox), pot(nbox);
+
+        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
+            x[i] = dx * (int) (i - nbox / 2);
+
+        testWf(nbox, s,  0.500, 0., 0., x, &pot, numerov_Wf, analytic_Wf);
+
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
+
+    TEST(WfTest,HarmonicOscillator2){
+        unsigned int nbox = 1000;
+        std::string s = "harmonic oscillator";
+
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> x(nbox), pot(nbox);
+
+        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
+            x[i] = dx * (int) (i - nbox / 2);
+
+        testWf(nbox, s,  1.0, 0.0, 0.0, x, &pot, numerov_Wf, analytic_Wf);
+
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
+
+
+    TEST(WfTest,Box){
+        unsigned int nbox = 500;
+        std::string s = "box";
+
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> x(nbox), pot(nbox);
+
+        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
+            x[i] = dx * (int) (i - nbox / 2);
+
+        testWf(nbox, s,  0.0, 0.0, 0.0, x, &pot, numerov_Wf, analytic_Wf);
+
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
+
+    TEST(WfTest,Box2){
+        unsigned int nbox = 1000;
+        std::string s = "box";
+
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> x(nbox), pot(nbox);
+
+        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
+            x[i] = dx * (int) (i - nbox / 2);
+
+        testWf(nbox, s,  0.0, 0.0, 0.0, x, &pot, numerov_Wf, analytic_Wf);
+
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
+
+    TEST(WfTest,FiniteWell1){
+        unsigned int nbox = 2000;
+        std::string s = "well";
+
+        double width = 10., height = 3.;
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> x(nbox), pot(nbox);
+
+        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
+            x[i] = dx * (int) (i - nbox / 2);
+
+        testWf(nbox, s, 0., width, height, x, &pot, numerov_Wf, analytic_Wf);
+
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
+
+    TEST(WfTest,FiniteWell2){
+        unsigned int nbox = 1000;
+        std::string s = "well";
+
+        double width = 7.0, height = 5.0;
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> x(nbox), pot(nbox);
+
+        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
+            x[i] = dx * (int) (i - nbox / 2);
+
+        testWf(nbox, s,  0.0, width, height, x, &pot, numerov_Wf, analytic_Wf);
+
+        if(HasFailure()){
+            for(int i=0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
+}
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
