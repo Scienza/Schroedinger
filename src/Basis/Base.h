@@ -6,7 +6,7 @@
 #include <iostream>
 
 class Base {
-private:
+public:
 
     class DiscreteBase {
     private:
@@ -34,11 +34,6 @@ private:
 public:
     Base() {};
     ~Base() = default;
-    void combine() {};
-    void change() {};
-
-    std::vector<DiscreteBase> quantumNumbers;
-    std::vector<ContinuousBase> coords;
 };
 
 #endif

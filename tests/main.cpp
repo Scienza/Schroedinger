@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "../src/Schroedinger/Schroedinger.h"
-
+#include "../src/Basis/Base.h"
 #include "test.h"
 
 double H3(double x) { return  8*std::pow(x,3) - 12*x; }
@@ -53,6 +53,20 @@ namespace {
     TEST(NumTest, Hermite) {
         ASSERT_NEAR(std::hermite(3, 10.), H3(10.), err);
         ASSERT_NEAR(std::hermite(4, 4.3), H4(4.3), err);
+    }
+
+    TEST(Basis,Constructor){
+        unsigned int nbox=1000;
+        double start = - (nbox/2.) * dx;
+        double end   =   (nbox/2.) * dx;
+        Base::ContinuousBase ContBase(start, end, dx);
+        std::vector<double> x(nbox), y(nbox), e(nbox);
+
+        for(std::vector<int>::size_type i = 0; i < x.size(); i++){
+            x[i] = dx * (int) (i - nbox / 2);
+
+            ASSERT_NEAR(x[i], ContBase.coord[i], err);
+        }
     }
 
     TEST(Potential, widthMustBePositive) {
