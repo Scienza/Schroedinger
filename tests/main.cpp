@@ -68,6 +68,7 @@ namespace {
 
             ASSERT_NEAR(x[i], ContBase.coord[i], err);
         }
+
     }
 
     TEST(Potential, widthMustBePositive) {
@@ -100,19 +101,16 @@ namespace {
 
     TEST(WfTest,HarmonicOscillator){
         unsigned int nbox = 1000;
-        double start = - (nbox/2.) * dx;
-        double end   =   (nbox/2.) * dx;
+        double mesh = dx;
+        Base::ContinuousBase x(mesh, nbox);
 
         std::string s = "harmonic oscillator";
 
         double *numerov_Wf = new double[nbox];
         double *analytic_Wf = new double[nbox];
-        std::vector<double> x(nbox), pot(nbox);
+        std::vector<double> pot(nbox);
 
-        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            x[i] = dx * (int) (i - nbox / 2);
-
-        testWf(nbox, s,  0.500, 0., 0., x, &pot, numerov_Wf, analytic_Wf);
+        testWf(nbox, s,  0.500, 0., 0., x.coord, &pot, numerov_Wf, analytic_Wf);
 
         if(HasFailure()){
             for(int i=0; i < nbox; i++)
@@ -122,22 +120,17 @@ namespace {
     }
 
     TEST(WfTest,HarmonicOscillator2){
-        unsigned int nbox=1000;
+        unsigned int nbox = 1000;
         double mesh = dx;
-        double start = - (nbox/2.) * mesh;
-        double end   =   (nbox/2.) * mesh;
-        Base::ContinuousBase ContBase(start, end, mesh);
+        Base::ContinuousBase x(mesh, nbox);
 
         std::string s = "harmonic oscillator";
 
         double *numerov_Wf = new double[nbox];
         double *analytic_Wf = new double[nbox];
-        std::vector<double> x(nbox), pot(nbox);
+        std::vector<double> pot(nbox);
 
-        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            x[i] = ContBase.coord[i];
-
-        testWf(nbox, s,  1.0, 0.0, 0.0, x, &pot, numerov_Wf, analytic_Wf);
+        testWf(nbox, s,  1.0, 0.0, 0.0, x.coord, &pot, numerov_Wf, analytic_Wf);
 
         if(HasFailure()){
             for(int i=0; i < nbox; i++)
@@ -149,16 +142,16 @@ namespace {
 
     TEST(WfTest,Box){
         unsigned int nbox = 500;
+        double mesh = dx;
+        Base::ContinuousBase x(mesh, nbox);
+
         std::string s = "box";
 
         double *numerov_Wf = new double[nbox];
         double *analytic_Wf = new double[nbox];
-        std::vector<double> x(nbox), pot(nbox);
+        std::vector<double> pot(nbox);
 
-        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            x[i] = dx * (int) (i - nbox / 2);
-
-        testWf(nbox, s,  0.0, 0.0, 0.0, x, &pot, numerov_Wf, analytic_Wf);
+        testWf(nbox, s,  0.0, 0.0, 0.0, x.coord, &pot, numerov_Wf, analytic_Wf);
 
         if(HasFailure()){
             for(int i=0; i < nbox; i++)
@@ -169,16 +162,16 @@ namespace {
 
     TEST(WfTest,Box2){
         unsigned int nbox = 1000;
+        double mesh = dx;
+        Base::ContinuousBase x(mesh, nbox);
+
         std::string s = "box";
 
         double *numerov_Wf = new double[nbox];
         double *analytic_Wf = new double[nbox];
-        std::vector<double> x(nbox), pot(nbox);
+        std::vector<double> pot(nbox);
 
-        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            x[i] = dx * (int) (i - nbox / 2);
-
-        testWf(nbox, s,  0.0, 0.0, 0.0, x, &pot, numerov_Wf, analytic_Wf);
+        testWf(nbox, s,  0.0, 0.0, 0.0, x.coord, &pot, numerov_Wf, analytic_Wf);
 
         if(HasFailure()){
             for(int i=0; i < nbox; i++)
@@ -189,17 +182,17 @@ namespace {
 
     TEST(WfTest,FiniteWell1){
         unsigned int nbox = 2000;
+        double mesh = dx;
+        Base::ContinuousBase x(mesh, nbox);
+
         std::string s = "well";
 
         double width = 10., height = 3.;
         double *numerov_Wf = new double[nbox];
         double *analytic_Wf = new double[nbox];
-        std::vector<double> x(nbox), pot(nbox);
+        std::vector<double> pot(nbox);
 
-        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            x[i] = dx * (int) (i - nbox / 2);
-
-        testWf(nbox, s, 0., width, height, x, &pot, numerov_Wf, analytic_Wf);
+        testWf(nbox, s, 0., width, height, x.coord, &pot, numerov_Wf, analytic_Wf);
 
         if(HasFailure()){
             for(int i=0; i < nbox; i++)
@@ -210,17 +203,17 @@ namespace {
 
     TEST(WfTest,FiniteWell2){
         unsigned int nbox = 1000;
+        double mesh = dx;
+        Base::ContinuousBase x(mesh, nbox);
+
         std::string s = "well";
 
         double width = 7.0, height = 5.0;
         double *numerov_Wf = new double[nbox];
         double *analytic_Wf = new double[nbox];
-        std::vector<double> x(nbox), pot(nbox);
+        std::vector<double> pot(nbox);
 
-        for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            x[i] = dx * (int) (i - nbox / 2);
-
-        testWf(nbox, s,  0.0, width, height, x, &pot, numerov_Wf, analytic_Wf);
+        testWf(nbox, s,  0.0, width, height, x.coord, &pot, numerov_Wf, analytic_Wf);
 
         if(HasFailure()){
             for(int i=0; i < nbox; i++)

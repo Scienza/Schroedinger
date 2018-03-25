@@ -25,6 +25,7 @@ public:
         double mesh;
         unsigned int nbox;
     public:
+        ContinuousBase(double, unsigned int);
         ContinuousBase(double, double, double);
         ContinuousBase(double, double, unsigned int);
 
