@@ -57,13 +57,14 @@ namespace {
 
     TEST(Basis,Constructor){
         unsigned int nbox=1000;
-        double start = - (nbox/2.) * dx;
-        double end   =   (nbox/2.) * dx;
-        Base::ContinuousBase ContBase(start, end, dx);
+        double mesh = 0.01;
+        double start = - (nbox/2.) * mesh;
+        double end   =   (nbox/2.) * mesh;
+        Base::ContinuousBase ContBase(start, end, mesh);
         std::vector<double> x(nbox), y(nbox), e(nbox);
 
         for(std::vector<int>::size_type i = 0; i < x.size(); i++){
-            x[i] = dx * (int) (i - nbox / 2);
+            x[i] = mesh * (int) (i - nbox / 2);
 
             ASSERT_NEAR(x[i], ContBase.coord[i], err);
         }
@@ -99,6 +100,9 @@ namespace {
 
     TEST(WfTest,HarmonicOscillator){
         unsigned int nbox = 1000;
+        double start = - (nbox/2.) * dx;
+        double end   =   (nbox/2.) * dx;
+
         std::string s = "harmonic oscillator";
 
         double *numerov_Wf = new double[nbox];
@@ -118,7 +122,12 @@ namespace {
     }
 
     TEST(WfTest,HarmonicOscillator2){
-        unsigned int nbox = 1000;
+        unsigned int nbox=1000;
+        double mesh = dx;
+        double start = - (nbox/2.) * mesh;
+        double end   =   (nbox/2.) * mesh;
+        Base::ContinuousBase ContBase(start, end, mesh);
+
         std::string s = "harmonic oscillator";
 
         double *numerov_Wf = new double[nbox];
@@ -126,7 +135,7 @@ namespace {
         std::vector<double> x(nbox), pot(nbox);
 
         for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            x[i] = dx * (int) (i - nbox / 2);
+            x[i] = ContBase.coord[i];
 
         testWf(nbox, s,  1.0, 0.0, 0.0, x, &pot, numerov_Wf, analytic_Wf);
 
