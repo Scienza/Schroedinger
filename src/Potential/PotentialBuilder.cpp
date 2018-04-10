@@ -37,7 +37,7 @@ Potential::Builder Potential::Builder::setType(std::string type)
 
 Potential::Builder Potential::Builder::setBase(Base b)
 {
-    this->base = &b;
+    this->base = b;
 }
 
 Potential Potential::Builder::build(){

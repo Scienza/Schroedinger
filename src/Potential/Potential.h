@@ -32,6 +32,8 @@ private:
     std::vector<double> x;
     std::vector<double> v;
     std::string type;
+    Base base;
+
     double k;
     double width;
     double height;
@@ -41,7 +43,7 @@ private:
     void finite_well_potential();
 
 public:
-    Potential(std::vector<double>, std::string, double, double, double, Base *base);
+    Potential(std::vector<double>, std::string, double, double, double, Base base);
     std::vector<double> get_v();
     Base get_x();
 
@@ -52,7 +54,7 @@ public:
             double k             = 0.5;
             double width         = 5.0;
             double height        = 10.0;
-            Base *base;
+            Base base;
 
         public:
             Builder(std::vector<double> x_new);

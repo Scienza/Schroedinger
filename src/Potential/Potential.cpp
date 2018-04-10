@@ -1,6 +1,6 @@
 #include "Potential.h"
 
-Potential::Potential(std::vector<double> coord, std::string type, double k, double width, double height, Base *base)
+Potential::Potential(std::vector<double> coord, std::string type, double k, double width, double height, Base base)
 {
     this->x        = coord;
     this->v        = std::vector<double>(x.size());
