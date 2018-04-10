@@ -16,7 +16,7 @@ Base::DiscreteBase::DiscreteBase(int start, int end, int step)
 
     this-> quantum_numbers.reserve(base_value);
     int j=0;
-    for(int i = start; i < end; i++ ) {
+    for(int i = start; i < end; i+=step ) {
         this->quantum_numbers[j] = i;
         j++;
     }

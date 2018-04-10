@@ -23,7 +23,7 @@ void testWf(unsigned int nbox, std::string potType, double k, double width, doub
     *pot = V.get_v();
 
     numerov_Wf[0] = 0.0;
-    numerov_Wf[1] = 0.2; //later on it gets renormalized, so is just a conventional number
+    numerov_Wf[1] = 0.01; //later on it gets renormalized, so is just a conventional number
 
     double E_numerov = solve_Numerov(0., 2., 0.01, nbox, V, numerov_Wf);
     double E_analytic;
@@ -56,7 +56,7 @@ namespace {
     }
 
     TEST(Basis,Constructor){
-        unsigned int nbox=1000;
+        unsigned int nbox = 1000;
         double mesh = 0.01;
         double start = - (nbox/2.) * mesh;
         double end   =   (nbox/2.) * mesh;
