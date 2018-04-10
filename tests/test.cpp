@@ -1,4 +1,4 @@
-#include "Schroedinger.h"
+#include "../src/Schroedinger/Schroedinger.h"
 
 /*! Calculates the analytical wavefunction of a particle in a box
 allowed energy levels :   $E_n = n^2 \pi^2 \hbar^2 / (2 m L)$
@@ -51,7 +51,7 @@ double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height,
     }else{             //looking for has n odd, thus is even parity
       eta_old = atan( sqrt(xi*xi/eta/eta - 1) ) - pi/2. * (nlevel-1);
     }
-    std::cout << "#" << eta << " - " << eta_old << std::endl;
+//    std::cout << "#" << eta << " - " << eta_old << std::endl;
   } while ( fabs((eta_old - eta)/eta) > tolerance && counter < 100 );
 
   if(counter == 100){
@@ -113,29 +113,18 @@ double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height,
   return E_n;
 }
 
-double H3(double x) { return 8*std::pow(x,3) - 12*x; }
-double H4(double x) { return 16*std::pow(x,4)-48*x*x+12; }
-
 inline int factorial(int x, int result = 1) {
   if (x == 1 || x == 0) return result; else return factorial(x - 1, x * result);
 }
 
 double harmonic_wf(int nlevel, int nbox, double omega, double* wavefunction){
-  double c = mass*omega/hbar;
+  double c = mass * omega / hbar;
   double E_n = hbar * omega * (nlevel+0.5);
-
-  //example of test
-  if(fabs(std::hermite(3, 10.) - H3(10.)) + fabs(std::hermite(4, 4.3) - H4(4.3)) > 1e-10){
-    std::cerr << "Hermite polynomials not correctly implemented: "
-    << fabs(std::hermite(3, 10.) - H3(10.)) + fabs(std::hermite(4, 4.3) - H4(4.3)) <<std::endl;
-    exit;
-  }
 
   for(int i=0; i<nbox; i++){
     double x = (- nbox/2 + i) * dx;
-    wavefunction[i] = sqrt(1/pow(2,nlevel) / factorial(nlevel) * sqrt(1/pi) )
-                    * exp(-c/2. * x*x) * std::hermite(nlevel,sqrt(c)*x);
-    //remember to translate by half box length, eventually
+    wavefunction[i] = sqrt(1 / pow(2,nlevel) / factorial(nlevel) * sqrt( c / pi) )
+                    * exp(- c/2. * x*x) * std::hermite(nlevel,sqrt(c)*x);
   }
   return E_n;
 }
