@@ -5,8 +5,24 @@
 #include <stdexcept>
 #include <iostream>
 
-class Base {
+class Base
+{
 public:
+    static Base& get_instance(){
+      static Base instance;
+      return instance;
+    }
+
+    enum baseType {Spherical,Cylindrical,Cartesian};
+    int dimNum;
+
+    // avoid copy; public for better error handling
+    Base(const Base&)       = delete;
+    void operator= (const Base&) = delete;
+
+protected:
+    // private Constructor
+    Base() {};
 
     class DiscreteBase {
     private:
@@ -32,9 +48,6 @@ public:
         std::vector<double> coord;
     };
 
-public:
-    Base() {};
-    ~Base() = default;
 };
 
 #endif
