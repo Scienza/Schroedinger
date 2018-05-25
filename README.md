@@ -1,7 +1,7 @@
 ## Schroedinger Solver     
 [![CircleCI](https://circleci.com/gh/Scienza/Schroedinger/tree/master.svg?style=shield)](https://circleci.com/gh/Scienza/Schroedinger/tree/master) 
 ![Linux](https://img.shields.io/badge/linux-supported-brightgreen.svg)
-
+![License](https://img.shields.io/badge/license-LGPL%20v2.1-blue.svg)
 
 This is a first instance of a Schroedinger Solver that makes use of the Numerov algorithm to numerically calcolate the solution of the time-indepedent Schroedinger equation in position space, treated as second order differential equation.
 
