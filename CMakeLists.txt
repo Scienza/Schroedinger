@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.6)
 project(Schroedinger)
 
 # Force C++17 standard
-# set(CMAKE_CXX_STANDARD              17)
-# set(CMAKE_CXX_STANDARD_REQUIRED     ON)
+set(CMAKE_CXX_STANDARD              17)
+set(CMAKE_CXX_STANDARD_REQUIRED     ON)
 set(CMAKE_CXX_FLAGS -D_EMULATE_GLIBC=0)
 set(CMAKE_CXX_FLAGS "--std=c++17") 
 
@@ -37,7 +37,6 @@ include_directories(
 
 # Fetch all sources, creating ${SOURCES}
 file(GLOB_RECURSE SOURCES ${SOURCE_DIR}/*.cpp)
-
 # Create ${TESTS}, using test's main.cpp instead of ${SOURCE}'s one
 set(TESTS ${SOURCES})
 list(REMOVE_ITEM TESTS ${SOURCE_DIR}/main.cpp)
