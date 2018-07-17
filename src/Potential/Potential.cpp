@@ -1,6 +1,6 @@
 #include "Potential.h"
 
-Potential::Potential(std::vector<double> coord, std::string type, double k, double width, double height, Base base)
+Potential::Potential(std::vector<double> coord, std::string type, double k, double width, double height)
 {
     this->x        = coord;
     this->v        = std::vector<double>(x.size());
@@ -8,7 +8,6 @@ Potential::Potential(std::vector<double> coord, std::string type, double k, doub
     this->width    = width;
     this->height   = height;
     this->type     = type;
-    this->base     = base;
 
     if(type.compare("box potential") == 0 || type.compare("box") == 0 || type.compare("0") == 0)
         this->box_potential();
