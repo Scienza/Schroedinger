@@ -13,25 +13,36 @@ public:
       return instance;
     }
 
+    std::vector<double> get_continuous(){
+      return this->x.coord;
+    }
+
+    int get_dim(){
+      return dimNum;
+    }
+
     // avoid copy; public for better error handling
-    Base(const Base&)       = delete;
+    Base(const Base&)            = delete;
     void operator= (const Base&) = delete;
 
 protected:
-    // private Constructor
+    // private Constructor, called just once
     Base(int dimNum = 1) {
-        double start=0, end=0, mesh=0.1;
-        baseType t = Cartesian; //TODO: Improve baseType
+        double start=-5., end=5., mesh=0.01;
+        baseType t = baseType::Cartesian; //TODO: Improve baseType to allow choice in input
         this->dimNum = dimNum;
 
         switch(t){
-          case baseType::Cartesian  : std::cout << "Initializing Cartesian Basis" << std::endl;
-          case baseType::Spherical  : std::cout << "Initializing Spherical Basis" << std::endl;
-          case baseType::Cylindrical: std::cout << "Initializing Cartesian Basis" << std::endl;
-
-          default                   : throw std::invalid_argument("Wrong basis type or initialization meaningless!");
+          case 0  : std::cout << "Initializing Cartesian Basis" << std::endl;
+                    break;
+          case 1  : std::cout << "Initializing Spherical Basis" << std::endl;
+                    break;
+          case 2  : std::cout << "Initializing Cylindrical Basis" << std::endl;
+                    break;
+          default : throw std::invalid_argument("Wrong basis type or initialization meaningless!");
         }
-        ContinuousBase x(start,end,mesh);
+        ContinuousBase coord(start,end,mesh);
+        this->x = coord;
     };
 
     class DiscreteBase {
@@ -51,16 +62,18 @@ protected:
         double mesh;
         unsigned int nbox;
     public:
+        ContinuousBase();
         ContinuousBase(double, unsigned int);
         ContinuousBase(double, double, double);
         ContinuousBase(double, double, unsigned int);
 
         std::vector<double> coord;
     };
+
 private:
     enum baseType {Cartesian = 0, Spherical = 1, Cylindrical = 2};
     int dimNum;
-
+    ContinuousBase x;
 };
 
 #endif

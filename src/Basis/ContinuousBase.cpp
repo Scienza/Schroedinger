@@ -1,5 +1,7 @@
 #include "Base.h"
 
+Base::ContinuousBase::ContinuousBase(){}
+
 Base::ContinuousBase::ContinuousBase(double mesh, unsigned int nbox)
 {
     //constant mesh, symmetrical box
