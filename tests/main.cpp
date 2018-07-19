@@ -62,11 +62,12 @@ namespace {
         double end   =   (nbox/2.) * mesh;
         Base::get_instance();
         std::vector<double> x(nbox), y(nbox), e(nbox);
-
+        auto cont = Base::get_instance().get_continuous();
+        
         for(std::vector<int>::size_type i = 0; i < x.size(); i++){
             x[i] = mesh * (int) (i - nbox / 2);
 
-            ASSERT_NEAR(x[i], Base::get_instance().get_continuous()[i], err);
+            ASSERT_NEAR(x[i], cont.coord[i], err);
         }
 
         // std::cout << Base::get_instance().get_dim() << std::endl;

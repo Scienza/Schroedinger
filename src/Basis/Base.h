@@ -13,8 +13,8 @@ public:
       return instance;
     }
 
-    std::vector<double> get_continuous(){
-      return this->x.coord;
+    auto get_continuous(){
+      return this->x;
     }
 
     int get_dim(){
