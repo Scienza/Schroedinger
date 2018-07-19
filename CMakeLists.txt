@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.5)
 project(Schroedinger)
 
 # Force C++17 standard
-#set(CMAKE_CXX_STANDARD              17)
-#set(CMAKE_CXX_STANDARD_REQUIRED     ON)
+set(CMAKE_CXX_STANDARD              17)
+set(CMAKE_CXX_STANDARD_REQUIRED     ON)
 set(CMAKE_CXX_FLAGS -D_EMULATE_GLIBC=0)
 set(CMAKE_CXX_FLAGS "--std=c++17") 
 
@@ -59,19 +59,16 @@ add_executable (
 )
 
 
-if (NOT WIN32)
-    # Test executable
-    add_executable(
-            unit_tests
-            ${TESTS}
-    )
-
-    add_dependencies(unit_tests googletest)
-    target_link_libraries(
+# Test executable
+add_executable(
         unit_tests
-        googletest
-        pthread
-    )
-    include(CTest)
-    enable_testing()
-endif()
+        ${TESTS}
+)
+
+add_dependencies(unit_tests googletest)
+target_link_libraries(
+    unit_tests
+    googletest
+)
+include(CTest)
+enable_testing()

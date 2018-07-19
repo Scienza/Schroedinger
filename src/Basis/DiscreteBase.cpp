@@ -1,6 +1,6 @@
 #include "Base.h"
 
-Base::DiscreteBase::DiscreteBase(int start, int end, int step)
+DiscreteBase::DiscreteBase(int start, int end, int step)
 {
     //if not integer division of the basis
     if( (end-start)/step % 1 != 0)

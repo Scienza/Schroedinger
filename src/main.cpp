@@ -6,7 +6,8 @@
 int main(int argc, char **argv) {
     unsigned int nbox = 1000;
     double step = 0.01, norm;
-    Base::ContinuousBase x(step, nbox);
+    
+	ContinuousBase x(step, nbox);
 
     double *wavefunction = new double[nbox];
 

@@ -1,8 +1,8 @@
 #include "Base.h"
 
-Base::ContinuousBase::ContinuousBase(){}
+ContinuousBase::ContinuousBase(){}
 
-Base::ContinuousBase::ContinuousBase(double mesh, unsigned int nbox)
+ContinuousBase::ContinuousBase(double mesh, unsigned int nbox)
 {
     //constant mesh, symmetrical box
     this-> start = - (nbox/2.) * mesh;
@@ -20,7 +20,7 @@ Base::ContinuousBase::ContinuousBase(double mesh, unsigned int nbox)
 }
 
 
-Base::ContinuousBase::ContinuousBase(double start, double end, double mesh)
+ContinuousBase::ContinuousBase(double start, double end, double mesh)
 {
 
     if( end - start <= 0){
@@ -41,7 +41,7 @@ Base::ContinuousBase::ContinuousBase(double start, double end, double mesh)
 }
 
 
-Base::ContinuousBase::ContinuousBase(double start, double end, unsigned int nbox)
+ContinuousBase::ContinuousBase(double start, double end, unsigned int nbox)
 {
     if( end - start <= 0){
         std::invalid_argument("CountinousBase starting-end = 0");
