@@ -8,9 +8,10 @@ jobs:
           name: Dependencies
           command: |
               apt-get -y update 
-              apt-get -y install build-essential 
-              apt-get -y install cmake
-              apt-get -y install git
+              apt-get -t testing update
+              apt-get -y -t testing install build-essential 
+              apt-get -y -t testing install cmake
+              apt-get -y -t testing install git
               
       - run:
           name: Avoid hosts unknown for github
