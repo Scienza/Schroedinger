@@ -7,6 +7,7 @@ jobs:
       - run:
           name: Dependencies
           command: |
+              sh -c 'echo "deb http://ftp.us.debian.org/debian testing main contrib non-free" >> /etc/apt/sources.list'
               apt-get -y update 
               apt-get -t testing update
               apt-get -y -t testing install build-essential 
