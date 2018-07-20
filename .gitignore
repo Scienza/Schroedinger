@@ -2,6 +2,7 @@ out
 *.x
 *.a
 *.tcl
+*.exe
 bin
 .idea
 cmake-*
