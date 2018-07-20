@@ -66,9 +66,17 @@ add_executable(
 )
 
 add_dependencies(unit_tests googletest)
-target_link_libraries(
-    unit_tests
-    googletest
-)
+if (WIN32)
+    target_link_libraries(
+        unit_tests
+        googletest
+    )
+    else()
+    target_link_libraries(
+        unit_tests
+        googletest
+        pthread
+    )
+endif()
 include(CTest)
 enable_testing()
