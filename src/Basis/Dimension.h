@@ -1,8 +1,4 @@
-// Dimension class (specified and implemented inside ContinuousBase and DiscreteBase)
-// used to add arbitrary dimension to basis.
-class Dimension {};
-
-class DiscreteDimension : Dimension
+class DiscreteDimension 
 {
 public:
 	int start, end, step;
@@ -10,7 +6,7 @@ public:
 	DiscreteDimension(int, int, int);
 };
 
-class ContinuousDimension : public Dimension
+class ContinuousDimension 
 {
 public:
 	double start, end, mesh, nbox;
