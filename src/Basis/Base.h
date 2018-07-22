@@ -13,20 +13,20 @@
 class Base
 {
 public:
-	enum baseType { Cartesian = 0, Spherical = 1, Cylindrical = 2 };
-	Base(baseType, int, std::vector< ContinuousDimension >, std::vector< DiscreteDimension >);
+	enum BaseType { Cartesian = 0, Spherical = 1, Cylindrical = 2 };
+	Base(BaseType, int, std::vector< ContinuousDimension >, std::vector< DiscreteDimension >);
 
 	int get_dim() {
 		return this->dimensions;
 	}
-	/*
-	ContinuousBase get_continuous() {
+	
+	const ContinuousBase& get_continuous() const {
 		return continuous;
 	}
-	DiscreteBase get_discrete() {
+	const DiscreteBase& get_discrete() const {
 		return discrete;
 	}
-	*/
+	
 
 private:
     ContinuousBase continuous;

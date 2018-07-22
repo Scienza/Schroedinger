@@ -1,6 +1,5 @@
 #include "Base.h"
-//TODO: instead of having an integer parameter, use the enum baseType
-Base::Base(baseType t, int n_dimension, std::vector<ContinuousDimension> c_dim, std::vector<DiscreteDimension> d_dim) {
+Base::Base(BaseType t, int n_dimension, std::vector<ContinuousDimension> c_dim, std::vector<DiscreteDimension> d_dim) {
 
 	switch (t) {
 		case Cartesian: std::cout << "Initializing Cartesian Basis" << std::endl;
@@ -11,6 +10,7 @@ Base::Base(baseType t, int n_dimension, std::vector<ContinuousDimension> c_dim, 
 		case Cylindrical: std::cout << "Initializing Cylindrical Basis" << std::endl;
 			break;
 		default: throw std::invalid_argument("Wrong basis type or initialization meaningless!");
+			break;
 	}
 
 	this->dimensions = n_dimension;

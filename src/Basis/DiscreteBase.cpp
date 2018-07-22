@@ -1,19 +1,6 @@
 #include <DiscreteBase.h>
 
-DiscreteDimension::DiscreteDimension(int start, int end, int step) {
-	if ((end - start) / step % 1 != 0)
-		throw std::invalid_argument("invalid discrete basis given (check interval and step).");
-	if ((end - start) / step < 1)
-		throw std::invalid_argument("invalid discrete basis given (check interval and step).");
-    if ((end - start) / step == 0)
-        throw std::invalid_argument("Empty dimensions basis given.");
-
-	this-> base_value = (end - start) / step;
-    this-> start	  = start;
-    this-> end		  = end;
-    this-> step		  = step;
-}
-
+DiscreteBase::DiscreteBase() {}
 DiscreteBase::DiscreteBase(std::vector< DiscreteDimension > dim)
 {
 	for (std::vector<DiscreteDimension>::iterator d = dim.begin(); d != dim.end(); ++d) {

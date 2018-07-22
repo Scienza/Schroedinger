@@ -1,26 +1,26 @@
 #ifndef DIMENSION_H
 #define DIMENSION_H
+#include <stdexcept>
+
 class Dimension {
 private:
-	static int id;
+	int id;
+	void setId();
+
 public:
-	Dimension() {
-		id = id++;
-	}
+	Dimension();
 	const int& getId() const{
 		return this->id;
 	}
 
 	// Overloading < operator due to "id" comparison used in std::map (ContinuousBase / DiscreteBase)
-	friend bool operator<(const Dimension& b1, const Dimension& b2) {
+	friend bool Dimension::operator<(const Dimension& b1, const Dimension& b2) {
 		if (b1.getId() == b2.getId())
 			return false;
 		else return true;
 	}
 
 };
-
-int Dimension::id = 0;
 
 class DiscreteDimension : public Dimension
 {
