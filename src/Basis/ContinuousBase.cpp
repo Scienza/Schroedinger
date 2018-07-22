@@ -40,8 +40,9 @@ ContinuousDimension::ContinuousDimension(double start, double end, unsigned int 
 // we fill the map properties with the pair <dimension's properties, evalued coords>
 ContinuousBase::ContinuousBase(std::vector< ContinuousDimension > dim)
 {
-	for (auto &d : dim) {
-		this->properties.insert(std::make_pair(d, evaluateCoord(d)));
+	for (std::vector<ContinuousDimension>::iterator d = dim.begin(); d != dim.end(); ++d) {
+		
+		this->properties.insert(std::pair(*d, evaluateCoord(*d)));
 	}
 }
 
