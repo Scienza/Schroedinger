@@ -14,8 +14,8 @@ public:
 	}
 
 	// Overloading < operator due to "id" comparison used in std::map (ContinuousBase / DiscreteBase)
-	friend bool Dimension::operator<(const Dimension& b1, const Dimension& b2) {
-		if (b1.getId() == b2.getId())
+	bool Dimension::operator<(const Dimension& b) {
+		if (b.getId() == getId())
 			return false;
 		else return true;
 	}
