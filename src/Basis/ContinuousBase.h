@@ -5,15 +5,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <map>
-
-class ContinuousDimension : public Dimension 
-{
-public:
-	double start, end, mesh, nbox;
-	ContinuousDimension(double, unsigned int);
-	ContinuousDimension(double, double, double);
-	ContinuousDimension(double, double, unsigned int);
-};
+#include <Dimension.h>
 
 class ContinuousBase 
 {

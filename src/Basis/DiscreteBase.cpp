@@ -17,7 +17,7 @@ DiscreteDimension::DiscreteDimension(int start, int end, int step) {
 DiscreteBase::DiscreteBase(std::vector< DiscreteDimension > dim)
 {
 	for (auto &d : dim) {
-		this->properties.insert(std::pair(d, evaluateCoord(d)));
+		this->properties.insert(std::make_pair(d, evaluateCoord(d)));
 	}
 }
 

@@ -1,6 +1,5 @@
 #include <ContinuousBase.h>
 
-
 ContinuousDimension::ContinuousDimension(double mesh, unsigned int nbox)
 {
 	if (end - start <= 0) {
@@ -42,7 +41,7 @@ ContinuousDimension::ContinuousDimension(double start, double end, unsigned int 
 ContinuousBase::ContinuousBase(std::vector< ContinuousDimension > dim)
 {
 	for (auto &d : dim) {
-		this->properties.insert(std::pair(d, evaluateCoord(d)));
+		this->properties.insert(std::make_pair(d, evaluateCoord(d)));
 	}
 }
 

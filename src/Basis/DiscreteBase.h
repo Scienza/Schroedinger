@@ -5,23 +5,16 @@
 #include <stdexcept>
 #include <iostream>
 #include <map>
-
-class DiscreteDimension : Dimension 
-{
-public:
-	int start, end, step;
-	unsigned int base_value;
-	DiscreteDimension(int, int, int);
-};
+#include <Dimension.h>
 
 class DiscreteBase 
 {
 private:
 	std::map < DiscreteDimension , std::vector<int> > properties;
-	std::vector<int> evaluateCoord( DiscreteDimension);
+	std::vector <int> evaluateCoord( DiscreteDimension);
 public:
 	DiscreteBase();
-	DiscreteBase(std::vector< DiscreteDimension >);
+	DiscreteBase(std::vector < DiscreteDimension >);
 };
 
 #endif
