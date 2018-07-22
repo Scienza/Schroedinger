@@ -1,3 +1,6 @@
+#ifndef DIMENSION_H
+#define DIMENSION_H
+
 class DiscreteDimension 
 {
 public:
@@ -14,3 +17,6 @@ public:
 	ContinuousDimension(double, double, double);
 	ContinuousDimension(double, double, unsigned int);
 };
+
+
+#endif
