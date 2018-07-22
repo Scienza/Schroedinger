@@ -1,7 +1,28 @@
 #ifndef DIMENSION_H
 #define DIMENSION_H
+class Dimension {
+private:
+	static int id;
+public:
+	Dimension() {
+		id = id++;
+	}
+	const int& getId() const{
+		return this->id;
+	}
 
-class DiscreteDimension 
+	// Overloading < operator due to "id" comparison used in std::map (ContinuousBase / DiscreteBase)
+	friend bool operator<(const Dimension& b1, const Dimension& b2) {
+		if (b1.getId() == b2.getId())
+			return false;
+		else return true;
+	}
+
+};
+
+int Dimension::id = 0;
+
+class DiscreteDimension : public Dimension
 {
 public:
 	int start, end, step;
@@ -9,7 +30,7 @@ public:
 	DiscreteDimension(int, int, int);
 };
 
-class ContinuousDimension 
+class ContinuousDimension : public Dimension
 {
 public:
 	double start, end, mesh, nbox;
@@ -17,6 +38,5 @@ public:
 	ContinuousDimension(double, double, double);
 	ContinuousDimension(double, double, unsigned int);
 };
-
 
 #endif
