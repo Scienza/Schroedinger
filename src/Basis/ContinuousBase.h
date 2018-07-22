@@ -4,8 +4,10 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+#include <map>
 
-class ContinuousDimension : public Dimension {
+class ContinuousDimension : public Dimension 
+{
 public:
 	double start, end, mesh, nbox;
 	ContinuousDimension(double, unsigned int);
@@ -13,7 +15,8 @@ public:
 	ContinuousDimension(double, double, unsigned int);
 };
 
-class ContinuousBase {
+class ContinuousBase 
+{
 private:
 	std::map< ContinuousDimension, std::vector<double>> properties;
 	std::vector<double> evaluateCoord(ContinuousDimension);

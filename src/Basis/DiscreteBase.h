@@ -4,15 +4,18 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+#include <map>
 
-class DiscreteDimension : Dimension{
+class DiscreteDimension : Dimension 
+{
 public:
 	int start, end, step;
 	unsigned int base_value;
 	DiscreteDimension(int, int, int);
 };
 
-class DiscreteBase {
+class DiscreteBase 
+{
 private:
 	std::map < DiscreteDimension , std::vector<int> > properties;
 	std::vector<int> evaluateCoord( DiscreteDimension);

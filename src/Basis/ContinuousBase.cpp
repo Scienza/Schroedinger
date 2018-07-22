@@ -1,4 +1,5 @@
-#include "Base.h"
+#include <ContinuousBase.h>
+
 
 ContinuousDimension::ContinuousDimension(double mesh, unsigned int nbox)
 {

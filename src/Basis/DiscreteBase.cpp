@@ -1,4 +1,4 @@
-#include "Base.h"
+#include <DiscreteBase.h>
 
 DiscreteDimension::DiscreteDimension(int start, int end, int step) {
 	if ((end - start) / step % 1 != 0)
