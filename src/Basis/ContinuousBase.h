@@ -5,19 +5,21 @@
 #include <stdexcept>
 #include <iostream>
 
+class ContinuousDimension : public Dimension {
+public:
+	double start, end, mesh, nbox;
+	ContinuousDimension(double, unsigned int);
+	ContinuousDimension(double, double, double);
+	ContinuousDimension(double, double, unsigned int);
+};
+
 class ContinuousBase {
 private:
-	double start;
-	double end;
-	double mesh;
-	unsigned int nbox;
+	std::map< ContinuousDimension, std::vector<double>> properties;
+	std::vector<double> evaluateCoord(ContinuousDimension);
 public:
 	ContinuousBase();
-	ContinuousBase(double, unsigned int);
-	ContinuousBase(double, double, double);
-	ContinuousBase(double, double, unsigned int);
-
-	std::vector<double> coord;
+	ContinuousBase(std::vector< ContinuousDimension >);
 };
 
 #endif

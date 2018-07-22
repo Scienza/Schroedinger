@@ -54,7 +54,7 @@ namespace {
         ASSERT_NEAR(std::hermite(3, 10.), H3(10.), err);
         ASSERT_NEAR(std::hermite(4, 4.3), H4(4.3), err);
     }
-
+	/*
     TEST(Basis,Constructor){
         unsigned int nbox = 1000;
         double mesh = 0.01;
@@ -101,7 +101,7 @@ namespace {
         catch (std::invalid_argument e) {}
     }
 
-
+	*/
     // TEST(WfTest,HarmonicOscillator){
     //     unsigned int nbox = 1000;
     //     double mesh = dx;

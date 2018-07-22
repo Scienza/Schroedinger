@@ -5,14 +5,20 @@
 #include <stdexcept>
 #include <iostream>
 
+class DiscreteDimension : Dimension{
+public:
+	int start, end, step;
+	unsigned int base_value;
+	DiscreteDimension(int, int, int);
+};
+
 class DiscreteBase {
 private:
-	int start;
-	int end;
-	int step;
+	std::map < DiscreteDimension , std::vector<int> > properties;
+	std::vector<int> evaluateCoord( DiscreteDimension);
 public:
-	DiscreteBase(int, int, int);
-	std::vector<int> quantum_numbers;
+	DiscreteBase();
+	DiscreteBase(std::vector< DiscreteDimension >);
 };
 
 #endif

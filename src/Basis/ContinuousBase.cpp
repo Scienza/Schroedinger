@@ -1,60 +1,55 @@
 #include "Base.h"
 
-ContinuousBase::ContinuousBase(){}
-
-ContinuousBase::ContinuousBase(double mesh, unsigned int nbox)
+ContinuousDimension::ContinuousDimension(double mesh, unsigned int nbox)
 {
-    //constant mesh, symmetrical box
-    this-> start = - (nbox/2.) * mesh;
-    this-> end   =   (nbox/2.) * mesh;
-    this-> mesh  = mesh;
-    this-> nbox  = nbox;
+	if (end - start <= 0) {
+		std::invalid_argument("CountinousBase starting-end = 0");
+	}
 
-    if( end - start <= 0){
-        std::invalid_argument("CountinousBase starting-end = 0");
-    }
-
-    this->coord.reserve(nbox);
-    for(std::vector<double>::size_type i = 0; i < nbox; i++)
-        this->coord.push_back(start + mesh * i);
+	this->start = -(nbox / 2.) * mesh;
+	this->end   = (nbox / 2.) * mesh;
+	this->mesh  = mesh;
+	this->nbox  = nbox;
 }
 
-
-ContinuousBase::ContinuousBase(double start, double end, double mesh)
+ContinuousDimension::ContinuousDimension(double start, double end, double mesh)
 {
+	if (end - start <= 0) {
+		std::invalid_argument("CountinousBase starting-end = 0");
+	}
 
-    if( end - start <= 0){
-        std::invalid_argument("CountinousBase end - starting < 0");
-    }
-
-    //constant mesh
-    unsigned int nbox = (unsigned int)( (end-start)/mesh );
-
-    this-> start = start;
-    this-> end   = end;
-    this-> mesh  = mesh;
-    this-> nbox  = nbox;
-
-    this->coord.reserve(nbox);
-    for(std::vector<double>::size_type i = 0; i < nbox; i++)
-        this->coord.push_back(start + mesh * i);
+	this->start = start;
+	this->end = end;
+	this->mesh = mesh;
+	this->nbox = (unsigned int)((end - start) / mesh);
 }
 
-
-ContinuousBase::ContinuousBase(double start, double end, unsigned int nbox)
+ContinuousDimension::ContinuousDimension(double start, double end, unsigned int nbox)
 {
-    if( end - start <= 0){
-        std::invalid_argument("CountinousBase starting-end = 0");
-    }
-    //constant mesh
-    double mesh = (end-start)/nbox;
+	if (end - start <= 0) {
+		std::invalid_argument("CountinousBase starting-end = 0");
+	}
+	
+	this->start = start;
+	this->end = end;
+	this->mesh = (end - start) / nbox;
+	this->nbox = nbox;
+}
 
-    this-> start = start;
-    this-> end   = end;
-    this-> mesh  = mesh;
-    this-> nbox  = nbox;
+// To construct a DiscreteBase of generic dimensions (specified with the vector dim), 
+// we fill the map properties with the pair <dimension's properties, evalued coords>
+ContinuousBase::ContinuousBase(std::vector< ContinuousDimension > dim)
+{
+	for (auto &d : dim) {
+		this->properties.insert(std::pair(d, evaluateCoord(d)));
+	}
+}
 
-    this->coord.reserve(nbox);
-    for(std::vector<double>::size_type i = 0; i < nbox; i++)
-        this->coord.push_back(start + mesh * i);
+std::vector<double> ContinuousBase::evaluateCoord(ContinuousDimension dim)
+{
+	std::vector<double> coord;
+	coord.reserve(dim.nbox);
+	for (std::vector<double>::size_type i = 0; i < dim.nbox; i++)
+		coord.push_back(dim.start + dim.mesh * i);
+	return coord;
 }

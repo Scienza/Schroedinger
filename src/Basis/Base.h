@@ -2,43 +2,36 @@
 #define BASE_H
 
 #include <vector>
+#include <map>
 #include <stdexcept>
 #include <iostream>
+
+#include <Dimension.h>
 #include <DiscreteBase.h>
 #include <ContinuousBase.h>
-
-class Base;
 
 class Base
 {
 public:
 	enum baseType { Cartesian = 0, Spherical = 1, Cylindrical = 2 };
-    static Base& get_instance(){
-		static Base instance;
-		return instance;
-    }
+	Base(baseType, int, std::vector< ContinuousDimension >, std::vector< DiscreteDimension >);
 
-    auto get_continuous(){
-	   return this->x;
-    } 
-
-    int get_dim(){
-		return dimNum;
-    }
-
-    // avoid copy; public for better error handling
-    Base(const Base&)            = delete;
-    void operator= (const Base&) = delete;
-
-protected:
-    // private Constructor, called just once
-    // Base(int);
-    Base(int dimNum = 1);
-
+	int get_dim() {
+		return this->dimensions;
+	}
+	/*
+	ContinuousBase get_continuous() {
+		return continuous;
+	}
+	DiscreteBase get_discrete() {
+		return discrete;
+	}
+	*/
 
 private:
-    int dimNum;
-    ContinuousBase x;
+    ContinuousBase continuous;
+	DiscreteBase discrete;
+	int dimensions;
 };
 
 #endif
