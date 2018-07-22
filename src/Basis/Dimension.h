@@ -14,12 +14,11 @@ public:
 	}
 
 	// Overloading < operator due to "id" comparison used in std::map (ContinuousBase / DiscreteBase)
-	bool Dimension::operator<(const Dimension& b) {
-		if (b.getId() == getId())
+	friend bool operator<(const Dimension& b1, const Dimension& b2) {
+		if (b1.getId() == b2.getId())
 			return false;
 		else return true;
 	}
-
 };
 
 class DiscreteDimension : public Dimension
