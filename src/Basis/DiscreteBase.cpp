@@ -12,10 +12,8 @@ std::vector<int> DiscreteBase::evaluateCoord(DiscreteDimension dim)
 {
 	std::vector<int> quantum_numbers;
 	quantum_numbers.reserve(dim.base_value);
-	int j = 0;
 	for (int i = dim.start; i < dim.end; i += dim.step) {
-		quantum_numbers[j] = i;
-		j++;
+		quantum_numbers.push_back(i);
 	}
 	return quantum_numbers;
 }

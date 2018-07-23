@@ -11,6 +11,10 @@ BasisManager* BasisManager::getInstance()
 	}
 };
 
+void BasisManager::addBase(Base b) {
+	this-> basis.push_back(b);
+}
+
 const std::vector<Base> &BasisManager::getBasisList() {
 	return this->basis;
 }

@@ -8,7 +8,8 @@ public:
 	static BasisManager *getInstance();
 	const std::vector<Base>& getBasisList(Source);
 	const std::vector<Base>& getBasisList();
-	
+	void addBase(Base);
+
 	class Builder {
 		std::vector<DiscreteDimension> d_dim;
 		std::vector<ContinuousDimension> c_dim;
