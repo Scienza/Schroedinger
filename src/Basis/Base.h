@@ -19,17 +19,17 @@ public:
 	int get_dim() {
 		return this->dimensions;
 	}
-	
+
 	const ContinuousBase& get_continuous() const {
 		return continuous;
 	}
 	const DiscreteBase& get_discrete() const {
 		return discrete;
 	}
-	
+
 
 private:
-    ContinuousBase continuous;
+  ContinuousBase continuous;
 	DiscreteBase discrete;
 	int dimensions;
 };

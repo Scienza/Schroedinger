@@ -3,8 +3,8 @@ class BasisManager
 {
 
 public:
-	enum Source { MEMORY = 0, FILE = 1 }; 
-	
+	enum Source { MEMORY = 0, FILE = 1 };
+
 	static BasisManager *getInstance();
 	const std::vector<Base>& getBasisList(Source);
 	const std::vector<Base>& getBasisList();
@@ -20,12 +20,12 @@ public:
 		 Builder addContinuousDimension(double, double, double);
 		 Builder addContinuousDimension(double, double, unsigned int);
 	};
-	
+
 	BasisManager(const BasisManager&)           = delete;
 	BasisManager& operator=(const BasisManager) = delete;
 
 private:
-	std::vector<Base> basis;
+	std::vector<Base> bases;
 	static BasisManager* instance;
 	BasisManager() {}
 };

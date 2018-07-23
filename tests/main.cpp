@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "../src/Schroedinger/Schroedinger.h"
-#include "../src/Basis/Base.h"
+#include "../src/Basis/BasisManager.h"
 #include "test.h"
 
 double H3(double x) { return  8*std::pow(x,3) - 12*x; }
@@ -54,26 +54,33 @@ namespace {
         ASSERT_NEAR(std::hermite(3, 10.), H3(10.), err);
         ASSERT_NEAR(std::hermite(4, 4.3), H4(4.3), err);
     }
-	/*
+
     TEST(Basis,Constructor){
         unsigned int nbox = 1000;
         double mesh = 0.01;
-        double start = - (nbox/2.) * mesh;
-        double end   =   (nbox/2.) * mesh;
-        Base::get_instance();
-        std::vector<double> x(nbox), y(nbox), e(nbox);
-        auto cont = Base::get_instance().get_continuous();
-        
+        std::vector<double> x(nbox);
+        // double start = - (nbox/2.) * mesh;
+        // double end   =   (nbox/2.) * mesh;
+
+        // Building Basis
+        BasisManager::Builder b = BasisManager::Builder();
+      	BasisManager *manager = BasisManager::getInstance();
+
+        manager->addBase( b.addContinuousDimension(mesh,nbox)
+      					           .build(Base::BaseType::Cartesian, 1)
+                         );
+
+        std::vector<Base> bases = manager->getBasisList();
+
+        auto cont = bases[0].get_continuous().evaluateCoord(b.c_dim[0]);
+
         for(std::vector<int>::size_type i = 0; i < x.size(); i++){
             x[i] = mesh * (int) (i - nbox / 2);
 
-            ASSERT_NEAR(x[i], cont.coord[i], err);
+            ASSERT_NEAR(x[i], cont[i], err);
         }
-
-        // std::cout << Base::get_instance().get_dim() << std::endl;
-
     }
-
+/*
     TEST(Potential, widthMustBePositive) {
         std::vector<double> x;
         try {

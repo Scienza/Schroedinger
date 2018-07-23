@@ -12,24 +12,24 @@ BasisManager* BasisManager::getInstance()
 };
 
 void BasisManager::addBase(Base b) {
-	this-> basis.push_back(b);
+	this-> bases.push_back(b);
 }
 
 const std::vector<Base> &BasisManager::getBasisList() {
-	return this->basis;
+	return this->bases;
 }
 
 const std::vector<Base> &BasisManager::getBasisList(Source s) {
 	switch (s) {
 		case MEMORY:
-			return this->basis;
+			return this->bases;
 			break;
 
 		case FILE:
 			//TODO: read from default basis file
 			break;
 	}
-	return this->basis;
+	return this->bases;
 }
 
 Base BasisManager::Builder::build(Base::BaseType b, int dimension) {
