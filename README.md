@@ -17,10 +17,6 @@ Numerov solver takes in input an energy bracket in which to look for solution. I
 ### How to build
 From the CLI navigate into project's directory, then run:
 ```
-$ cd external/googletest
-$ git submodule init
-$ git submodule update
-$ cd ../../
 $ mkdir build
 $ cd build
 $ cmake ..
