@@ -4,20 +4,20 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+#include <map>
 
-class ContinuousBase {
+class ContinuousBase 
+{
 private:
-	double start;
-	double end;
-	double mesh;
-	unsigned int nbox;
+	double start, end, mesh, nbox;
+	std::vector<double> coords;
+	std::vector<double> evaluate();
 public:
-	ContinuousBase();
+	std::vector<double> getCoords();
+	ContinuousBase();	
 	ContinuousBase(double, unsigned int);
 	ContinuousBase(double, double, double);
 	ContinuousBase(double, double, unsigned int);
-
-	std::vector<double> coord;
 };
 
 #endif

@@ -4,15 +4,19 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+#include <map>
 
-class DiscreteBase {
+class DiscreteBase 
+{
 private:
-	int start;
-	int end;
-	int step;
+	int start, end, step;
+	unsigned int base_value;
+	std::vector<int> coords;
+	std::vector <int> evaluate();
 public:
+	std::vector<int> getCoords();
+	DiscreteBase();
 	DiscreteBase(int, int, int);
-	std::vector<int> quantum_numbers;
 };
 
 #endif

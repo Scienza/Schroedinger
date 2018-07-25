@@ -2,8 +2,8 @@
 
 #include <gtest/gtest.h>
 
-#include "../src/Schroedinger/Schroedinger.h"
-#include "../src/Basis/Base.h"
+#include <Schroedinger.h>
+#include <BasisManager.h>
 #include "test.h"
 
 double H3(double x) { return  8*std::pow(x,3) - 12*x; }
@@ -57,23 +57,30 @@ namespace {
 
     TEST(Basis,Constructor){
         unsigned int nbox = 1000;
-        double mesh = 0.01;
-        double start = - (nbox/2.) * mesh;
-        double end   =   (nbox/2.) * mesh;
-        Base::get_instance();
-        std::vector<double> x(nbox), y(nbox), e(nbox);
-        auto cont = Base::get_instance().get_continuous();
-        
+        double mesh		  = 0.01;
+        std::vector<double> x(nbox);
+		
+		// Building Basis
+        BasisManager::Builder b = BasisManager::Builder();
+      	BasisManager *manager = BasisManager::getInstance();
+
+		// With this we save a new base, created with the Builder object b.
+        manager->addBase( b.addContinuous(mesh,nbox).build(Base::BaseType::Cartesian, 1) );
+
+		// This is to get a list of available basis
+        std::vector<Base> bases = manager->getBasisList();
+
+		// getContinuous() returns a vector of continuousbasis, even if there's only one dimension!
+        // So in this test we select the first base and its first continuousbase
+		ContinuousBase firstContinuousBase			= bases.at(0).getContinuous().at(0);
+		std::vector<double> firstDimensionCoords	= firstContinuousBase.getCoords();
+
         for(std::vector<int>::size_type i = 0; i < x.size(); i++){
             x[i] = mesh * (int) (i - nbox / 2);
-
-            ASSERT_NEAR(x[i], cont.coord[i], err);
+            ASSERT_NEAR(x[i], firstDimensionCoords[i], err);
         }
-
-        // std::cout << Base::get_instance().get_dim() << std::endl;
-
     }
-
+/*
     TEST(Potential, widthMustBePositive) {
         std::vector<double> x;
         try {
@@ -101,7 +108,7 @@ namespace {
         catch (std::invalid_argument e) {}
     }
 
-
+	*/
     // TEST(WfTest,HarmonicOscillator){
     //     unsigned int nbox = 1000;
     //     double mesh = dx;

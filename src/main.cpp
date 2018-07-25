@@ -1,23 +1,19 @@
 #include <iostream>
 #include <string>
-#include "../src/Potential/Potential.h"
-#include "../src/Schroedinger/Schroedinger.h"
+#include <BasisManager.h>
+#include <Potential.h>
+#include <Schroedinger.h>
 
 int main(int argc, char **argv) {
-    unsigned int nbox = 1000;
-    double step = 0.01, norm;
-    
-	ContinuousBase x(step, nbox);
 
-    double *wavefunction = new double[nbox];
+	BasisManager::Builder b = BasisManager::Builder();
+	BasisManager *manager = BasisManager::getInstance();
 
-    Potential::Builder b(x.coord);
+	manager->addBase( b.addDiscrete(0, 5, 1)
+					   .addContinuous(-5.0, 5.0, 0.01)
+					   .build(Base::BaseType::Cartesian, 1)
+	);
 
-    Potential V = b.build();
-
-    wavefunction[0] = 0.;
-    wavefunction[1] = 0.2; //later on it gets renormalized, so is just a conventional number
-    solve_Numerov(0., 2., 0.01, nbox, V, wavefunction);
-
-    return 0;
+	std::vector<Base> basis = manager->getBasisList();
+	return 0;
 }

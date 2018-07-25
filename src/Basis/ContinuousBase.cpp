@@ -1,60 +1,53 @@
-#include "Base.h"
+#include <ContinuousBase.h>
 
-ContinuousBase::ContinuousBase(){}
-
+ContinuousBase::ContinuousBase() {}
 ContinuousBase::ContinuousBase(double mesh, unsigned int nbox)
 {
-    //constant mesh, symmetrical box
-    this-> start = - (nbox/2.) * mesh;
-    this-> end   =   (nbox/2.) * mesh;
-    this-> mesh  = mesh;
-    this-> nbox  = nbox;
+	if (end - start <= 0) {
+		std::invalid_argument("CountinousBase starting-end = 0");
+	}
 
-    if( end - start <= 0){
-        std::invalid_argument("CountinousBase starting-end = 0");
-    }
-
-    this->coord.reserve(nbox);
-    for(std::vector<double>::size_type i = 0; i < nbox; i++)
-        this->coord.push_back(start + mesh * i);
+	this->start  = -(nbox / 2.) * mesh;
+	this->end	 = (nbox / 2.) * mesh;
+	this->mesh   = mesh;
+	this->nbox   = nbox;
+	this->coords = evaluate();
 }
-
 
 ContinuousBase::ContinuousBase(double start, double end, double mesh)
 {
+	if (end - start <= 0) {
+		std::invalid_argument("CountinousBase starting-end = 0");
+	}
 
-    if( end - start <= 0){
-        std::invalid_argument("CountinousBase end - starting < 0");
-    }
-
-    //constant mesh
-    unsigned int nbox = (unsigned int)( (end-start)/mesh );
-
-    this-> start = start;
-    this-> end   = end;
-    this-> mesh  = mesh;
-    this-> nbox  = nbox;
-
-    this->coord.reserve(nbox);
-    for(std::vector<double>::size_type i = 0; i < nbox; i++)
-        this->coord.push_back(start + mesh * i);
+	this->start = start;
+	this->end = end;
+	this->mesh = mesh;
+	this->nbox = (unsigned int)((end - start) / mesh);
+	this->coords = evaluate();
 }
-
 
 ContinuousBase::ContinuousBase(double start, double end, unsigned int nbox)
 {
-    if( end - start <= 0){
-        std::invalid_argument("CountinousBase starting-end = 0");
-    }
-    //constant mesh
-    double mesh = (end-start)/nbox;
+	if (end - start <= 0) {
+		std::invalid_argument("CountinousBase starting-end = 0");
+	}
 
-    this-> start = start;
-    this-> end   = end;
-    this-> mesh  = mesh;
-    this-> nbox  = nbox;
+	this->start = start;
+	this->end = end;
+	this->mesh = (end - start) / nbox;
+	this->nbox = nbox;
+	this->coords = evaluate();
+}
+std::vector<double> ContinuousBase::evaluate()
+{
+	std::vector<double> coord;
+	coord.reserve(this->nbox);
+	for (std::vector<double>::size_type i = 0; i < this->nbox; i++)
+		coord.push_back(this->start + this->mesh * i);
+	return coord;
+}
 
-    this->coord.reserve(nbox);
-    for(std::vector<double>::size_type i = 0; i < nbox; i++)
-        this->coord.push_back(start + mesh * i);
+std::vector<double> ContinuousBase::getCoords() {
+	return this->coords;
 }

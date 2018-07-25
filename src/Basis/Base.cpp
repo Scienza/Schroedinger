@@ -1,19 +1,31 @@
-#include "Base.h"
-//TODO: instead of having an integer parameter, use the enum baseType
-Base::Base(int dimNum) {
-	double start = -5., end = 5., mesh = 0.01;
-	baseType t = baseType::Cartesian; //TODO: Improve baseType to allow choice in input
-	this->dimNum = dimNum;
+#include <Base.h>
+
+Base::Base(BaseType t, int n_dimension, std::vector< ContinuousBase > c_base, std::vector< DiscreteBase > d_base) {
 
 	switch (t) {
-	case 0: std::cout << "Initializing Cartesian Basis" << std::endl;
-		break;
-	case 1: std::cout << "Initializing Spherical Basis" << std::endl;
-		break;
-	case 2: std::cout << "Initializing Cylindrical Basis" << std::endl;
-		break;
-	default: throw std::invalid_argument("Wrong basis type or initialization meaningless!");
+		//TODO: add here, for each base type, a control for dimensions 
+		case Cartesian: std::cout << "Initializing Cartesian Basis" << std::endl;
+			break;
+		case Spherical: std::cout << "Initializing Spherical Basis" << std::endl;
+			break;
+		case Cylindrical: std::cout << "Initializing Cylindrical Basis" << std::endl;
+			break;
+		default: throw std::invalid_argument("Wrong basis type or initialization meaningless!");
+			break;
 	}
-	ContinuousBase coord(start, end, mesh);
-	this->x = coord;
+
+	this->dimensions = n_dimension;
+	this->continuous.insert(continuous.end(), c_base.begin(), c_base.end());
+	this->discrete.insert(discrete.end(), d_base.begin(), d_base.end());
 };
+
+
+int Base::getDim() {
+	return this->dimensions;
+}
+std::vector<ContinuousBase> Base::getContinuous() {
+	return this->continuous;
+}
+std::vector<DiscreteBase> Base::getDiscrete() {
+	return this->discrete;
+}
