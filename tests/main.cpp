@@ -55,6 +55,12 @@ namespace {
         ASSERT_NEAR(std::hermite(4, 4.3), H4(4.3), err);
     }
 
+	TEST(Basis, IsSingleton) {
+		auto *m1 = BasisManager::getInstance();
+		auto *m2 = BasisManager::getInstance();
+		ASSERT_EQ(std::addressof(m1), std::addressof(m2));
+	}
+
     TEST(Basis,Constructor){
         unsigned int nbox = 1000;
         double mesh		  = 0.01;
