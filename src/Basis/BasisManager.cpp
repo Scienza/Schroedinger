@@ -11,8 +11,17 @@ BasisManager* BasisManager::getInstance()
 	}
 };
 
+void BasisManager::selectBase(Base b) {
+	// TODO: add controls here, such as: b must be an element of basis vector
+	this->selected = b;
+}
+
 void BasisManager::addBase(Base b) {
 	this-> bases.push_back(b);
+
+	// If it's there's just this one in the vector, then it's automatically selected
+		if (this->bases.size() == 1)
+		this->selectBase(b);
 }
 
 std::vector<Base> BasisManager::getBasisList() {
