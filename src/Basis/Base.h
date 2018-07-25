@@ -13,7 +13,7 @@ class Base
 public:
 	enum BaseType { Cartesian = 0, Spherical = 1, Cylindrical = 2 };
 	Base(BaseType, int, std::vector< ContinuousBase >, std::vector< DiscreteBase >);
-
+	Base() {}
 	int getDim();
 	std::vector<ContinuousBase> getContinuous();
 	std::vector<DiscreteBase> getDiscrete();

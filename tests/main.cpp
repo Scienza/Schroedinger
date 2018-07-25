@@ -56,9 +56,9 @@ namespace {
     }
 
 	TEST(Basis, IsSingleton) {
-		auto *m1 = BasisManager::getInstance();
-		auto *m2 = BasisManager::getInstance();
-		ASSERT_EQ(std::addressof(m1), std::addressof(m2));
+		BasisManager *m1 = BasisManager::getInstance();
+		BasisManager *m2 = BasisManager::getInstance();
+		ASSERT_EQ(m1, m2);
 	}
 
     TEST(Basis,Constructor){
