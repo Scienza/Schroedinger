@@ -5,16 +5,19 @@
 #include <stdexcept>
 #include <iostream>
 #include <map>
-#include <Dimension.h>
 
 class ContinuousBase 
 {
 private:
-	std::map< ContinuousDimension, std::vector<double>> properties;
-	std::vector<double> evaluateCoord(ContinuousDimension);
+	double start, end, mesh, nbox;
+	std::vector<double> coords;
+	std::vector<double> evaluate();
 public:
-	ContinuousBase();
-	ContinuousBase(std::vector< ContinuousDimension >);
+	std::vector<double> getCoords();
+	ContinuousBase();	
+	ContinuousBase(double, unsigned int);
+	ContinuousBase(double, double, double);
+	ContinuousBase(double, double, unsigned int);
 };
 
 #endif

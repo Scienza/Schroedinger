@@ -6,19 +6,19 @@ public:
 	enum Source { MEMORY = 0, FILE = 1 };
 
 	static BasisManager *getInstance();
-	const std::vector<Base>& getBasisList(Source);
-	const std::vector<Base>& getBasisList();
+	std::vector<Base> getBasisList(Source);
+	std::vector<Base> getBasisList();
 	void addBase(Base);
 
 	class Builder {
-		std::vector<DiscreteDimension> d_dim;
-		std::vector<ContinuousDimension> c_dim;
+		std::vector< DiscreteBase > d_base;
+		std::vector< ContinuousBase > c_base;
 	public:
 		 Base build(Base::BaseType, int dimension);
-		 Builder addDiscreteDimension(int, int, int);
-		 Builder addContinuousDimension(double, unsigned int);
-		 Builder addContinuousDimension(double, double, double);
-		 Builder addContinuousDimension(double, double, unsigned int);
+		 Builder addDiscrete(int, int, int);
+		 Builder addContinuous(double, unsigned int);
+		 Builder addContinuous(double, double, double);
+		 Builder addContinuous(double, double, unsigned int);
 	};
 
 	BasisManager(const BasisManager&)           = delete;

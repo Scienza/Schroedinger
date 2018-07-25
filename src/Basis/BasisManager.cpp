@@ -15,11 +15,11 @@ void BasisManager::addBase(Base b) {
 	this-> bases.push_back(b);
 }
 
-const std::vector<Base> &BasisManager::getBasisList() {
+std::vector<Base> BasisManager::getBasisList() {
 	return this->bases;
 }
 
-const std::vector<Base> &BasisManager::getBasisList(Source s) {
+std::vector<Base> BasisManager::getBasisList(Source s) {
 	switch (s) {
 		case MEMORY:
 			return this->bases;
@@ -34,25 +34,25 @@ const std::vector<Base> &BasisManager::getBasisList(Source s) {
 
 Base BasisManager::Builder::build(Base::BaseType b, int dimension) {
 	//TODO: Eventually add controls...
-	return Base(b, dimension, c_dim, d_dim);
+	return Base(b, dimension, c_base, d_base);
 }
-BasisManager::Builder BasisManager::Builder::addDiscreteDimension(int start, int end, int step) {
+BasisManager::Builder BasisManager::Builder::addDiscrete(int start, int end, int step) {
 	//TODO: Eventually add controls...
-	d_dim.push_back(DiscreteDimension(start, end, step));
+	d_base.push_back(DiscreteBase(start, end, step));
 	return *this;
 }
-BasisManager::Builder BasisManager::Builder::addContinuousDimension(double mesh, unsigned int nbox) {
+BasisManager::Builder BasisManager::Builder::addContinuous(double mesh, unsigned int nbox) {
 	//TODO: Eventually add controls...
-	c_dim.push_back(ContinuousDimension(mesh, nbox));
+	c_base.push_back(ContinuousBase(mesh, nbox));
 	return *this;
 }
-BasisManager::Builder BasisManager::Builder::addContinuousDimension(double start, double end, double mesh) {
+BasisManager::Builder BasisManager::Builder::addContinuous(double start, double end, double mesh) {
 	//TODO: Eventually add controls...
-	c_dim.push_back(ContinuousDimension(start, end, mesh));
+	c_base.push_back(ContinuousBase(start, end, mesh));
 	return *this;
 }
-BasisManager::Builder BasisManager::Builder::addContinuousDimension(double start, double end, unsigned int nbox) {
+BasisManager::Builder BasisManager::Builder::addContinuous(double start, double end, unsigned int nbox) {
 	//TODO: Eventually add controls...
-	c_dim.push_back(ContinuousDimension(start, end, nbox));
+	c_base.push_back(ContinuousBase(start, end, nbox));
 	return *this;
 }

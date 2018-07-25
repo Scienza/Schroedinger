@@ -5,8 +5,6 @@
 #include <map>
 #include <stdexcept>
 #include <iostream>
-
-#include <Dimension.h>
 #include <DiscreteBase.h>
 #include <ContinuousBase.h>
 
@@ -14,23 +12,15 @@ class Base
 {
 public:
 	enum BaseType { Cartesian = 0, Spherical = 1, Cylindrical = 2 };
-	Base(BaseType, int, std::vector< ContinuousDimension >, std::vector< DiscreteDimension >);
+	Base(BaseType, int, std::vector< ContinuousBase >, std::vector< DiscreteBase >);
 
-	int get_dim() {
-		return this->dimensions;
-	}
-
-	const ContinuousBase& get_continuous() const {
-		return continuous;
-	}
-	const DiscreteBase& get_discrete() const {
-		return discrete;
-	}
-
+	int getDim();
+	std::vector<ContinuousBase> getContinuous();
+	std::vector<DiscreteBase> getDiscrete();
 
 private:
-  ContinuousBase continuous;
-	DiscreteBase discrete;
+	std::vector< DiscreteBase > discrete;
+	std::vector< ContinuousBase > continuous;
 	int dimensions;
 };
 
