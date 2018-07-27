@@ -42,6 +42,39 @@ std::vector<Base> BasisManager::getBasisList(Source s) {
 	return this->bases;
 }
 
+
+// --- Factory Methods --- //
+void build1DCartesian(double mesh, unsigned int nbox){
+	BasisManager::Builder b;
+	b.build(Base::BaseType::Cartesian, 1);
+
+	b.addContinuous(mesh, nbox);
+
+	return;
+}
+
+
+void BasisManager::build1DCartesian(double start, double end, double mesh) {
+	BasisManager::Builder b;
+	Base base = b.build(Base::BaseType::Cartesian, 1);
+
+	b.addContinuous(start, end, mesh);
+
+	return;
+}
+
+
+void build1DCartesian(double start, double end, unsigned int nbox){
+	BasisManager::Builder b;
+	Base base = b.build(Base::BaseType::Cartesian, 1);
+
+	b.addContinuous(start, end, nbox);
+
+	return;
+}
+
+
+// --- End Factory --- //
 Base BasisManager::Builder::build(Base::BaseType b, int dimension) {
 	//TODO: Eventually add controls...
 	return Base(b, dimension, c_base, d_base);

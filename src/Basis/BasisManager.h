@@ -11,8 +11,11 @@ public:
 	Base selected;
 	void selectBase(Base);
 	void addBase(Base);
+	void build1DCartesian(double, unsigned int);
+    void build1DCartesian(double, double, double);
+    void build1DCartesian(double, double, unsigned int);
 
-	class Builder {
+    class Builder {
 		std::vector< DiscreteBase > d_base;
 		std::vector< ContinuousBase > c_base;
 	public:
