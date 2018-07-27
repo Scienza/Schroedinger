@@ -92,7 +92,7 @@ namespace {
         unsigned int nbox = 1000;
         double mesh		  = 0.01;
         std::vector<double> x(nbox);
-		
+
 		// Building Basis
         BasisManager::Builder b = BasisManager::Builder();
       	BasisManager *manager = BasisManager::getInstance();
