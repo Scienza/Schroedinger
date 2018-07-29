@@ -6,19 +6,20 @@
 #include <BasisManager.h>
 #include "test.h"
 
-double H3(double x) { return  8*std::pow(x,3) - 12*x; }
-double H4(double x) { return 16*std::pow(x,4) - 48*x*x+12; }
+double H3(double x) { return 8 * std::pow(x, 3) - 12 * x; }
+
+double H4(double x) { return 16 * std::pow(x, 4) - 48 * x * x + 12; }
 
 void testWf(unsigned int nbox, std::string potType, double k, double width, double height,
-            std::vector<double> x, std::vector<double>* pot,
-            double* numerov_Wf, double* analytic_Wf){
+            std::vector<double> x, std::vector<double> *pot,
+            double *numerov_Wf, double *analytic_Wf) {
 
     Potential::Builder b(x);
     Potential V = b.setType(potType)
-                    .setK(k)
-                    .setHeight(height)
-                    .setWidth(width)
-                    .build();
+            .setK(k)
+            .setHeight(height)
+            .setWidth(width)
+            .build();
 
     *pot = V.get_v();
 
@@ -28,25 +29,22 @@ void testWf(unsigned int nbox, std::string potType, double k, double width, doub
     double E_numerov = solve_Numerov(0., 2., 0.01, nbox, V, numerov_Wf);
     double E_analytic;
 
-    if(potType == "box") {
+    if (potType == "box") {
         E_analytic = box_wf(1, nbox, analytic_Wf);
-    }
-    else if(potType == "harmonic oscillator") {
-        E_analytic = harmonic_wf(0,nbox, sqrt(2.*k), analytic_Wf);
-    }
-    else if(potType == "well") {
+    } else if (potType == "harmonic oscillator") {
+        E_analytic = harmonic_wf(0, nbox, sqrt(2. * k), analytic_Wf);
+    } else if (potType == "well") {
         E_analytic = finite_well_wf(1, nbox, width, height, analytic_Wf);
-    }
-    else {
+    } else {
         std::cerr << "ERROR! Wrong potential name in set" << std::endl;
         exit(8);
     }
 
-    for(int i=0; i < nbox; i++) {
-        EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], 1e-2 ); //improve error definition
-     }
+    for (int i = 0; i < nbox; i++) {
+        EXPECT_NEAR(numerov_Wf[i], analytic_Wf[i], 1e-2); //improve error definition
+    }
 
-    ASSERT_NEAR(E_numerov, E_analytic, 1e-3 );
+    ASSERT_NEAR(E_numerov, E_analytic, 1e-3);
 }
 
 namespace {
@@ -55,11 +53,11 @@ namespace {
         ASSERT_NEAR(std::hermite(4, 4.3), H4(4.3), err);
     }
 
-	TEST(Basis, IsSingleton) {
-		BasisManager *m1 = BasisManager::getInstance();
-		BasisManager *m2 = BasisManager::getInstance();
-		ASSERT_EQ(m1, m2);
-	}
+    TEST(Basis, IsSingleton) {
+        BasisManager *m1 = BasisManager::getInstance();
+        BasisManager *m2 = BasisManager::getInstance();
+        ASSERT_EQ(m1, m2);
+    }
 
     TEST(Potential, widthMustBePositive) {
         std::vector<double> x;
@@ -88,33 +86,33 @@ namespace {
         catch (std::invalid_argument e) {}
     }
 
-    TEST(Basis,Constructor){
+    TEST(Basis, Constructor) {
         unsigned int nbox = 1000;
-        double mesh		  = 0.1;
+        double mesh = 0.1;
         std::vector<double> x(nbox);
 
-		// Building Basis
+        // Building Basis
         BasisManager::Builder b = BasisManager::Builder();
-      	BasisManager *manager = BasisManager::getInstance();
+        BasisManager *manager = BasisManager::getInstance();
 
-		// With this we save a new base, created with the Builder object b.
-        manager->addBase( b.addContinuous(mesh,nbox).build() );
+        // With this we save a new base, created with the Builder object b.
+        manager->addBase(b.addContinuous(mesh, nbox).build());
 
-		// This is to get a list of available basis
+        // This is to get a list of available basis
         std::vector<Base> bases = manager->getBasisList();
 
-		// getContinuous() returns a vector of continuousbasis, even if there's only one dimension!
+        // getContinuous() returns a vector of continuousbasis, even if there's only one dimension!
         // So in this test we select the first base and its first continuousbase
-		ContinuousBase firstContinuousBase			= bases.at(0).getContinuous().at(0);
-		std::vector<double> firstDimensionCoords	= firstContinuousBase.getCoords();
+        ContinuousBase firstContinuousBase = bases.at(0).getContinuous().at(0);
+        std::vector<double> firstDimensionCoords = firstContinuousBase.getCoords();
 
-        for(std::vector<int>::size_type i = 0; i < x.size(); i++){
+        for (std::vector<int>::size_type i = 0; i < x.size(); i++) {
             x[i] = mesh * (int) (i - nbox / 2);
             ASSERT_NEAR(x[i], firstDimensionCoords[i], err);
         }
     }
 
-    TEST(WfTest,HarmonicOscillator){
+    TEST(WfTest, HarmonicOscillator) {
         unsigned int nbox = 1000;
         double mesh = 0.01;
         //         Base::ContinuousBase x(mesh, nbox);
@@ -130,117 +128,133 @@ namespace {
         double *analytic_Wf = new double[nbox];
         std::vector<double> pot(nbox);
 
-        testWf(nbox, s,  0.500, 0., 0., x.getCoords(), &pot, numerov_Wf, analytic_Wf);
+        testWf(nbox, s, 0.500, 0., 0., x.getCoords(), &pot, numerov_Wf, analytic_Wf);
 
-        if(HasFailure()){
-            for(int i=0; i < nbox; i++)
+        if (HasFailure()) {
+            for (int i = 0; i < nbox; i++)
                 std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-                << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
         }
-     }
-/*
-     TEST(WfTest,HarmonicOscillator2){
-         unsigned int nbox = 1000;
-         double mesh = dx;
-         Base::ContinuousBase x(mesh, nbox);
+    }
 
-         std::string s = "harmonic oscillator";
+    TEST(WfTest, HarmonicOscillator2) {
+        unsigned int nbox = 1000;
+        double mesh = dx;
+        BasisManager::Builder b;
+        b.build(Base::BaseType::Cartesian, 1, mesh, nbox);
 
-         double *numerov_Wf = new double[nbox];
-         double *analytic_Wf = new double[nbox];
-         std::vector<double> pot(nbox);
+        ContinuousBase x = BasisManager::getInstance()->selected.getContinuous().at(0);
 
-         testWf(nbox, s,  1.0, 0.0, 0.0, x.coord, &pot, numerov_Wf, analytic_Wf);
+        std::string s = "harmonic oscillator";
 
-         if(HasFailure()){
-             for(int i=0; i < nbox; i++)
-                 std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-                           << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-         }
-     }
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> pot(nbox);
+
+        testWf(nbox, s, 1.0, 0.0, 0.0, x.getCoords(), &pot, numerov_Wf, analytic_Wf);
+
+        if (HasFailure()) {
+            for (int i = 0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
 
 
-     TEST(WfTest,Box){
-         unsigned int nbox = 500;
-         double mesh = dx;
-         Base::ContinuousBase x(mesh, nbox);
+    TEST(WfTest, Box) {
+        unsigned int nbox = 500;
+        double mesh = dx;
+        BasisManager::Builder b;
+        b.build(Base::BaseType::Cartesian, 1, mesh, nbox);
 
-         std::string s = "box";
+        ContinuousBase x = BasisManager::getInstance()->selected.getContinuous().at(0);
 
-         double *numerov_Wf = new double[nbox];
-         double *analytic_Wf = new double[nbox];
-         std::vector<double> pot(nbox);
+        std::string s = "box";
 
-         testWf(nbox, s,  0.0, 0.0, 0.0, x.coord, &pot, numerov_Wf, analytic_Wf);
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> pot(nbox);
 
-         if(HasFailure()){
-             for(int i=0; i < nbox; i++)
-                 std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-                           << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-         }
-     }
+        testWf(nbox, s, 0.0, 0.0, 0.0, x.getCoords(), &pot, numerov_Wf, analytic_Wf);
 
-     TEST(WfTest,Box2){
-         unsigned int nbox = 1000;
-         double mesh = dx;
-         Base::ContinuousBase x(mesh, nbox);
+        if (HasFailure()) {
+            for (int i = 0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
 
-         std::string s = "box";
+    TEST(WfTest, Box2) {
+        unsigned int nbox = 1000;
+        double mesh = dx;
+        BasisManager::Builder b;
+        b.build(Base::BaseType::Cartesian, 1, mesh, nbox);
 
-         double *numerov_Wf = new double[nbox];
-         double *analytic_Wf = new double[nbox];
-         std::vector<double> pot(nbox);
+        ContinuousBase x = BasisManager::getInstance()->selected.getContinuous().at(0);
 
-         testWf(nbox, s,  0.0, 0.0, 0.0, x.coord, &pot, numerov_Wf, analytic_Wf);
+        std::string s = "box";
 
-         if(HasFailure()){
-             for(int i=0; i < nbox; i++)
-                 std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-                           << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-         }
-     }
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> pot(nbox);
 
-     TEST(WfTest,FiniteWell1){
-         unsigned int nbox = 2000;
-         double mesh = dx;
-         Base::ContinuousBase x(mesh, nbox);
+        testWf(nbox, s, 0.0, 0.0, 0.0, x.getCoords(), &pot, numerov_Wf, analytic_Wf);
 
-         std::string s = "well";
+        if (HasFailure()) {
+            for (int i = 0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
 
-         double width = 10., height = 3.;
-         double *numerov_Wf = new double[nbox];
-         double *analytic_Wf = new double[nbox];
-         std::vector<double> pot(nbox);
+    TEST(WfTest, FiniteWell1) {
+        unsigned int nbox = 2000;
+        double mesh = dx;
+        BasisManager::Builder b;
+        b.build(Base::BaseType::Cartesian, 1, mesh, nbox);
 
-         testWf(nbox, s, 0., width, height, x.coord, &pot, numerov_Wf, analytic_Wf);
+        ContinuousBase x = BasisManager::getInstance()->selected.getContinuous().at(0);
 
-         if(HasFailure()){
-             for(int i=0; i < nbox; i++)
-                 std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-                           << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-         }
-     }
+        std::string s = "well";
 
-     TEST(WfTest,FiniteWell2){
-         unsigned int nbox = 1000;
-         double mesh = dx;
-         Base::ContinuousBase x(mesh, nbox);
+        double width = 10., height = 3.;
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> pot(nbox);
 
-         std::string s = "well";
+        testWf(nbox, s, 0., width, height, x.getCoords(), &pot, numerov_Wf, analytic_Wf);
 
-         double width = 7.0, height = 5.0;
-         double *numerov_Wf = new double[nbox];
-         double *analytic_Wf = new double[nbox];
-         std::vector<double> pot(nbox);
+        if (HasFailure()) {
+            for (int i = 0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }
 
-         testWf(nbox, s,  0.0, width, height, x.coord, &pot, numerov_Wf, analytic_Wf);
+    TEST(WfTest, FiniteWell2) {
+        unsigned int nbox = 1000;
+        double mesh = dx;
+        BasisManager::Builder b;
+        b.build(Base::BaseType::Cartesian, 1, mesh, nbox);
 
-         if(HasFailure()){
-             for(int i=0; i < nbox; i++)
-                 std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
-                           << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
-         }
-     }*/
+        ContinuousBase x = BasisManager::getInstance()->selected.getContinuous().at(0);
+
+        std::string s = "well";
+
+        double width = 7.0, height = 5.0;
+        double *numerov_Wf = new double[nbox];
+        double *analytic_Wf = new double[nbox];
+        std::vector<double> pot(nbox);
+
+        testWf(nbox, s, 0.0, width, height, x.getCoords(), &pot, numerov_Wf, analytic_Wf);
+
+        if (HasFailure()) {
+            for (int i = 0; i < nbox; i++)
+                std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
+                          << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+        }
+    }/*
+*/
 }
 
 int main(int argc, char **argv) {
