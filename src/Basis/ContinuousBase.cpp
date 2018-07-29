@@ -39,6 +39,7 @@ ContinuousBase::ContinuousBase(double start, double end, unsigned int nbox)
 	this->nbox = nbox;
 	this->coords = evaluate();
 }
+
 std::vector<double> ContinuousBase::evaluate()
 {
 	std::vector<double> coord;

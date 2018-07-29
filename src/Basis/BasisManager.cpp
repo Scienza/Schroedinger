@@ -69,9 +69,9 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
                 this->addContinuous(mesh, nbox);
             }
             break;
-        case Base::basePreset::Cylindrical: std::invalid_argument("Not implemented");
+        case Base::basePreset::Cylindrical: std::invalid_argument("Wrong parameters for Cylindrical basis");
             break;
-        case Base::basePreset::Spherical: std::invalid_argument("Not implemented");
+        case Base::basePreset::Spherical: std::invalid_argument("Wrong parameters for Spherical basis");
             break;
         default: throw std::invalid_argument("Wrong basis type or initialization meaningless!");
             break;

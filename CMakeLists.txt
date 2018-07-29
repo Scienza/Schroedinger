@@ -38,7 +38,7 @@ include_directories(
 # Fetch all sources, creating ${SOURCES}
 file(GLOB_RECURSE SOURCES ${SOURCE_DIR}/*.cpp)
 # Create ${TESTS}, using test's main.cpp instead of ${SOURCE}'s one
-set(TESTS ${SOURCES})
+set(TESTS ${SOURCES} src/Basis/Initializer.cpp src/Basis/Initializer.h)
 list(REMOVE_ITEM TESTS ${SOURCE_DIR}/main.cpp)
 list(APPEND TESTS
         ${TEST_DIR}/main.cpp
@@ -56,14 +56,14 @@ add_library(googletest ${GOOGLETEST_SOURCES})
 add_executable (
     Schroedinger 
     ${SOURCES}
-)
+        src/Basis/Initializer.cpp src/Basis/Initializer.h)
 
 
 # Test executable
 add_executable(
         unit_tests
         ${TESTS}
-)
+        src/Basis/Initializer.cpp src/Basis/Initializer.h)
 
 add_dependencies(unit_tests googletest)
 if (WIN32)
