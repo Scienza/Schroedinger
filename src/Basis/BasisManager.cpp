@@ -73,6 +73,14 @@ Base BasisManager::Builder::build(Base::BaseType b, int dimension) {
 	//TODO: Eventually add controls...
 	return Base(b, dimension, c_base, d_base);
 }
+
+Base BasisManager::Builder::build() {
+	//TODO: Eventually add controls...
+    int dimension = 0;
+
+	return Base(Base::BaseType::Custom, dimension, c_base, d_base);
+}
+
 BasisManager::Builder BasisManager::Builder::addDiscrete(int start, int end, int step) {
 	//TODO: Eventually add controls...
 	d_base.push_back(DiscreteBase(start, end, step));

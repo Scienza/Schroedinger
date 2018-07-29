@@ -11,7 +11,7 @@
 class Base
 {
 public:
-	enum BaseType { Cartesian = 0, Spherical = 1, Cylindrical = 2 };
+	enum BaseType { Custom = 0, Cartesian = 1, Spherical = 2, Cylindrical = 3 };
 	Base(BaseType, int, std::vector< ContinuousBase >, std::vector< DiscreteBase >);
 	Base() {}
 	int getDim();

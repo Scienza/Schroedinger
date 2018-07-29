@@ -20,6 +20,7 @@ public:
 		std::vector< ContinuousBase > c_base;
 	public:
 		Base build(Base::BaseType, int dimension);
+        Base build();
 		Builder addDiscrete(int, int, int);
 		Builder addContinuous(double, unsigned int);
 		Builder addContinuous(double, double, double);

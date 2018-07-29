@@ -3,7 +3,9 @@
 Base::Base(BaseType t, int n_dimension, std::vector< ContinuousBase > c_base, std::vector< DiscreteBase > d_base) {
 
 	switch (t) {
-		//TODO: add here, for each base type, a control for dimensions 
+		//TODO: add here, for each base type, a control for dimensions
+		case Custom: std::cout << "Initializing Custom Basis" << std::endl;
+			break;
 		case Cartesian: std::cout << "Initializing Cartesian Basis" << std::endl;
 			break;
 		case Spherical: std::cout << "Initializing Spherical Basis" << std::endl;
