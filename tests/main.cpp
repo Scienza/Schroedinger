@@ -90,7 +90,7 @@ namespace {
 
     TEST(Basis,Constructor){
         unsigned int nbox = 1000;
-        double mesh		  = 0.01;
+        double mesh		  = 0.1;
         std::vector<double> x(nbox);
 
 		// Building Basis
@@ -116,9 +116,12 @@ namespace {
 
     TEST(WfTest,HarmonicOscillator){
         unsigned int nbox = 1000;
-        double mesh = dx;
+        double mesh = 0.01;
         //         Base::ContinuousBase x(mesh, nbox);
-        BasisManager::getInstance()->build1DCartesian(mesh,nbox);
+//        BasisManager::getInstance()->build1DCartesian(mesh,nbox);
+        BasisManager::Builder b;
+        b.build(Base::BaseType::Cartesian, 1, mesh, nbox);
+
         ContinuousBase x = BasisManager::getInstance()->selected.getContinuous().at(0);
 
         std::string s = "harmonic oscillator";

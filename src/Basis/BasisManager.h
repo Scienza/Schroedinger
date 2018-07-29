@@ -19,9 +19,11 @@ public:
 		std::vector< DiscreteBase > d_base;
 		std::vector< ContinuousBase > c_base;
 	public:
-		Base build(Base::BaseType, int dimension);
         Base build();
-		Builder addDiscrete(int, int, int);
+        Base build(Base::BaseType, int dimension);
+        Base build(Base::BaseType, int, double, int);
+
+        Builder addDiscrete(int, int, int);
 		Builder addContinuous(double, unsigned int);
 		Builder addContinuous(double, double, double);
 		Builder addContinuous(double, double, unsigned int);

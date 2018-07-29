@@ -1,4 +1,5 @@
 #include <Base.h>
+#include "BasisManager.h"
 
 Base::Base(BaseType t, int n_dimension, std::vector< ContinuousBase > c_base, std::vector< DiscreteBase > d_base) {
 
@@ -19,6 +20,9 @@ Base::Base(BaseType t, int n_dimension, std::vector< ContinuousBase > c_base, st
 	this->dimensions = n_dimension;
 	this->continuous.insert(continuous.end(), c_base.begin(), c_base.end());
 	this->discrete.insert(discrete.end(), d_base.begin(), d_base.end());
+
+	BasisManager::getInstance()->selectBase(*this);
+
 };
 
 
