@@ -42,33 +42,6 @@ std::vector<Base> BasisManager::getBasisList(Source s) {
 	return this->bases;
 }
 
-
-// --- Factory Methods --- //
-void BasisManager::build1DCartesian(double mesh, unsigned int nbox){
-	BasisManager::Builder b;
-	Base base = b.addContinuous(mesh, nbox).build(Base::basePreset::Cartesian, 1);
-
-	return;
-}
-
-
-void BasisManager::build1DCartesian(double start, double end, double mesh) {
-	BasisManager::Builder b;
-	Base base = b.addContinuous(start, end, mesh).build(Base::basePreset::Cartesian, 1);
-
-	return;
-}
-
-
-void BasisManager::build1DCartesian(double start, double end, unsigned int nbox){
-	BasisManager::Builder b;
-	Base base = b.addContinuous(start, end, nbox).build(Base::basePreset::Cartesian, 1);
-
-	return;
-}
-
-
-// --- End Factory --- //
 Base BasisManager::Builder::build() {
 	//TODO: Eventually add controls...
     int dimension = 0;
@@ -81,6 +54,7 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension) {
         return Base(b, dimension, c_base, d_base);
     }
 
+// --- Factory Methods --- //
 Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh, int nbox) {
     //TODO: Eventually add controls...
 
@@ -106,6 +80,7 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
 
     return Base(b, dimension, c_base, d_base);
 }
+// --- End Factory --- //
 
 
 BasisManager::Builder BasisManager::Builder::addDiscrete(int start, int end, int step) {
