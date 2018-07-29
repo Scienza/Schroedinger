@@ -1,7 +1,7 @@
 #include <Base.h>
 #include "BasisManager.h"
 
-Base::Base(BaseType t, int n_dimension, std::vector< ContinuousBase > c_base, std::vector< DiscreteBase > d_base) {
+Base::Base(basePreset t, int n_dimension, std::vector< ContinuousBase > c_base, std::vector< DiscreteBase > d_base) {
 
 	switch (t) {
 		//TODO: add here, for each base type, a control for dimensions

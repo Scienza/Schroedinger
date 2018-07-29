@@ -46,7 +46,7 @@ std::vector<Base> BasisManager::getBasisList(Source s) {
 // --- Factory Methods --- //
 void BasisManager::build1DCartesian(double mesh, unsigned int nbox){
 	BasisManager::Builder b;
-	Base base = b.addContinuous(mesh, nbox).build(Base::BaseType::Cartesian, 1);
+	Base base = b.addContinuous(mesh, nbox).build(Base::basePreset::Cartesian, 1);
 
 	return;
 }
@@ -54,7 +54,7 @@ void BasisManager::build1DCartesian(double mesh, unsigned int nbox){
 
 void BasisManager::build1DCartesian(double start, double end, double mesh) {
 	BasisManager::Builder b;
-	Base base = b.addContinuous(start, end, mesh).build(Base::BaseType::Cartesian, 1);
+	Base base = b.addContinuous(start, end, mesh).build(Base::basePreset::Cartesian, 1);
 
 	return;
 }
@@ -62,7 +62,7 @@ void BasisManager::build1DCartesian(double start, double end, double mesh) {
 
 void BasisManager::build1DCartesian(double start, double end, unsigned int nbox){
 	BasisManager::Builder b;
-	Base base = b.addContinuous(start, end, nbox).build(Base::BaseType::Cartesian, 1);
+	Base base = b.addContinuous(start, end, nbox).build(Base::basePreset::Cartesian, 1);
 
 	return;
 }
@@ -73,32 +73,31 @@ Base BasisManager::Builder::build() {
 	//TODO: Eventually add controls...
     int dimension = 0;
 
-	return Base(Base::BaseType::Custom, dimension, c_base, d_base);
+	return Base(Base::basePreset::Custom, dimension, c_base, d_base);
 }
 
-Base BasisManager::Builder::build(Base::BaseType b, int dimension) {
+Base BasisManager::Builder::build(Base::basePreset b, int dimension) {
     //TODO: Eventually add controls...
         return Base(b, dimension, c_base, d_base);
     }
 
-Base BasisManager::Builder::build(Base::BaseType b, int dimension, double mesh, int nbox) {
+Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh, int nbox) {
     //TODO: Eventually add controls...
-//    BasisManager::Builder builder;
 
     switch(b){
 
-        case Base::BaseType::Custom: throw std::invalid_argument("Custom basis not meaningful with parameters!");
+        case Base::basePreset::Custom: throw std::invalid_argument("Custom basis not meaningful with parameters!");
             break;
-        case Base::BaseType::Cartesian:
+        case Base::basePreset::Cartesian:
             std::cout<< "Building Cartesian basis in " << dimension << "dimensions, with nbox = " << nbox << ", mesh = " << mesh << std::endl;
             for(int i = 0; i < dimension; i++)
             {
                 this->addContinuous(mesh, nbox);
             }
             break;
-        case Base::BaseType::Cylindrical: std::invalid_argument("Not implemented");
+        case Base::basePreset::Cylindrical: std::invalid_argument("Not implemented");
             break;
-        case Base::BaseType::Spherical: std::invalid_argument("Not implemented");
+        case Base::basePreset::Spherical: std::invalid_argument("Not implemented");
             break;
         default: throw std::invalid_argument("Wrong basis type or initialization meaningless!");
             break;
