@@ -98,7 +98,7 @@ namespace {
       	BasisManager *manager = BasisManager::getInstance();
 
 		// With this we save a new base, created with the Builder object b.
-        manager->addBase( b.addContinuous(mesh,nbox).build(Base::BaseType::Cartesian, 1) );
+        manager->addBase( b.addContinuous(mesh,nbox).build() );
 
 		// This is to get a list of available basis
         std::vector<Base> bases = manager->getBasisList();

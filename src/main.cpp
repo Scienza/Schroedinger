@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
 
 	BasisManager::getInstance()->addBase( b.addDiscrete(0, 5, 1)
 					   .addContinuous(-5.0, 5.0, 0.01)
-					   .build(Base::BaseType::Cartesian, 1)
+					   .build()
 	);
 
 	std::vector<Base> basis = BasisManager::getInstance()->getBasisList();
