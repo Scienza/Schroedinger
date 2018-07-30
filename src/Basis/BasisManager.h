@@ -1,4 +1,6 @@
 #include <Base.h>
+#include <Initializer.h>
+
 class BasisManager
 {
 

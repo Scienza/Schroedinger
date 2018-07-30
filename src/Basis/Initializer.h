@@ -52,7 +52,11 @@ class SphericalInitializer : public ContinuousInizializer, public DiscreteInitia
 public:
     int Lmin = 0;
     int Lmax = 0;
+    int Lstep = 1;
+
     int spin = 0;
+
+//    SphericalInitializer(){};
 };
 
 #endif //SCHROEDINGER_INITIALIZER_H
