@@ -4,8 +4,19 @@
 
 #include "Initializer.h"
 
+Initializer::Initializer()
+{
+    setId();
+}
 
-initializer::initializer(double mesh, unsigned int nbox)
+void Initializer::setId()
+{
+    static int start = 0;
+    this->id = start++;
+}
+
+// ContinuousInizializer //
+ContinuousInizializer::ContinuousInizializer(double mesh, unsigned int nbox)
 {
     if (end - start <= 0) {
         std::invalid_argument("CountinousBase starting-end = 0");
@@ -17,8 +28,7 @@ initializer::initializer(double mesh, unsigned int nbox)
     this->nbox   = nbox;
 }
 
-
-initializer::initializer(double start, double end, unsigned int nbox)
+ContinuousInizializer::ContinuousInizializer(double start, double end, unsigned int nbox)
 {
     if (end - start <= 0) {
         std::invalid_argument("CountinousBase starting-end = 0");
@@ -31,7 +41,7 @@ initializer::initializer(double start, double end, unsigned int nbox)
 }
 
 
-initializer::initializer(double start, double end, double mesh)
+ContinuousInizializer::ContinuousInizializer(double start, double end, double mesh)
 {
     if (end - start <= 0) {
         std::invalid_argument("CountinousBase starting-end = 0");
@@ -41,4 +51,19 @@ initializer::initializer(double start, double end, double mesh)
     this->end = end;
     this->mesh = mesh;
     this->nbox = (unsigned int)((end - start) / mesh);
+}
+
+// DiscreteInitializer //
+DiscreteInitializer::DiscreteInitializer(int start, int end, int step) {
+    if ((end - start) / step % 1 != 0)
+        throw std::invalid_argument("invalid discrete basis given (check interval and step).");
+    if ((end - start) / step < 1)
+        throw std::invalid_argument("invalid discrete basis given (check interval and step).");
+    if ((end - start) / step == 0)
+        throw std::invalid_argument("Empty dimensions basis given.");
+
+    this->base_value = (end - start) / step;
+    this->start = start;
+    this->end = end;
+    this->step = step;
 }
