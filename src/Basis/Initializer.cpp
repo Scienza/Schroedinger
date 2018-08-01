@@ -63,7 +63,7 @@ DiscreteInitializer::DiscreteInitializer(int start, int end, int step) {
         throw std::invalid_argument("Empty dimensions basis given.");
 
     this->base_value = (end - start) / step;
-    this->start = start;
-    this->end = end;
+    this->min = start;
+    this->max = end;
     this->step = step;
 }

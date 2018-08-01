@@ -13,12 +13,12 @@ class Initializer {
 private:
     int id;
 
-    void setId();
+    virtual void setId();
 
 public:
     Initializer();
 
-    const int &getId() const {
+    virtual const int &getId() const {
         return this->id;
     }
 
@@ -32,9 +32,10 @@ public:
 
 class DiscreteInitializer : public Initializer {
 public:
-    int start, end, step;
+    int min, max, step;
     unsigned int base_value;
 
+    DiscreteInitializer() = default;
     DiscreteInitializer(int, int, int);
 };
 
@@ -43,12 +44,13 @@ public:
     double start, end, mesh;
     unsigned int nbox;
 
+    ContinuousInizializer() = default;
     ContinuousInizializer(double, unsigned int);
     ContinuousInizializer(double, double, double);
     ContinuousInizializer(double, double, unsigned int);
 };
 
-class SphericalInitializer : public ContinuousInizializer, public DiscreteInitializer {
+class SphericalInitializer : public virtual ContinuousInizializer {
 public:
     int Lmin = 0;
     int Lmax = 0;
@@ -56,7 +58,8 @@ public:
 
     int spin = 0;
 
-//    SphericalInitializer(){};
+    // todo: check start = 0, end > 0... might be needed new set of constructors :(
+    SphericalInitializer(...){};
 };
 
 #endif //SCHROEDINGER_INITIALIZER_H

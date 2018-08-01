@@ -69,6 +69,7 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
                 this->addContinuous(mesh, nbox);
             }
             break;
+        // todo: find criterium criterium to define Lmax given only r. Harmonic oscillator r/l relation?
         case Base::basePreset::Cylindrical: std::invalid_argument("Wrong parameters for Cylindrical basis");
             break;
         case Base::basePreset::Spherical: std::invalid_argument("Wrong parameters for Spherical basis");
@@ -80,6 +81,29 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
 
     return Base(b, dimension, c_base, d_base);
 }
+
+Base BasisManager::Builder::build(SphericalInitializer ini) {
+    if(ini.Lmax == 0) std::invalid_argument("Spherical basis with Lmax = 0 does not have sense");
+    if(ini.mesh <= 0 ) std::invalid_argument("mesh < 0 does not have sense");
+    if(ini.end <= ini.mesh ) std::invalid_argument("Spherical basis with r < mesh does not have sense");
+
+    this->addContinuous(ini.start,ini.end,ini.mesh);
+    this->addDiscrete(ini.Lmin,ini.Lmax,ini.Lstep);
+
+    return Base(Base::basePreset::Spherical, 3, c_base, d_base);
+}
+
+Base BasisManager::Builder::build(ContinuousInizializer ini) {
+	if(ini.mesh <= 0 ) std::invalid_argument("mesh < 0 does not have sense");
+	if(ini.end <= ini.mesh ) std::invalid_argument("xmax < mesh does not have sense");
+
+	std::cout<< "Building Cartesian basis between " << ini.start << ", " << ini.end << "  mesh = " << ini.mesh << std::endl;
+
+	this->addContinuous(ini.start,ini.end,ini.mesh);
+
+	return Base(Base::basePreset::Spherical, 3, c_base, d_base);
+}
+
 // --- End Factory --- //
 
 
