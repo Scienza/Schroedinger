@@ -17,6 +17,7 @@ Numerov solver takes in input an energy bracket in which to look for solution. I
   - g++ version newer than 6.0, due to src implementation of Hermite polynomials in std available in C++17.
   - clang version > 9.0 (there are reports of it working for 5.0)
   - Intel Compilers version > 18.0
+- Git
 - CMake
 
 ### How to build
