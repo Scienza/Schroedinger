@@ -21,7 +21,7 @@ for the Shroedinger equation v(x) = V(x) - E, where V(x) is the potential and E 
 */
 void fsol_Numerov(double Energy, int nbox, Potential V, double *wavefunction) {
     double c, x;
-    std::vector<double> potential = V.get_v();
+    std::vector<double> potential = V.getValues();
 
     c = (2. * mass / hbar / hbar) * (dx * dx / 12.);
     //Build Numerov f(x) solution from left.
