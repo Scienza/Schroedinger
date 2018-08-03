@@ -1,11 +1,12 @@
-#ifndef POTENTIAL
-#define POTENTIAL
+#ifndef POTENTIAL_H
+#define POTENTIAL_H
 
 #include <iostream>
 #include <vector>
 #include <string>
 #include <algorithm>
 #include <stdexcept>
+#include "../Basis/Base.h"
 
 /*! Class Potential contains the potential used in the Schroedinger equation.
  * takes the necessary input: std::vector x at definition Builder(x),
@@ -31,6 +32,7 @@ private:
     std::vector<double> x;
     std::vector<double> v;
     std::string type;
+
     double k;
     double width;
     double height;
@@ -42,6 +44,7 @@ private:
 public:
     Potential(std::vector<double>, std::string, double, double, double);
     std::vector<double> get_v();
+    // Base get_x();
 
     class Builder{
         private:
@@ -52,46 +55,14 @@ public:
             double height        = 10.0;
 
         public:
-            Builder(std::vector<double> x_new) {
-                this->x = x_new;
-            }
-
-            Builder setK(double k_new){
-                this->k = k_new;
-                return *this;
-            }
-
-            Builder setWidth(double width_new){
-                if (width_new >= 0) {
-                    this->width = width_new;
-                    return *this;
-                }
-                else throw std::invalid_argument("Width parameter cannot be negative.");
-            }
-
-            Builder setHeight(double height_new){
-                this->height = height_new;
-                return *this;
-            }
-
-            Builder setType(std::string type){
-                if (!type.empty()) {
-                    this->type = type;
-                    return *this;
-                }
-                else throw std::invalid_argument("Empty type given as parameter.");
-            }
-
-            Potential build(){
-                try {
-                    return Potential(this->x,this->type,this->k,this->width,this->height);
-                }
-                catch(const std::invalid_argument& e){
-                    throw;
-                }
-            }
+            Builder(std::vector<double> x_new);
+            Builder setK(double k_new);
+            Builder setWidth(double width_new);
+            Builder setHeight(double height_new);
+            Builder setType(std::string type);
+            // Builder setBase(Base b);
+            Potential build();
     };
 };
-
 
 #endif

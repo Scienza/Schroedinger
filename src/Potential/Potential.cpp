@@ -1,4 +1,4 @@
-#include "../include/Potential.h"
+#include "Potential.h"
 
 Potential::Potential(std::vector<double> coord, std::string type, double k, double width, double height)
 {
@@ -44,4 +44,3 @@ std::vector<double> Potential::get_v()
 {
     return this->v;
 }
-
