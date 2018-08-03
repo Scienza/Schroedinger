@@ -21,7 +21,7 @@ void testWf(unsigned int nbox, std::string potType, double k, double width, doub
             .setWidth(width)
             .build();
 
-    *pot = V.get_v();
+    *pot = V.getValues();
 
     numerov_Wf[0] = 0.0;
     numerov_Wf[1] = 0.01; //later on it gets renormalized, so is just a conventional number

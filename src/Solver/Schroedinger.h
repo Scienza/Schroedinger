@@ -15,7 +15,7 @@
 #include <vector>
 #include <string>
 
-#include "../Potential/Potential.h"
+#include <Potential.h>
 
 
 double trap_array(int, int, double, double *);

@@ -40,7 +40,7 @@ void Potential::finite_well_potential()
         this->v[i] = (this->x[i] > -this->width/2.0 && this->x[i] < this->width/2.0) ? 0.0 : this->height;
 }
 
-std::vector<double> Potential::get_v()
+std::vector<double> Potential::getValues()
 {
     return this->v;
 }

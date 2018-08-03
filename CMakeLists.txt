@@ -32,7 +32,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/include
         ${PROJECT_SOURCE_DIR}/src/Basis
         ${PROJECT_SOURCE_DIR}/src/Potential
-        ${PROJECT_SOURCE_DIR}/src/Schroedinger
+        ${PROJECT_SOURCE_DIR}/src/Solver
 )
 
 # Fetch all sources, creating ${SOURCES}

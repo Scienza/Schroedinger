@@ -43,7 +43,7 @@ private:
 
 public:
     Potential(std::vector<double>, std::string, double, double, double);
-    std::vector<double> get_v();
+    std::vector<double> getValues();
     // Base get_x();
 
     class Builder{
