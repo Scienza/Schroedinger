@@ -19,7 +19,7 @@ public:
 		std::vector< ContinuousBase > c_base;
 	public:
         Base build();
-        Base build(ContinuousInizializer);
+        Base build(ContinuousInitializer);
         Base build(SphericalInitializer);
         Base build(Base::basePreset, int dimension);
         Base build(Base::basePreset, int, double, int);

@@ -93,7 +93,7 @@ Base BasisManager::Builder::build(SphericalInitializer ini) {
     return Base(Base::basePreset::Spherical, 3, c_base, d_base);
 }
 
-Base BasisManager::Builder::build(ContinuousInizializer ini) {
+Base BasisManager::Builder::build(ContinuousInitializer ini) {
 	if(ini.mesh <= 0 ) std::invalid_argument("mesh < 0 does not have sense");
 	if(ini.end <= ini.mesh ) std::invalid_argument("xmax < mesh does not have sense");
 

@@ -210,7 +210,7 @@ namespace {
     TEST(WfTest, FiniteWell1) {
         unsigned int nbox = 2000;
         double mesh = dx;
-        ContinuousInizializer x_ini(mesh,nbox);
+        ContinuousInitializer x_ini(mesh,nbox);
         BasisManager::Builder b;
         b.build(x_ini);
 

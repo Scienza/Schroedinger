@@ -1,34 +1,19 @@
-//
-// Created by Andrea Idini on 2018-07-29.
-//
-
 #include "Initializer.h"
 
-Initializer::Initializer()
-{
-    setId();
-}
-
-void Initializer::setId()
-{
-    static int start = 0;
-    this->id = start++;
-}
-
-// ContinuousInizializer //
-ContinuousInizializer::ContinuousInizializer(double mesh, unsigned int nbox)
+// ContinuousInitializer //
+ContinuousInitializer::ContinuousInitializer(double mesh, unsigned int nbox)
 {
     if (end - start <= 0) {
         std::invalid_argument("CountinousBase starting-end = 0");
     }
 
-    this->start  = -(nbox / 2.) * mesh;
-    this->end	 = (nbox / 2.) * mesh;
-    this->mesh   = mesh;
-    this->nbox   = nbox;
+    this->start = -(nbox / 2.) * mesh;
+    this->end = (nbox / 2.) * mesh;
+    this->mesh = mesh;
+    this->nbox = nbox;
 }
 
-ContinuousInizializer::ContinuousInizializer(double start, double end, unsigned int nbox)
+ContinuousInitializer::ContinuousInitializer(double start, double end, unsigned int nbox)
 {
     if (end - start <= 0) {
         std::invalid_argument("CountinousBase starting-end = 0");
@@ -41,7 +26,7 @@ ContinuousInizializer::ContinuousInizializer(double start, double end, unsigned 
 }
 
 
-ContinuousInizializer::ContinuousInizializer(double start, double end, double mesh)
+ContinuousInitializer::ContinuousInitializer(double start, double end, double mesh)
 {
     if (end - start <= 0) {
         std::invalid_argument("CountinousBase starting-end = 0");
