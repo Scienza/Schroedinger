@@ -2,7 +2,5 @@
 #define WORLD_H
 
 class World 
-{
-
-};
+{};
 #endif
