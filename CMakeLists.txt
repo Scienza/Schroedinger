@@ -33,10 +33,13 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src/Basis
         ${PROJECT_SOURCE_DIR}/src/Potential
         ${PROJECT_SOURCE_DIR}/src/Solver
+		${PROJECT_SOURCE_DIR}/src/World
+
 )
 
 # Fetch all sources, creating ${SOURCES}
 file(GLOB_RECURSE SOURCES ${SOURCE_DIR}/*.cpp)
+
 # Create ${TESTS}, using test's main.cpp instead of ${SOURCE}'s one
 set(TESTS ${SOURCES} src/Basis/Initializer.cpp src/Basis/Initializer.h)
 list(REMOVE_ITEM TESTS ${SOURCE_DIR}/main.cpp)
@@ -50,20 +53,18 @@ list(APPEND TESTS
 foreach(_source ${GOOGLETEST_SOURCES})
     set_source_files_properties(${_source} PROPERTIES GENERATED 1)
 endforeach()
+
 add_library(googletest ${GOOGLETEST_SOURCES})
 
 # Main executable
 add_executable (
     Schroedinger 
-    ${SOURCES}
-        src/Basis/Initializer.cpp src/Basis/Initializer.h)
-
+    ${SOURCES})
 
 # Test executable
 add_executable(
         unit_tests
-        ${TESTS}
-        src/Basis/Initializer.cpp src/Basis/Initializer.h)
+        ${TESTS})
 
 add_dependencies(unit_tests googletest)
 if (WIN32)
@@ -78,5 +79,3 @@ if (WIN32)
         pthread
     )
 endif()
-include(CTest)
-enable_testing()
