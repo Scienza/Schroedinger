@@ -19,6 +19,7 @@ public:
 	int getDim();
 	std::vector<ContinuousBase> getContinuous();
 	std::vector<DiscreteBase> getDiscrete();
+	friend std::ostream& operator<< (std::ostream& stream, Base& base);
 
 private:
 	std::vector< DiscreteBase > discrete;

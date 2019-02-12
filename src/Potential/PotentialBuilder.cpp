@@ -1,8 +1,8 @@
 #include "Potential.h"
 
-Potential::Builder::Builder(std::vector<double> x_new)
+Potential::Builder::Builder(Base b)
 {
-    this->x = x_new;
+    this->base = b;
 }
 
 Potential::Builder Potential::Builder::setK(double k_new)
@@ -26,25 +26,27 @@ Potential::Builder Potential::Builder::setHeight(double height_new)
     return *this;
 }
 
-Potential::Builder Potential::Builder::setType(std::string type)
+Potential::Builder Potential::Builder::setType(PotentialType type)
+{   
+    this->type = type;
+    return *this;
+}
+
+Potential::Builder Potential::Builder::setSeparable(bool separable)
 {
-    if (!type.empty()) {
-        this->type = type;
-        return *this;
-    }
-    else throw std::invalid_argument("Empty type given as parameter.");
+    this->separable = separable;
+
 }
 
 Potential Potential::Builder::build(){
     try {
-        return Potential(this->x,this->type,this->k,this->width,this->height);
+        return Potential(this->base,this->type,this->k,this->width,this->height, this->separable);
     }
     catch(const std::invalid_argument& e){
         throw;
     }
 }
 
-// Potential::Builder Potential::Builder::setBase(Base b)
-// {
-//     this->base = b;
-// }
+Potential::Builder Potential::Builder::setBase(Base b) {
+     this->base = b;
+ }

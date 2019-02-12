@@ -1,3 +1,6 @@
+#ifndef BASISMANAGER_H
+#define BASISMANAGER_H
+
 #include <Base.h>
 #include <Initializer.h>
 
@@ -18,7 +21,7 @@ public:
 		std::vector< DiscreteBase > d_base;
 		std::vector< ContinuousBase > c_base;
 	public:
-        Base build();
+        Base build(int dimension);
         Base build(ContinuousInitializer);
         Base build(SphericalInitializer);
         Base build(Base::basePreset, int dimension);
@@ -38,3 +41,5 @@ private:
 	static BasisManager* instance;
 	BasisManager() {}
 };
+
+#endif

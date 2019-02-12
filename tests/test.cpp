@@ -1,4 +1,4 @@
-#include <Schroedinger.h>
+#include <Numerov.h>
 
 /*! Calculates the analytical wavefunction of a particle in a box
 allowed energy levels :   $E_n = n^2 \pi^2 \hbar^2 / (2 m L)$
@@ -6,16 +6,19 @@ wavefcuntion: $A*sin(n \pi/L * x)$
 Analytically exact
 nlevel > 0,
 */
-double box_wf(int nlevel, int nbox, double* wavefunction) {
+double box_wf(int nlevel, int nbox, std::vector<double> &wavefunction) {
+    wavefunction = std::vector<double>(nbox+1);
+
     double boxLength = (nbox)* dx;
-    double E_n = nlevel * nlevel * pi * pi * hbar * hbar / 2. / mass / boxLength / boxLength;
+    double E_n  = nlevel * nlevel * pi * pi * hbar * hbar / 2. / mass / boxLength / boxLength;
     double norm = sqrt(2 / boxLength);
 
-    for (int i = 0; i < nbox; i++) {
+    for (int i = 0; i < wavefunction.size(); i++) {
         double x = i * dx;
-        wavefunction[i] = norm * sin(nlevel * pi * x / boxLength);
-        //remember to translate by half box length, eventually
-    //    std::cout << x - boxLength/2. << " " << wavefunction[i] << std::endl;
+        double &wavefunction_value = wavefunction.at(i);
+        wavefunction_value = norm * sin(nlevel * pi * x / boxLength);
+        // remember to translate by half box length, eventually
+        // std::cout << x - boxLength/2. << " " << wavefunction.at(i) << std::endl;
     }
     return E_n;
 }
@@ -28,8 +31,9 @@ box is a finite overlay on top of the finite well, instead of an exact contiuum.
 Check by expanding the box, and/or deepening the potential.
 nlevel > 1
 */
-double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height, double* wavefunction) {
+double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height, std::vector<double> &wavefunction) {
     // double boxLength = nbox * dx;
+    wavefunction = std::vector<double>(nbox+1);
 
     std::cout << "width: " << pot_width << " height: " << pot_height << std::endl;
     double xi = pot_width / 2.*sqrt(2. * mass * pot_height / hbar / hbar);
@@ -84,36 +88,36 @@ double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height,
 
     for (int i = 0; i < nbox; i++) {
         double x = (-nbox / 2 + i) * dx;
+        double &wavefunction_value = wavefunction.at(i);
 
         if (x <= -pot_width / 2.) {
             k = sqrt(2. * mass * (pot_height - E_n)) / hbar;
-            wavefunction[i] = G * exp(k*x);
+            wavefunction_value = G * exp(k*x);
         }
         else if (x > -pot_width / 2. && x < pot_width / 2.) {
             k = sqrt(2. * mass * E_n) / hbar;
-            wavefunction[i] = A * sin(k * x) + B * cos(k * x);
+            wavefunction_value = A * sin(k * x) + B * cos(k * x);
         }
         else {
             k = sqrt(2. * mass * (pot_height - E_n)) / hbar;
             // std::cout << k << " " << H << " " << exp( -k * x ) << std::endl;
-            wavefunction[i] = H * exp(-k * x);
+            wavefunction_value = H * exp(-k * x);
         }
-
-        // std::cout << x << " " << wavefunction[i] << std::endl;
     }
 
 
     // Final Normalization
-    double *probab = new double[nbox];
-
-    for (int i = 0; i <= nbox; i++)
-        probab[i] = wavefunction[i] * wavefunction[i];
-
-    double norm = trap_array(0., nbox, dx, probab);
-    for (int i = 0; i <= nbox; i++)
-        wavefunction[i] = wavefunction[i] / sqrt(norm);
-    //
-
+    std::vector<double> probability = std::vector<double>(nbox+1);
+    for (int i = 0; i <= nbox; i++){
+        double &probab = probability.at(i);
+        double &wavefunction_value = wavefunction.at(i);
+        probab = wavefunction_value * wavefunction_value;
+    }
+    double norm = Numerov::trapezoidalRule(0.0, nbox, dx, probability);
+    for (int i = 0; i < wavefunction.size(); i++) {
+        double &wavefunction_value = wavefunction.at(i);
+        wavefunction_value /= sqrt(norm);
+    }
     return E_n;
 }
 
@@ -121,13 +125,15 @@ inline int factorial(int x, int result = 1) {
     if (x == 1 || x == 0) return result; else return factorial(x - 1, x * result);
 }
 
-double harmonic_wf(int nlevel, int nbox, double omega, double* wavefunction) {
+double harmonic_wf(int nlevel, int nbox, double omega, std::vector<double> &wavefunction) {
+    wavefunction = std::vector<double>(nbox+1);
     double c = mass * omega / hbar;
     double E_n = hbar * omega * (nlevel + 0.5);
 
     for (int i = 0; i < nbox; i++) {
+        double &wavefunction_value = wavefunction.at(i);
         double x = (-nbox / 2 + i) * dx;
-        wavefunction[i] = sqrt(1 / pow(2, nlevel) / factorial(nlevel) * sqrt(c / pi))
+        wavefunction_value = sqrt(1 / pow(2, nlevel) / factorial(nlevel) * sqrt(c / pi))
             * exp(-c / 2. * x*x) * std::hermite(nlevel, sqrt(c)*x);
     }
     return E_n;

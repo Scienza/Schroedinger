@@ -6,7 +6,9 @@
 #include <string>
 #include <algorithm>
 #include <stdexcept>
-#include "../Basis/Base.h"
+#include <stdbool.h>
+#include <fstream>
+#include <Base.h>
 
 /*! Class Potential contains the potential used in the Schroedinger equation.
  * takes the necessary input: std::vector x at definition Builder(x),
@@ -27,42 +29,61 @@
  * Eventually it throws invalid_argument exception if given parameters are wrong.
  */
 
-class Potential {
-private:
-    std::vector<double> x;
+class Potential
+{
+
+  public:
+    enum PotentialType
+    {
+        BOX_POTENTIAL = 0,
+        HARMONIC_OSCILLATOR = 1,
+        FINITE_WELL_POTENTIAL = 2,
+    };
+
+    Potential();
+    Potential(Base, PotentialType, double, double, double, bool);
+    std::vector<double> getValues();
+    std::vector<double> getCoordsFromBase();
+    Base getBase();
+    void printToFile();
+    bool isSeparated();
+    std::vector<Potential> getSeparatedPotentials();
+    class Builder
+    {
+      private:
+        Base base;
+        PotentialType type = PotentialType::BOX_POTENTIAL;
+        double k = 0.5;
+        double width = 5.0;
+        double height = 10.0;
+        bool separable = false;
+        std::vector<Potential> separated_potentials;
+
+      public:
+        Builder(Base b);
+        Builder setK(double k_new);
+        Builder setWidth(double width_new);
+        Builder setHeight(double height_new);
+        Builder setType(PotentialType type);
+        Builder setBase(Base b);
+        Builder setSeparable(bool separable);
+        Potential build();
+    };
+
+  private:
+    Base base;
     std::vector<double> v;
-    std::string type;
+    PotentialType type;
 
     double k;
     double width;
     double height;
+    bool separable;
+    std::vector<Potential> separated_potentials;
 
     void ho_potential();
     void box_potential();
     void finite_well_potential();
-
-public:
-    Potential(std::vector<double>, std::string, double, double, double);
-    std::vector<double> getValues();
-    // Base get_x();
-
-    class Builder{
-        private:
-            std::vector<double> x;
-            std::string type     = "box";
-            double k             = 0.5;
-            double width         = 5.0;
-            double height        = 10.0;
-
-        public:
-            Builder(std::vector<double> x_new);
-            Builder setK(double k_new);
-            Builder setWidth(double width_new);
-            Builder setHeight(double height_new);
-            Builder setType(std::string type);
-            // Builder setBase(Base b);
-            Potential build();
-    };
 };
 
 #endif

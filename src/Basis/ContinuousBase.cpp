@@ -20,10 +20,10 @@ ContinuousBase::ContinuousBase(double start, double end, double mesh)
 		std::invalid_argument("CountinousBase starting-end = 0");
 	}
 
-	this->start = start;
-	this->end = end;
-	this->mesh = mesh;
-	this->nbox = (unsigned int)((end - start) / mesh);
+	this->start  = start;
+	this->end    = end;
+	this->mesh   = mesh;
+	this->nbox   = (unsigned int)((end - start) / mesh);
 	this->coords = evaluate();
 }
 
@@ -33,10 +33,10 @@ ContinuousBase::ContinuousBase(double start, double end, unsigned int nbox)
 		std::invalid_argument("CountinousBase starting-end = 0");
 	}
 
-	this->start = start;
-	this->end = end;
-	this->mesh = (end - start) / nbox;
-	this->nbox = nbox;
+	this->start  = start;
+	this->end    = end;
+	this->mesh   = (end - start) / nbox;
+	this->nbox   = nbox;
 	this->coords = evaluate();
 }
 

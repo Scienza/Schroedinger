@@ -21,8 +21,8 @@ void BasisManager::addBase(Base b) {
 	this-> bases.push_back(b);
 
 	// If it's there's just this one in the vector, then it's automatically selected
-		if (this->bases.size() == 1)
-		this->selectBase(b);
+	if (this->bases.size() == 1)
+	this->selectBase(b);
 }
 
 std::vector<Base> BasisManager::getBasisList() {
@@ -42,39 +42,39 @@ std::vector<Base> BasisManager::getBasisList(Source s) {
 	return this->bases;
 }
 
-Base BasisManager::Builder::build() {
+Base BasisManager::Builder::build(int dimension) {
 	//TODO: Eventually add controls...
-    int dimension = 0;
-
 	return Base(Base::basePreset::Custom, dimension, c_base, d_base);
 }
 
 Base BasisManager::Builder::build(Base::basePreset b, int dimension) {
     //TODO: Eventually add controls...
-        return Base(b, dimension, c_base, d_base);
-    }
+    return Base(b, dimension, c_base, d_base);
+}
 
 // --- Factory Methods --- //
 Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh, int nbox) {
     //TODO: Eventually add controls...
 
     switch(b){
-
-        case Base::basePreset::Custom: throw std::invalid_argument("Custom basis not meaningful with parameters!");
-            break;
         case Base::basePreset::Cartesian:
             std::cout<< "Building Cartesian basis in " << dimension << "dimensions, with nbox = " << nbox << ", mesh = " << mesh << std::endl;
-            for(int i = 0; i < dimension; i++)
-            {
+            for(int i = 0; i < dimension; i++) 
                 this->addContinuous(mesh, nbox);
-            }
             break;
+
         // todo: find criterium criterium to define Lmax given only r. Harmonic oscillator r/l relation?
-        case Base::basePreset::Cylindrical: std::invalid_argument("Wrong parameters for Cylindrical basis");
+        case Base::basePreset::Cylindrical: 
+			throw std::invalid_argument("Wrong parameters for Cylindrical basis");
             break;
-        case Base::basePreset::Spherical: std::invalid_argument("Wrong parameters for Spherical basis");
+        case Base::basePreset::Spherical: 
+			throw std::invalid_argument("Wrong parameters for Spherical basis");
             break;
-        default: throw std::invalid_argument("Wrong basis type or initialization meaningless!");
+        case Base::basePreset::Custom: 
+			throw std::invalid_argument("Custom basis not meaningful with parameters!");
+            break;
+        default: 
+			throw std::invalid_argument("Wrong basis type or initialization meaningless!");
             break;
 
     }
@@ -83,9 +83,12 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
 }
 
 Base BasisManager::Builder::build(SphericalInitializer ini) {
-    if(ini.Lmax == 0) std::invalid_argument("Spherical basis with Lmax = 0 does not have sense");
-    if(ini.mesh <= 0 ) std::invalid_argument("mesh < 0 does not have sense");
-    if(ini.end <= ini.mesh ) std::invalid_argument("Spherical basis with r < mesh does not have sense");
+    if(ini.Lmax == 0) 
+		throw std::invalid_argument("Spherical basis with Lmax = 0 does not have sense");
+    if(ini.mesh <= 0 ) 
+		throw std::invalid_argument("mesh < 0 does not have sense");
+    if(ini.end <= ini.mesh ) 
+		throw std::invalid_argument("Spherical basis with r < mesh does not have sense");
 
     this->addContinuous(ini.start,ini.end,ini.mesh);
     this->addDiscrete(ini.Lmin,ini.Lmax,ini.Lstep);
@@ -94,16 +97,17 @@ Base BasisManager::Builder::build(SphericalInitializer ini) {
 }
 
 Base BasisManager::Builder::build(ContinuousInitializer ini) {
-	if(ini.mesh <= 0 ) std::invalid_argument("mesh < 0 does not have sense");
-	if(ini.end <= ini.mesh ) std::invalid_argument("xmax < mesh does not have sense");
 
-	std::cout<< "Building Cartesian basis between " << ini.start << ", " << ini.end << "  mesh = " << ini.mesh << std::endl;
+	if(ini.mesh <= 0 ) 
+		throw std::invalid_argument("mesh < 0 does not have sense");
+	if(ini.end <= ini.mesh ) 
+		throw std::invalid_argument("xmax < mesh does not have sense");
 
 	this->addContinuous(ini.start,ini.end,ini.mesh);
 
+	std::cout<< "Building Cartesian basis between " << ini.start << ", " << ini.end << "  mesh = " << ini.mesh << std::endl;
 	return Base(Base::basePreset::Spherical, 3, c_base, d_base);
 }
-
 // --- End Factory --- //
 
 

@@ -35,3 +35,24 @@ std::vector<ContinuousBase> Base::getContinuous() {
 std::vector<DiscreteBase> Base::getDiscrete() {
 	return this->discrete;
 }
+
+std::ostream& operator<<(std::ostream& stream, Base& base) {
+
+	// Print continuous dimension values (if present)
+	if (base.getContinuous().size() > 0)
+		for (int i = 0; i < base.getContinuous().size(); i++) {
+			for (int coord_counter = 0; coord_counter < base.getContinuous().at(i).getCoords().size(); coord_counter++)
+				stream << base.getContinuous().at(i).getCoords().at(coord_counter) << "; ";
+		}
+
+	stream << "\n\n";
+
+	// Print discrete dimension values (if present)
+	if (base.getDiscrete().size() > 0)
+		for (int i = 0; i < base.getContinuous().size(); i++) {
+			for (int coord_counter = 0; coord_counter < base.getDiscrete().at(i).getCoords().size(); coord_counter++)
+				stream << base.getDiscrete().at(i).getCoords().at(coord_counter) << "; ";
+		}
+
+    return stream;
+ }
