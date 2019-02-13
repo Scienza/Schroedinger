@@ -35,9 +35,15 @@ Potential::Builder Potential::Builder::setType(PotentialType type)
 Potential::Builder Potential::Builder::setSeparable(bool separable)
 {
     this->separable = separable;
-
+    return *this;
 }
 
+
+Potential::Builder Potential::Builder::setBase(Base b) {
+     this->base = b;
+     return *this;
+ }
+ 
 Potential Potential::Builder::build(){
     try {
         return Potential(this->base,this->type,this->k,this->width,this->height, this->separable);
@@ -47,6 +53,3 @@ Potential Potential::Builder::build(){
     }
 }
 
-Potential::Builder Potential::Builder::setBase(Base b) {
-     this->base = b;
- }
