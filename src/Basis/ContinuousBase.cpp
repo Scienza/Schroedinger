@@ -42,10 +42,10 @@ ContinuousBase::ContinuousBase(double start, double end, unsigned int nbox)
 
 std::vector<double> ContinuousBase::evaluate()
 {
-	std::vector<double> coord;
-	coord.reserve(this->nbox);
-	for (std::vector<double>::size_type i = 0; i < this->nbox; i++)
-		coord.push_back(this->start + this->mesh * i);
+	std::vector<double> coord;	
+	for (int i = 0; i < this->nbox; i++)
+		coord.push_back(this->start + (this->mesh * i));
+
 	return coord;
 }
 
