@@ -44,10 +44,13 @@ class Potential
     Potential(Base, PotentialType, double, double, double, bool);
     std::vector<double> getValues();
     std::vector<double> getCoordsFromBase();
+    std::vector<Potential> getSeparatedPotentials();
+
     Base getBase();
     void printToFile();
     bool isSeparated();
-    std::vector<Potential> getSeparatedPotentials();
+    friend std::ostream& operator<< (std::ostream& stream, Potential& potential);
+
     class Builder
     {
       private:

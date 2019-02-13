@@ -34,11 +34,11 @@ void Numerov::findWavefunction(double energy, std::vector<double> &potential_val
 {
     double x;
     double c = (2.0 * mass / hbar / hbar) * (dx * dx / 12.0);
-    potential_values[nbox] = 1.0; // tricky fix
+    
+    potential_values[this->nbox] = 1.0; // tricky fix
 
     //Build Numerov f(x) solution from left.
-    for (int i = 2; i <= this->nbox; i++)
-    {
+    for (int i = 2; i <= this->nbox; i++){
         x = (-this->nbox / 2 + i) * dx;
         double &value = this->tempWavefunction[i];
         double &pot_1 = potential_values[i - 1];
@@ -51,7 +51,6 @@ void Numerov::findWavefunction(double energy, std::vector<double> &potential_val
         value = 2 * (1.0 - (5 * c) * (energy - pot_1)) * wave_1 - (1.0 + (c) * (energy - pot_2)) * wave_2;
         value /= (1.0 + (c) * (energy - pot_a));
     }
-
 }
 
 // A solver of differential equation using Numerov algorithm and selecting non-trivial solutions.
@@ -63,11 +62,13 @@ void Numerov::findWavefunction(double energy, std::vector<double> &potential_val
 // where the exponential solution changes sign.
 double Numerov::solve(double e_min, double e_max, double e_step)
 {
+
     // Get potentials values from the main
     std::vector< std::vector<double> > potentials = this->getPotentialsValues();
- 
+
     // For each separated potential values...
     for (std::vector<double> &this_potential_values : potentials) {
+
         // The final solution energy is the sum of each energy
         this->solutionEnergy += this->findEnergy(e_min, e_max, e_step, this_potential_values);
         this->probability     = this->findProbability();
@@ -84,13 +85,23 @@ std::vector<std::vector<double>> Numerov::getPotentialsValues() {
 
     // Get potentials from the main potentials (check if it's separated or not)
     if (this->potential->isSeparated()) {
-        for (Potential local_potential : this->potential->getSeparatedPotentials()) {
+        
+        std::vector<Potential> s_p = this->potential->getSeparatedPotentials();
+
+        for (Potential &local_potential : s_p) {
+            std::vector<double> values = local_potential.getValues();
+
+            for(double v : values)
+                std::cout << v;
+            
             potentials.push_back(local_potential.getValues());
         }
     } 
     else {
         potentials.push_back(this->potential->getValues());
     }
+
+    return potentials;
 }
 
 // Applies a bisection algorith to the numerov method to find
@@ -182,11 +193,13 @@ void Numerov::normalize(){
 double Numerov::findEnergy(double e_min, double e_max, double e_step, std::vector<double> &this_potential) {
     double solutionEnergy = 0;
     int sign;
+
     // scan energies to find when the Numerov solution is = 0 at the right extreme of the box.
     for (int n = 0; n < (e_max - e_min) / e_step; n++)
     {
         double energy = e_min + n * e_step;
         this->findWavefunction(energy, this_potential);
+
         double &last_wavefunction_value = this->tempWavefunction[this->nbox];
 
         if (fabs(last_wavefunction_value) < err) {

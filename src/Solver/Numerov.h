@@ -52,7 +52,7 @@ class Numerov {
                 void normalize();
                 std::vector<double> findProbability();
                 void initializeWavefunction();
-                std::vector<std::vector<double>> Numerov::getPotentialsValues();
+                std::vector<std::vector<double>> getPotentialsValues();
 
 };
 

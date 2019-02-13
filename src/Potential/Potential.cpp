@@ -11,7 +11,6 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
     this->height    = height;
     this->type      = type;
     this->separable = separable;
-    this->v         = std::vector<double>();
 
     if (!this->separable) {
         switch(type) {
@@ -30,30 +29,32 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
     }
     // If the potential is separable, then n potentials (one for each base's representation)
     else {
-        this->separated_potentials = std::vector<Potential>();
 
-        for (int i = 0; i < base.getContinuous().size(); i++) {
+        for (ContinuousBase this_base : base.getContinuous()) {
+            std::vector<ContinuousBase> c_base;
+            std::vector<DiscreteBase> d_base;
+
             // Extract continuous representation from the main base
-            std::vector<ContinuousBase> c_base = std::vector<ContinuousBase>(1);
-            c_base.push_back(base.getContinuous().at(i));
+            c_base.push_back(this_base);
 
             // Create new base object with the extracted representation
-            Base monodimensional = Base(Base::basePreset::Custom, 1, c_base, std::vector<DiscreteBase>());
+            Base monodimensional = Base(Base::basePreset::Custom, 1, c_base, d_base);
 
             // Create new potential with the new base
             Potential separated_potential = Potential(monodimensional, this->type, this->k, this->width, this->height, false);
-
             // Add the new Potential to the separated potenial vector associated to the main potential
             this->separated_potentials.push_back(separated_potential);
         }
 
-        for (int i = 0; i < base.getDiscrete().size(); i++) {
+        for (DiscreteBase this_base : base.getDiscrete()) {
+            std::vector<ContinuousBase> c_base;
+            std::vector<DiscreteBase> d_base;
+
             // Extract discrete representation from the main base
-            std::vector<DiscreteBase> d_base = std::vector<DiscreteBase>(1);
-            d_base.push_back(base.getDiscrete().at(i));
+            d_base.push_back(this_base);
 
             // Create new base object with the extracted representation
-            Base monodimensional = Base(Base::basePreset::Custom, 1, std::vector<ContinuousBase>(), d_base);
+            Base monodimensional = Base(Base::basePreset::Custom, 1, c_base, d_base);
 
             // Create new potential with the new base
             Potential separated_potential = Potential(monodimensional, this->type, this->k, this->width, this->height, false);
@@ -61,6 +62,7 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
             // Add the new Potential to the separated potenial vector associated to the main potential
             this->separated_potentials.push_back(separated_potential);
         }
+
     }
 }
 
@@ -125,5 +127,13 @@ void Potential::printToFile() {
     myfile.close();
   }
 }
+
+std::ostream& operator<<(std::ostream& stream, Potential& potential) {
+
+	for (double val : potential.getValues())
+        stream << val << std::endl;
+
+    return stream;
+ }
 
 
