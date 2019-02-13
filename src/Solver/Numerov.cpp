@@ -34,19 +34,19 @@ void Numerov::findWavefunction(double energy, std::vector<double> &potential_val
 {
     double x;
     double c = (2.0 * mass / hbar / hbar) * (dx * dx / 12.0);
-    potential_values.push_back(1.0); // tricky fix
+    potential_values[nbox] = 1.0; // tricky fix
 
     //Build Numerov f(x) solution from left.
     for (int i = 2; i <= this->nbox; i++)
     {
         x = (-this->nbox / 2 + i) * dx;
         double &value = this->tempWavefunction[i];
-        double &pot_1 = potential_values.at(i - 1);
-        double &pot_2 = potential_values.at(i - 2);
-        double &pot_a = potential_values.at(i);
+        double &pot_1 = potential_values[i - 1];
+        double &pot_2 = potential_values[i - 2];
+        double &pot_a = potential_values[i];
 
-        double &wave_1 = this->tempWavefunction.at(i - 1);
-        double &wave_2 = this->tempWavefunction.at(i - 2);
+        double &wave_1 = this->tempWavefunction[i - 1];
+        double &wave_2 = this->tempWavefunction[i - 2];
 
         value = 2 * (1.0 - (5 * c) * (energy - pot_1)) * wave_1 - (1.0 + (c) * (energy - pot_2)) * wave_2;
         value /= (1.0 + (c) * (energy - pot_a));
@@ -63,16 +63,11 @@ void Numerov::findWavefunction(double energy, std::vector<double> &potential_val
 // where the exponential solution changes sign.
 double Numerov::solve(double e_min, double e_max, double e_step)
 {
-    double c, x, first_step, norm, energy = 0.0;
-    int n, sign;
-
+    // Get potentials values from the main
     std::vector< std::vector<double> > potentials = this->getPotentialsValues();
  
     // For each separated potential values...
-    for (int potential_counter = 0; potential_counter < potentials.size(); potential_counter++)
-    {
-        std::vector<double> &this_potential_values = potentials[potential_counter];
-
+    for (std::vector<double> &this_potential_values : potentials) {
         // The final solution energy is the sum of each energy
         this->solutionEnergy += this->findEnergy(e_min, e_max, e_step, this_potential_values);
         this->probability     = this->findProbability();
@@ -194,8 +189,7 @@ double Numerov::findEnergy(double e_min, double e_max, double e_step, std::vecto
         this->findWavefunction(energy, this_potential);
         double &last_wavefunction_value = this->tempWavefunction[this->nbox];
 
-        if (fabs(last_wavefunction_value) < err)
-        {
+        if (fabs(last_wavefunction_value) < err) {
             std::cout << "Solution found" << last_wavefunction_value << std::endl;
             solutionEnergy = energy;
             break;
@@ -205,8 +199,7 @@ double Numerov::findEnergy(double e_min, double e_max, double e_step, std::vecto
             sign = (last_wavefunction_value > 0) ? 1 : -1;
 
         // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus calls bisection rule.
-        if (sign * last_wavefunction_value < 0)
-        {
+        if (sign * last_wavefunction_value < 0) {
             std::cout << "Bisection " << last_wavefunction_value << std::endl;
             solutionEnergy = this->bisection(energy - e_step, energy + e_step, this_potential);
             break;
