@@ -67,8 +67,6 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
             this->separated_potentials.push_back(separated_potential);
         }
     }
-            this->printToFile();
-
 }
 
 void Potential::ho_potential()
@@ -152,3 +150,4 @@ void Potential::printToFile() {
         }
     }
 }
+
