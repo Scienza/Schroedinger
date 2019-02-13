@@ -51,6 +51,8 @@ class Numerov {
                 double findEnergy(double, double, double, std::vector<double>&);
                 void normalize();
                 std::vector<double> findProbability();
+                void initializeWavefunction();
+                std::vector<std::vector<double>> Numerov::getPotentialsValues();
 
 };
 

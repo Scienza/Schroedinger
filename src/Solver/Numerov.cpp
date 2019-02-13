@@ -13,7 +13,15 @@ Numerov::Numerov(Potential potential, int nbox)
 
     // Fill wavefunction with 1 in order to multiply each wavefunction found on separated potentials
     std::fill(this->wavefunction.begin(), this->wavefunction.end(), 1.0);
+    this->initializeWavefunction();
+}
+
+
+void Numerov::initializeWavefunction() {
+    this->tempWavefunction.clear();
     std::fill(this->tempWavefunction.begin(), this->tempWavefunction.end(), 0.0);
+
+    // TODO: generalize boundary condition as stated in the proper issue
     this->tempWavefunction[0] = 0.0;
     this->tempWavefunction[1] = 0.1;
 }
@@ -58,17 +66,7 @@ double Numerov::solve(double e_min, double e_max, double e_step)
     double c, x, first_step, norm, energy = 0.0;
     int n, sign;
 
-    std::vector< std::vector<double> > potentials;
-    
-    // Get potentials from the main potentials (check if it's separated or not)
-    if (this->potential->isSeparated()) {
-        for (int i = 0; i < this->potential->getSeparatedPotentials().size(); i++) {
-            potentials.push_back(this->potential->getSeparatedPotentials().at(i).getValues());
-        }
-    } 
-    else {
-        potentials.push_back(this->potential->getValues());
-    }
+    std::vector< std::vector<double> > potentials = this->getPotentialsValues();
  
     // For each separated potential values...
     for (int potential_counter = 0; potential_counter < potentials.size(); potential_counter++)
@@ -80,8 +78,24 @@ double Numerov::solve(double e_min, double e_max, double e_step)
         this->probability     = this->findProbability();
         this->normalize();
         this->multiplyWavefunction();
+        this->initializeWavefunction();
     }
     return this->solutionEnergy;
+}
+
+std::vector<std::vector<double>> Numerov::getPotentialsValues() {
+
+    std::vector< std::vector<double> > potentials;
+
+    // Get potentials from the main potentials (check if it's separated or not)
+    if (this->potential->isSeparated()) {
+        for (Potential local_potential : this->potential->getSeparatedPotentials()) {
+            potentials.push_back(local_potential.getValues());
+        }
+    } 
+    else {
+        potentials.push_back(this->potential->getValues());
+    }
 }
 
 // Applies a bisection algorith to the numerov method to find
