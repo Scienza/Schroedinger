@@ -18,9 +18,12 @@ Numerov::Numerov(Potential potential, int nbox)
 
 
 void Numerov::initializeWavefunction() {
-    this->tempWavefunction[0] = 0.0;
-    this->tempWavefunction[1] = 0.1;
-    std::fill(this->tempWavefunction.begin()+2, this->tempWavefunction.end(), 0.0);
+    std::fill(this->tempWavefunction.begin(), this->tempWavefunction.end(), 0.0);
+    double &val_1 = this->tempWavefunction.at(0);
+    double &val_2 = this->tempWavefunction.at(1);
+    
+    val_1 = 0.0;
+    val_2 = 0.1;
     // TODO: generalize boundary condition as stated in the properissue
 }
 
@@ -32,26 +35,23 @@ void Numerov::findWavefunction(double energy, std::vector<double> &potential_val
 {
     double x;
     double c = (2.0 * mass / hbar / hbar) * (dx * dx / 12.0);
-
-    if (potential_values.size() < this->nbox)
-        potential_values.push_back(0.0);
-
+    potential_values.push_back(1.0); // tricky fix
 
     //Build Numerov f(x) solution from left.
     for (int i = 2; i <= this->nbox; i++)
     {
         x = (-this->nbox / 2 + i) * dx;
-        double &value = this->tempWavefunction[i];
-        double &wave_1 = this->tempWavefunction[i - 1];
-        double &wave_2 = this->tempWavefunction[i - 2];
-        double &pot_1 = potential_values[i - 1];
-        double &pot_2 = potential_values[i - 2];
-        double &pot_a = potential_values[i];
+        double &value = this->tempWavefunction.at(i);
+        double &pot_1 = potential_values.at(i - 1);
+        double &pot_2 = potential_values.at(i - 2);
+        double &pot_a = potential_values.at(i);
+
+        double &wave_1 = this->tempWavefunction.at(i - 1);
+        double &wave_2 = this->tempWavefunction.at(i - 2);
 
         value = 2 * (1.0 - (5 * c) * (energy - pot_1)) * wave_1 - (1.0 + (c) * (energy - pot_2)) * wave_2;
         value /= (1.0 + (c) * (energy - pot_a));
-    }
-
+    }   
 }
 
 // A solver of differential equation using Numerov algorithm and selecting non-trivial solutions.
@@ -63,9 +63,6 @@ void Numerov::findWavefunction(double energy, std::vector<double> &potential_val
 // where the exponential solution changes sign.
 void Numerov::solve(double e_min, double e_max, double e_step)
 {
-    double c, x, first_step, norm, energy = 0.0;
-    int n, sign;
-
     std::vector< std::vector<double> > potentials = this->getPotentialsValues();
  
     // For each separated potential values...
@@ -82,20 +79,18 @@ void Numerov::solve(double e_min, double e_max, double e_step)
 
 // Get potentials' values from the main potentials (check if it's separated or not)
 std::vector< std::vector<double> >  Numerov::getPotentialsValues() {
-
     std::vector< std::vector<double> > potentials;
 
-    if (this->potential->isSeparated()) {
-        for (int i = 0; i < this->potential->getSeparatedPotentials().size(); i++) {
-            potentials.push_back(this->potential->getSeparatedPotentials().at(i).getValues());
-        }
-    } 
+    if (this->potential->isSeparated()) 
+        for (Potential this_potential : this->potential->getSeparatedPotentials())
+            potentials.push_back(this_potential.getValues());
+
     else {
         potentials.push_back(this->potential->getValues());
     }
-
     return potentials;
 }
+
 // Applies a bisection algorith to the numerov method to find
 // the energy that gives the non-trivial (non-exponential) solution
 // with the correct boundary conditions
@@ -112,10 +107,10 @@ double Numerov::bisection(double e_min, double e_max, std::vector<double> &this_
         energy_middle = (e_max + e_min) / 2.0;
 
         this->findWavefunction(energy_middle, this_potential);
-        fx1 = this->tempWavefunction[this->nbox];
+        fx1 = this->tempWavefunction.at(this->nbox);
 
         this->findWavefunction(e_max, this_potential);
-        fb = this->tempWavefunction[this->nbox];
+        fb = this->tempWavefunction.at(this->nbox);
 
         if (std::abs(fx1) < err)
         {
@@ -129,14 +124,14 @@ double Numerov::bisection(double e_min, double e_max, std::vector<double> &this_
         else
         {
             this->findWavefunction(e_min, this_potential);
-            fa = this->tempWavefunction[this->nbox];
+            fa = this->tempWavefunction.at(this->nbox);
 
             if (fa * fx1 < 0.)
                 e_max = energy_middle;
         }
     }
 
-    std::cerr << "ERROR: Solution not found using the bisection method, " << this->tempWavefunction[this->nbox] << " > " << err << std::endl;
+    std::cerr << "ERROR: Solution not found using the bisection method, " << this->tempWavefunction.at(this->nbox) << " > " << err << std::endl;
     return energy_middle;
 }
 
@@ -145,7 +140,7 @@ void Numerov::printToFile()
     if (this->wavefunction.size() > 0) {
         std::ofstream myfile("wavefunction.dat");
         if (myfile.is_open())
-            for (int i = 0; i < this->wavefunction.size(); i++)
+            for (int i = 0; i < this->nbox; i++)
                 myfile << i << " " << this->wavefunction.at(i) << std::endl;
             myfile.close();
     }
@@ -153,7 +148,7 @@ void Numerov::printToFile()
     if (this->probability.size() > 0) {
         std::ofstream myfile("probability.dat");
         if (myfile.is_open())
-            for (int i = 0; i < this->probability.size(); i++)
+            for (int i = 0; i < this->nbox; i++)
                 myfile << i << " " << this->probability.at(i) << std::endl;
             myfile.close();
     }
@@ -183,7 +178,7 @@ double Numerov::findEnergy(double e_min, double e_max, double e_step, std::vecto
         double energy = e_min + n * e_step;
         this->findWavefunction(energy, this_potential);
 
-        double &last_wavefunction_value = this->tempWavefunction[this->nbox];
+        double last_wavefunction_value = this->tempWavefunction.at(this->nbox);
 
         if (fabs(last_wavefunction_value) < err)
         {

@@ -29,7 +29,6 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
     }
     // If the potential is separable, then n potentials (one for each base's representation)
     else {
-
         for (ContinuousBase this_base : base.getContinuous()) {
 
             std::vector<ContinuousBase> c_base;
@@ -64,16 +63,15 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
             // Add the new Potential to the separated potenial vector associated to the main potential
             this->separated_potentials.push_back(separated_potential);
         }
-
     }
 }
 
 void Potential::ho_potential()
 {
     std::vector<double> x = this->getCoordsFromBase();
-    this->v.reserve(x.size());
+    this->v = std::vector<double>(x.size());
     for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            this->v.push_back(x.at(i) * x.at(i) * this->k);
+            this->v[i] = x.at(i) * x.at(i) * this->k;
 }
 
 void Potential::box_potential()
@@ -85,11 +83,9 @@ void Potential::box_potential()
 void Potential::finite_well_potential()
 {
     std::vector<double> x = this->getCoordsFromBase();
-    this->v.reserve(x.size());
-    for(std::vector<int>::size_type i = 0; i < x.size(); i++) {
-        double value = (x.at(i) > -this->width/2.0 && x.at(i) < this->width/2.0) ? 0.0 : this->height;
-        this->v.push_back(value);
-    }
+    this->v = std::vector<double>(x.size());
+    for(std::vector<int>::size_type i = 0; i < x.size(); i++) 
+        this->v[i] =  (x.at(i) > -this->width/2.0 && x.at(i) < this->width/2.0) ? 0.0 : this->height;
 }
 
 std::vector<double> Potential::getValues()
