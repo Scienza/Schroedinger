@@ -120,7 +120,7 @@ void Potential::printToFile() {
   std::ofstream myfile ("potential.dat");
   if (this->isSeparated()) {
     if (myfile.is_open()) {
-        int potential_length = this->separated_potentials.at(0).size();
+        int potential_length = this->separated_potentials.at(0).getValues().size();
         for(int i = 0; i < potential_length; i ++)
             myfile << i << " ";
 
