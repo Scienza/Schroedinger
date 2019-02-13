@@ -69,9 +69,8 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
 void Potential::ho_potential()
 {
     std::vector<double> x = this->getCoordsFromBase();
-    this->v = std::vector<double>(x.size());
-    for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            this->v[i] = x.at(i) * x.at(i) * this->k;
+    for(double value : x)
+            this->v.push_back(value * value * this->k);
 }
 
 void Potential::box_potential()
@@ -83,9 +82,8 @@ void Potential::box_potential()
 void Potential::finite_well_potential()
 {
     std::vector<double> x = this->getCoordsFromBase();
-    this->v = std::vector<double>(x.size());
-    for(std::vector<int>::size_type i = 0; i < x.size(); i++) 
-        this->v[i] =  (x.at(i) > -this->width/2.0 && x.at(i) < this->width/2.0) ? 0.0 : this->height;
+    for(double value : x) 
+        this->v.push_back((value > -this->width/2.0 && value < this->width/2.0) ? 0.0 : this->height);
 }
 
 std::vector<double> Potential::getValues()
@@ -98,7 +96,7 @@ std::vector<double> Potential::getCoordsFromBase()
 {
     if (this->base.getContinuous().size() == 1)
         return this->base.getContinuous().at(0).getCoords();
-
+ 
     else if (this->base.getDiscrete().size() == 1) {
         // tricky conversion taking each std::vector<int> value and returning a final std::vector<double> 
         std::vector<int> original_coords = this->base.getDiscrete().at(0).getCoords();
