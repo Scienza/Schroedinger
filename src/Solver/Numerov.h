@@ -26,7 +26,7 @@ class Numerov {
                 std::vector<double> getWavefunction();
                 std::vector<double> getProbability();
                 double getSolutionEnergy();
-                double solve(double, double, double);
+                void solve(double, double, double);
                 void printToFile();
 	        friend std::ostream& operator<< (std::ostream& stream, Numerov& solver);
 

@@ -45,11 +45,6 @@ Potential::Builder Potential::Builder::setBase(Base b) {
  }
  
 Potential Potential::Builder::build(){
-    try {
         return Potential(this->base,this->type,this->k,this->width,this->height, this->separable);
-    }
-    catch(const std::invalid_argument& e){
-        throw;
-    }
 }
 

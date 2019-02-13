@@ -11,7 +11,7 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
     this->height    = height;
     this->type      = type;
     this->separable = separable;
-
+    
     if (!this->separable) {
         switch(type) {
             case BOX_POTENTIAL:
@@ -31,6 +31,7 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
     else {
 
         for (ContinuousBase this_base : base.getContinuous()) {
+
             std::vector<ContinuousBase> c_base;
             std::vector<DiscreteBase> d_base;
 
@@ -47,6 +48,7 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
         }
 
         for (DiscreteBase this_base : base.getDiscrete()) {
+
             std::vector<ContinuousBase> c_base;
             std::vector<DiscreteBase> d_base;
 
@@ -116,23 +118,18 @@ std::vector<Potential> Potential::getSeparatedPotentials() {
     if (this->separable == true && this->separated_potentials.size() > 0)
         return this->separated_potentials;
 }
+
 void Potential::printToFile() {
   std::ofstream myfile ("potential.dat");
   if (myfile.is_open())
-  {
-
-    for(int i = 0; i < this->v.size(); i ++){
+    for(int i = 0; i < this->v.size(); i ++)
         myfile << i <<" " << this->v.at(i)<< std::endl ;
-    }
     myfile.close();
-  }
 }
 
 std::ostream& operator<<(std::ostream& stream, Potential& potential) {
-
 	for (double val : potential.getValues())
         stream << val << std::endl;
-
     return stream;
  }
 
