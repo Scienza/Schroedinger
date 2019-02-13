@@ -73,14 +73,16 @@ void finite_well_example() {
 	// Print everything 
 	std::cout << solver;
 
+	std::cout << "Energy: " << energy << std::endl;
 	// Save to file wavefunction and probability
 	solver.printToFile();
+	V.printToFile();
 }
 
 void harmonic_oscillator_example() {
 	unsigned int nbox = 1000;
 	double mesh       = 0.1;
-	double k          = 1.0;
+	double k          = 0.5;
 	double energy     = 0.0;
 	double e_min      = 0.0;
 	double e_max      = 2.0;

@@ -53,6 +53,7 @@ void testWf(unsigned int nbox, Potential::PotentialType potType, double k,
         FAIL() << "Analytic wavefunction and Numerov wavefunction haven't the same size " << analytic_Wf.size() << " " << numerov_Wf.size();
 
     ASSERT_NEAR(E_numerov, E_analytic, 1e-3);
+
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "Test completed" << std::endl;
     std::cout << "Energies: " << E_numerov << " " << E_analytic << std:: endl;
@@ -60,7 +61,6 @@ void testWf(unsigned int nbox, Potential::PotentialType potType, double k,
               << " " << numerov_Wf.at(numerov_Wf.size() - 1) << " " << std::endl;
     std::cout << "ana wf: " << analytic_Wf.at(0) << " " << analytic_Wf.at(analytic_Wf.size()/2)
               << " " << analytic_Wf.at(analytic_Wf.size()-1) << std::endl;
-
 }
 
 namespace {
@@ -130,6 +130,7 @@ namespace {
                 std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " "
                           << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
         }
+
     }
 
     TEST(WfTest, HarmonicOscillator2) {

@@ -120,37 +120,35 @@ std::vector<Potential> Potential::getSeparatedPotentials() {
 
 void Potential::printToFile() {
     std::ofstream myfile ("potential.dat");
-    std::vector<Potential> to_print;
     int size = 0;
     
     if (this->isSeparated()) {
-        int size = this->separated_potentials.at(0).getValues().size();
-        to_print = this->separated_potentials;
+        int coords_size = this->separated_potentials.at(0).getValues().size();
+
+        if (myfile.is_open()) {
+            for (int i = 0; i < coords_size; i++) {
+                for (Potential &pot : this->separated_potentials) {
+                    myfile << pot.getCoordsFromBase().at(i);
+                    myfile << " ";
+                    myfile << pot.getValues().at(i);
+                    myfile << " ";                   
+                }   
+                myfile << std::endl ;
+            }
+            myfile.close();
+        }
+
     }
     else {
-        to_print.push_back(*this);
-    }
-
-    if (myfile.is_open()) {
-        std::cout << "Size: "<< size;
-
-        for(int i = 0; i < size; i++) {
-            for (Potential p : to_print) {
-                myfile << p.getCoordsFromBase().at(i);
-                myfile << " ";
-                myfile << p.getValues().at(i);
-                myfile << " ";
-            }
-            myfile << std::endl ;
+        if (myfile.is_open()) {
+            for (int i = 0; i < this->getValues().size(); i++) {
+                    myfile << this->getCoordsFromBase().at(i);
+                    myfile << " ";
+                    myfile << this->getValues().at(i);
+                    myfile << " ";   
+                    myfile << std::endl; 
+                }   
+            myfile.close();
         }
-        myfile.close();
     }
 }
-
-std::ostream& operator<<(std::ostream& stream, Potential& potential) {
-	for (double val : potential.getValues())
-        stream << val << std::endl;
-    return stream;
- }
-
-
