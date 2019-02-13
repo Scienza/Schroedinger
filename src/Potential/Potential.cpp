@@ -45,12 +45,12 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
 
             // Create new potential with the new base
             Potential separated_potential = Potential(monodimensional, this->type, this->k, this->width, this->height, false);
+
             // Add the new Potential to the separated potenial vector associated to the main potential
             this->separated_potentials.push_back(separated_potential);
         }
 
         for (DiscreteBase this_base : base.getDiscrete()) {
-
             std::vector<ContinuousBase> c_base;
             std::vector<DiscreteBase> d_base;
 
@@ -67,6 +67,8 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
             this->separated_potentials.push_back(separated_potential);
         }
     }
+            this->printToFile();
+
 }
 
 void Potential::ho_potential()
@@ -117,20 +119,32 @@ std::vector<Potential> Potential::getSeparatedPotentials() {
 }
 
 void Potential::printToFile() {
-  std::ofstream myfile ("potential.dat");
-  if (this->isSeparated()) {
+    std::ofstream myfile ("potential.dat");
+    std::vector<Potential> to_print;
+    int size = 0;
+    
+    if (this->isSeparated()) {
+        int size = this->separated_potentials.at(0).getValues().size();
+        to_print = this->separated_potentials;
+    }
+    else {
+        to_print.push_back(*this);
+    }
+
     if (myfile.is_open()) {
-        int potential_length = this->separated_potentials.at(0).getValues().size();
-        for(int i = 0; i < potential_length; i ++)
-            myfile << i << " ";
+        std::cout << "Size: "<< size;
 
-            for (Potential p : this->separated_potentials)
-                myfile << p.getValues().at(i) << " ";
-
+        for(int i = 0; i < size; i++) {
+            for (Potential p : to_print) {
+                myfile << p.getCoordsFromBase().at(i);
+                myfile << " ";
+                myfile << p.getValues().at(i);
+                myfile << " ";
+            }
             myfile << std::endl ;
+        }
         myfile.close();
     }
-  }
 }
 
 std::ostream& operator<<(std::ostream& stream, Potential& potential) {

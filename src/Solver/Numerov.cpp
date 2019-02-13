@@ -152,7 +152,6 @@ void Numerov::printToFile()
                 myfile << i << " " << this->probability.at(i) << std::endl;
             myfile.close();
     }
-
 }
 
 
@@ -173,15 +172,13 @@ double Numerov::findEnergy(double e_min, double e_max, double e_step, std::vecto
     int sign;
 
     // scan energies to find when the Numerov solution is = 0 at the right extreme of the box.
-    for (int n = 0; n < (e_max - e_min) / e_step; n++)
-    {
+    for (int n = 0; n < (e_max - e_min) / e_step; n++) {
         double energy = e_min + n * e_step;
         this->findWavefunction(energy, this_potential);
 
         double last_wavefunction_value = this->tempWavefunction.at(this->nbox);
 
-        if (fabs(last_wavefunction_value) < err)
-        {
+        if (fabs(last_wavefunction_value) < err) {
             std::cout << "Solution found" << last_wavefunction_value << std::endl;
             solutionEnergy = energy;
             break;
@@ -191,8 +188,7 @@ double Numerov::findEnergy(double e_min, double e_max, double e_step, std::vecto
             sign = (last_wavefunction_value > 0) ? 1 : -1;
 
         // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus calls bisection rule.
-        if (sign * last_wavefunction_value < 0)
-        {
+        if (sign * last_wavefunction_value < 0) {
             std::cout << "Bisection " << last_wavefunction_value << std::endl;
             solutionEnergy = this->bisection(energy - e_step, energy + e_step, this_potential);
             break;
