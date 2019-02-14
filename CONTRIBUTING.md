@@ -20,8 +20,8 @@ This is based on the [Google C++ Styling guide](https://google.github.io/stylegu
 - Align the equal sign when declaring multiple variables
 - readability > functionality, don't be afraid of writing 5 lines of code more
 - Use namespaces, the name should be about the functionality itself
-- **DO NOT** use `using` (e.g. `using namespace std;`)
-- At the end of namespace, comment it's end `} // namespace nsName`
+- **DO NOT** `using` namespaces (e.g. `using namespace std;`)
+- At the end of namespace, comment `} // namespace nsName`
 
 - All parameters passed by lvalue(&) reference must be labeled const.
   
@@ -31,7 +31,7 @@ This is based on the [Google C++ Styling guide](https://google.github.io/stylegu
 - Public functions/objects/... -> FirstLetterUppercase
 - Non-public functions/objects/... -> firstLetterLowercase
 
-- Comment before function:
+- Comment before function to document the use:
 ``` 
 /*
 nameOfTheFunction Long description of the function's function
