@@ -67,6 +67,10 @@ access level order:
 - protected
 - private
 
+### How to send an issue
+== Should this be a thing? ==
+Title: Keep the title as concised as possible
+Description: In the description try to feed as more info as possible, especially if it's bug that is difficult to reproduce
 
 ### Guideline for pull requests
 * Fork the project
