@@ -22,7 +22,6 @@ Base::Base(basePreset t, int n_dimension, std::vector< ContinuousBase > c_base, 
 	this->discrete.insert(discrete.end(), d_base.begin(), d_base.end());
 
 	BasisManager::getInstance()->selectBase(*this);
-
 };
 
 

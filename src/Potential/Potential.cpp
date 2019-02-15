@@ -1,8 +1,6 @@
 #include "Potential.h"
 
-Potential::Potential() {
-    throw std::invalid_argument("Can't initialize a potential without specifying parameters");
-}
+Potential::Potential() {}
 Potential::Potential(Base base, PotentialType type, double k, double width, double height, bool separable)
 {
     this->base      = base; 
@@ -11,8 +9,7 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
     this->height    = height;
     this->type      = type;
     this->separable = separable;
-    this->v         = std::vector<double>();
-
+    
     if (!this->separable) {
         switch(type) {
             case BOX_POTENTIAL:
@@ -30,30 +27,33 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
     }
     // If the potential is separable, then n potentials (one for each base's representation)
     else {
-        this->separated_potentials = std::vector<Potential>();
+        for (ContinuousBase this_base : base.getContinuous()) {
 
-        for (int i = 0; i < base.getContinuous().size(); i++) {
+            std::vector<ContinuousBase> c_base;
+            std::vector<DiscreteBase> d_base;
+
             // Extract continuous representation from the main base
-            std::vector<ContinuousBase> c_base = std::vector<ContinuousBase>(1);
-            c_base.push_back(base.getContinuous().at(i));
+            c_base.push_back(this_base);
 
             // Create new base object with the extracted representation
-            Base monodimensional = Base(Base::basePreset::Custom, 1, c_base, std::vector<DiscreteBase>());
+            Base monodimensional = Base(Base::basePreset::Custom, 1, c_base, d_base);
 
             // Create new potential with the new base
             Potential separated_potential = Potential(monodimensional, this->type, this->k, this->width, this->height, false);
-
             // Add the new Potential to the separated potenial vector associated to the main potential
             this->separated_potentials.push_back(separated_potential);
         }
 
-        for (int i = 0; i < base.getDiscrete().size(); i++) {
+        for (DiscreteBase this_base : base.getDiscrete()) {
+
+            std::vector<ContinuousBase> c_base;
+            std::vector<DiscreteBase> d_base;
+
             // Extract discrete representation from the main base
-            std::vector<DiscreteBase> d_base = std::vector<DiscreteBase>(1);
-            d_base.push_back(base.getDiscrete().at(i));
+            d_base.push_back(this_base);
 
             // Create new base object with the extracted representation
-            Base monodimensional = Base(Base::basePreset::Custom, 1, std::vector<ContinuousBase>(), d_base);
+            Base monodimensional = Base(Base::basePreset::Custom, 1, c_base, d_base);
 
             // Create new potential with the new base
             Potential separated_potential = Potential(monodimensional, this->type, this->k, this->width, this->height, false);
@@ -62,14 +62,19 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
             this->separated_potentials.push_back(separated_potential);
         }
     }
+    this->printToFile();
 }
 
 void Potential::ho_potential()
-{
+{   
     std::vector<double> x = this->getCoordsFromBase();
-    this->v.reserve(x.size());
-    for(std::vector<int>::size_type i = 0; i < x.size(); i++)
-            this->v.push_back(x.at(i) * x.at(i) * this->k);
+    this->v = std::vector<double>(this->getCoordsFromBase().size());
+    std::fill(this->v.begin(), this->v.end(), 0.0);
+    int i = 0;
+    for(double value : x) {
+            this->v[i] = (value * value * this->k);
+            i++;
+    }
 }
 
 void Potential::box_potential()
@@ -80,25 +85,27 @@ void Potential::box_potential()
 
 void Potential::finite_well_potential()
 {
+
     std::vector<double> x = this->getCoordsFromBase();
-    this->v.reserve(x.size());
-    for(std::vector<int>::size_type i = 0; i < x.size(); i++) {
-        double value = (x.at(i) > -this->width/2.0 && x.at(i) < this->width/2.0) ? 0.0 : this->height;
-        this->v.push_back(value);
+    this->v = x;
+    std::fill(this->v.begin(), this->v.end(), 0.0);
+
+    int i = 0;
+    for(double value : x)  {
+        this->v[i] = (value > -this->width/2.0 && value < this->width/2.0) ? 0.0 : this->height;
+        i++;
     }
+
+    //for(double value : x) 
+    //    this->v.push_back((value > -this->width/2.0 && value < this->width/2.0) ? 0.0 : this->height);
 }
 
-std::vector<double> Potential::getValues()
-{
-    this->printToFile();
-    return this->v;
-}
 
 std::vector<double> Potential::getCoordsFromBase() 
 {
     if (this->base.getContinuous().size() == 1)
         return this->base.getContinuous().at(0).getCoords();
-
+ 
     else if (this->base.getDiscrete().size() == 1) {
         // tricky conversion taking each std::vector<int> value and returning a final std::vector<double> 
         std::vector<int> original_coords = this->base.getDiscrete().at(0).getCoords();
@@ -114,16 +121,22 @@ std::vector<Potential> Potential::getSeparatedPotentials() {
     if (this->separable == true && this->separated_potentials.size() > 0)
         return this->separated_potentials;
 }
+
 void Potential::printToFile() {
   std::ofstream myfile ("potential.dat");
-  if (myfile.is_open())
-  {
+  if (myfile.is_open()) {
+    std::vector<double> base_coords = this->getCoordsFromBase();
 
-    for(int i = 0; i < this->v.size(); i ++){
-        myfile << i <<" " << this->v.at(i)<< std::endl ;
-    }
+    for(int i = 0; i < base_coords.size(); i ++)
+        myfile << base_coords[i] <<" " << this->v.at(i)<< std::endl ;
     myfile.close();
   }
 }
+
+std::ostream& operator<<(std::ostream& stream, Potential& potential) {
+	for (double val : potential.getValues())
+        stream << val << std::endl;
+    return stream;
+ }
 
 

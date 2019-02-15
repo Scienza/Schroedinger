@@ -44,11 +44,7 @@ file(GLOB_RECURSE SOURCES ${SOURCE_DIR}/*.cpp)
 # Create ${TESTS}, using test's main.cpp instead of ${SOURCE}'s one
 set(TESTS ${SOURCES} src/Basis/Initializer.cpp src/Basis/Initializer.h)
 list(REMOVE_ITEM TESTS ${SOURCE_DIR}/main.cpp)
-list(APPEND TESTS
-        ${TEST_DIR}/main.cpp
-        ${TEST_DIR}/test.cpp
-        ${TEST_DIR}/test.h
-)
+list(APPEND TESTS ${TEST_DIR}/main.cpp )
 
 # Google test things
 foreach(_source ${GOOGLETEST_SOURCES})

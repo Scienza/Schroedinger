@@ -6,8 +6,8 @@
 #include <Numerov.h>
 
 void box_potential_example() {
-	unsigned int nbox = 1000;
-	double mesh       = 0.1;
+	unsigned int nbox = 500;
+	double mesh       = 0.01;
 	double k          = 0.0;
 	double height     = 0.0;
 	double width      = 0.0;
@@ -15,13 +15,13 @@ void box_potential_example() {
 	double e_min      = 0.0;
 	double e_max      = 2.0;
 	double e_step     = 0.01;
-
+	int dimension     = 1;
 	std::vector<double> wavefunction;
 
 	// Initialize the base using preset and parameters
 	BasisManager::Builder baseBuilder;
-	Base base = baseBuilder.build(Base::basePreset::Cartesian, 1, mesh, nbox);
-	
+	Base base = baseBuilder.addContinuous(mesh, nbox).build(dimension);
+
 	Potential::Builder potentialBuilder(base);
 
 	// No need to setup Box_potential, is just 0 and the above defined cartesian basis sets up the box. 
@@ -34,8 +34,7 @@ void box_potential_example() {
     wavefunction  = solver.getWavefunction();
     energy        = solver.getSolutionEnergy();
 
-	// Print everything 
-	std::cout << solver;
+	std::cout << std::endl << energy << std::endl;
 
 	// Save to file wavefunction and probability
 	solver.printToFile();
@@ -63,21 +62,50 @@ void finite_well_example() {
 								  .setWidth(width)
 								  .build();
     
-
     Numerov solver = Numerov(V, nbox);
     solver.solve(e_min, e_max, e_step);
 
     wavefunction  = solver.getWavefunction();
     energy        = solver.getSolutionEnergy();
 
-	// Print everything 
-	std::cout << solver;
+	std::cout << std::endl << energy << std::endl;
 
 	// Save to file wavefunction and probability
 	solver.printToFile();
 }
 
 void harmonic_oscillator_example() {
+	unsigned int nbox = 1000;
+	double mesh       = 0.01;
+	double k          = 1.0;
+	double energy     = 0.0;
+	double e_min      = 0.0;
+	double e_max      = 2.0;
+	double e_step     = 0.01;
+	int dimension     = 1;
+	std::vector<double> wavefunction;
+
+	BasisManager::Builder baseBuilder;
+	Base base = baseBuilder.addContinuous(mesh, nbox).build(dimension);
+
+	Potential::Builder potentialBuilder(base);
+    Potential V = potentialBuilder.setType(Potential::PotentialType::HARMONIC_OSCILLATOR)
+								  .setK(k)
+								  .build();
+    
+    Numerov solver = Numerov(V, nbox);
+    solver.solve(e_min, e_max, e_step);
+
+    wavefunction  = solver.getWavefunction();
+    energy        = solver.getSolutionEnergy();
+
+	std::cout << std::endl << energy << std::endl;
+
+	// Save to file wavefunction and probability
+	solver.printToFile();
+}
+
+void harmonic_oscillator_2D_example() {
 	unsigned int nbox = 1000;
 	double mesh       = 0.1;
 	double k          = 1.0;
@@ -89,10 +117,11 @@ void harmonic_oscillator_example() {
 	std::vector<double> wavefunction;
 
 	BasisManager::Builder baseBuilder;
-	Base base = baseBuilder.build(Base::basePreset::Cartesian, 1, mesh, nbox);
+	Base base = baseBuilder.build(Base::basePreset::Cartesian, 2, mesh, nbox);
 	
 	Potential::Builder potentialBuilder(base);
     Potential V = potentialBuilder.setType(Potential::PotentialType::HARMONIC_OSCILLATOR)
+								  .setSeparable(true)
 								  .setK(k)
 								  .build();
     
@@ -104,11 +133,13 @@ void harmonic_oscillator_example() {
     energy        = solver.getSolutionEnergy();
 
 	// Print everything 
-	std::cout << solver;
+	//std::cout << solver;
 
 	// Save to file wavefunction and probability
 	solver.printToFile();
 }
+
+
 
 void custom_workflow() {
 	BasisManager::Builder builder = BasisManager::Builder();
@@ -155,6 +186,7 @@ int main(int argc, char **argv) {
 	std::cout << "2) Box (example)" << std::endl;
 	std::cout << "3) Finite well1 (example)" << std::endl;
 	std::cout << "4) Custom (step-by-step configuration)" << std::endl;
+	std::cout << "5) 2D Harmonic oscillator (example)" << std::endl;
 	std::cout << "\nInsert: ";
 	std::cin >> c;
 
@@ -171,6 +203,9 @@ int main(int argc, char **argv) {
 		case 4:
 			std::cout << "Not ready yet" << std::endl;
 			break;
+		case 5:
+			harmonic_oscillator_2D_example();
+			break;     	
 		default:
 			std::cout << "Not a valid option" << std::endl;
 			break;
