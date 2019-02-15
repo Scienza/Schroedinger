@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 #include <Base.h>
 
 class State
@@ -17,10 +18,11 @@ public:
     const std::vector<double>& getWavefunction();
     const std::vector<double>& getProbability();
     const double& getEnergy();
+    Base getBase();
 
     void printToFile();
 	
-    friend std::ostream& operator<< (std::ostream& stream, const State& state);
+    friend std::ostream& operator<< (std::ostream& stream, State& state);
 	friend std::ostream& operator^ (const State& state_1, const State& state_2);
 
 private:

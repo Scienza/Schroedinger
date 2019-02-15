@@ -3,6 +3,7 @@
 #include <BasisManager.h>
 #include <Base.h>
 #include <Potential.h>
+#include <State.h>
 #include <Numerov.h>
 
 void box_potential_example() {
@@ -29,15 +30,19 @@ void box_potential_example() {
     Potential V = potentialBuilder.setType(Potential::PotentialType::BOX_POTENTIAL).build();
     
     Numerov solver = Numerov(V, nbox);
-    solver.solve(e_min, e_max, e_step);
+    State state    = solver.solve(e_min, e_max, e_step);
 
-    wavefunction  = solver.getWavefunction();
-    energy        = solver.getSolutionEnergy();
+    wavefunction  = state.getWavefunction();
+    energy        = state.getEnergy();
 
 	std::cout << std::endl << energy << std::endl;
 
+	// Printing state
+	std::cout << "Printing state" << std::endl;
+	std::cout << state;
+
 	// Save to file wavefunction and probability
-	solver.printToFile();
+	state.printToFile();
 }
 
 void finite_well_example() {
@@ -63,15 +68,19 @@ void finite_well_example() {
 								  .build();
     
     Numerov solver = Numerov(V, nbox);
-    solver.solve(e_min, e_max, e_step);
+    State state    = solver.solve(e_min, e_max, e_step);
 
-    wavefunction  = solver.getWavefunction();
-    energy        = solver.getSolutionEnergy();
+    wavefunction  = state.getWavefunction();
+    energy        = state.getEnergy();
 
 	std::cout << std::endl << energy << std::endl;
 
+	// Printing state
+	std::cout << "Printing state" << std::endl;
+	std::cout << state;
+	
 	// Save to file wavefunction and probability
-	solver.printToFile();
+	state.printToFile();
 }
 
 void harmonic_oscillator_example() {
@@ -94,15 +103,19 @@ void harmonic_oscillator_example() {
 								  .build();
     
     Numerov solver = Numerov(V, nbox);
-    solver.solve(e_min, e_max, e_step);
+    State state    = solver.solve(e_min, e_max, e_step);
 
-    wavefunction  = solver.getWavefunction();
-    energy        = solver.getSolutionEnergy();
+    wavefunction  = state.getWavefunction();
+    energy        = state.getEnergy();
 
 	std::cout << std::endl << energy << std::endl;
 
+	// Printing state
+	std::cout << "Printing state" << std::endl;
+	std::cout << state;
+	
 	// Save to file wavefunction and probability
-	solver.printToFile();
+	state.printToFile();
 }
 
 void harmonic_oscillator_2D_example() {
@@ -127,16 +140,15 @@ void harmonic_oscillator_2D_example() {
     
 
     Numerov solver = Numerov(V, nbox);
-    solver.solve(e_min, e_max, e_step);
+    State state    = solver.solve(e_min, e_max, e_step);
 
-    wavefunction  = solver.getWavefunction();
-    energy        = solver.getSolutionEnergy();
+    wavefunction  = state.getWavefunction();
+    energy        = state.getEnergy();
 
-	// Print everything 
-	//std::cout << solver;
+	std::cout << std::endl << energy << std::endl;
 
 	// Save to file wavefunction and probability
-	solver.printToFile();
+	state.printToFile();
 }
 
 

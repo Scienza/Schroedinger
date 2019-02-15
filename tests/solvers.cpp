@@ -2,6 +2,7 @@
 #include <Numerov.h>
 #include <BasisManager.h>
 #include <Potential.h>
+#include <State.h>
 #include "analytical.cpp"
 
 void testWavefunction(unsigned int nbox, Potential::PotentialType potType, double k,
@@ -17,12 +18,12 @@ void testWavefunction(unsigned int nbox, Potential::PotentialType potType, doubl
                       .build();
 
     Numerov solver = Numerov(V, nbox);
-    solver.solve(0.0, 2.0, 0.01);
+    State state = solver.solve(0.0, 2.0, 0.01);
 
-    numerov_Wf = solver.getWavefunction();
+    numerov_Wf = state.getWavefunction();
     analytic_Wf = numerov_Wf;
 
-    double E_numerov = solver.getSolutionEnergy();
+    double E_numerov = state.getEnergy();
     double E_analytic;
 
     switch (potType) {

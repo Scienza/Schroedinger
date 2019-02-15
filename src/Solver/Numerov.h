@@ -16,6 +16,7 @@
 #include <string>
 #include <fstream> 
 #include <Potential.h>
+#include <State.h>
 
 class Numerov {
         public:
@@ -23,11 +24,7 @@ class Numerov {
                 int nbox;
 
                 Numerov(Potential, int);
-                std::vector<double> getWavefunction();
-                std::vector<double> getProbability();
-                double getSolutionEnergy();
-                double solve(double, double, double);
-                void printToFile();
+                State solve(double, double, double);
 
                 /*! Integrate with the trapezoidal rule method, from a to b position in a function array*/
                 static double trapezoidalRule(int a, int b, double stepx, std::vector<double> function) {

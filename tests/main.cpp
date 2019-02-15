@@ -1,8 +1,6 @@
 #define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
 
 #include <gtest/gtest.h>
-#include <Numerov.h>
-#include <Potential.h>
 #include "basis.cpp"
 #include "potentials.cpp"
 #include "solvers.cpp"

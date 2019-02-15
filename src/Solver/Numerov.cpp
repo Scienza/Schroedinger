@@ -60,7 +60,7 @@ void Numerov::functionSolve(double energy) {
     where the exponential solution changes sign.
 */
 
-double Numerov::solve(double e_min, double e_max, double e_step) {
+State Numerov::solve(double e_min, double e_max, double e_step) {
     double c, x, first_step, norm, energy = 0.0;
     int n, sign;
 
@@ -87,19 +87,29 @@ double Numerov::solve(double e_min, double e_max, double e_step) {
         }
     }
 
+    // Evaluation of the probability
     for (int i = 0; i <= nbox; i++) {
         double &value      = this->wavefunction[i];
         double &prob_value = this->probability[i];
         prob_value = value*value;
     }
+
+    // Evaluation of the norm
     norm = trapezoidalRule(0.0, this->nbox, dx, this->probability);
+
+    // Normalization of the wavefunction
     for (int i = 0; i <= nbox; i++) {
         double &value = this->wavefunction[i];
         value /= sqrt(norm);
     }
 
-    this->printToFile();
-    return this->solutionEnergy;
+    // Normalization of the potential
+    for (int i = 0; i <= nbox; i++) {
+        double &value = this->probability[i];
+        value /= norm;
+    }
+
+    return State(this->wavefunction, this->probability, this->solutionEnergy, this->potential.getBase());
 }
 
 /*! Applies a bisection algorith to the numerov method to find
@@ -137,33 +147,6 @@ double Numerov::bisection(double e_min, double e_max) {
         }
     }
 
-    std::cerr << "ERROR: Solution not found using the bisection method, " << this->wavefunction.at(this->nbox) << " > " << err << std::endl;
-//    exit(9);
+    std::cerr << "INFO: Solution not found using the bisection method, " << this->wavefunction.at(this->nbox) << " > " << err << std::endl;
     return energy_middle;
-}
-
-
-
-void Numerov::printToFile() {
-  std::ofstream myfile ("wavefunction.dat");
-  if (myfile.is_open())
-  {
-    std::vector<double> base_coords = this->potential.getBase().getCoords();
-    for(int i = 0; i < base_coords.size(); i ++){
-        myfile << base_coords[i] <<" " << this->wavefunction.at(i)<< std::endl ;
-    }
-    myfile.close();
-  }
-}
-
-double Numerov::getSolutionEnergy() {
-    return this->solutionEnergy;
-}
-
-std::vector<double> Numerov::getWavefunction() {
-    return this->wavefunction;
-}
-
-std::vector<double> Numerov::getProbability() {
-    return this->probability;
 }
