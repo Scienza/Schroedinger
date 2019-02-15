@@ -43,7 +43,6 @@ class Potential
     Potential();
     Potential(Base, PotentialType, double, double, double, bool);
     const std::vector<double>& getValues() { return this->v; }
-    std::vector<double> getCoordsFromBase();
     std::vector<Potential> getSeparatedPotentials();
 
     Base getBase();

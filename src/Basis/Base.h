@@ -19,6 +19,7 @@ public:
 	int getDim();
 	std::vector<ContinuousBase> getContinuous();
 	std::vector<DiscreteBase> getDiscrete();
+	std::vector<double> getCoords();
 	friend std::ostream& operator<< (std::ostream& stream, Base& base);
 
 private:

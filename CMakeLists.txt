@@ -35,7 +35,7 @@ include_directories(
         ${PROJECT_SOURCE_DIR}/src/Potential
         ${PROJECT_SOURCE_DIR}/src/Solver
 		${PROJECT_SOURCE_DIR}/src/World
-
+        ${PROJECT_SOURCE_DIR}/src/States
 )
 
 # Fetch all sources, creating ${SOURCES}

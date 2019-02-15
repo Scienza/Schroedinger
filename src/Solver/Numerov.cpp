@@ -148,11 +148,10 @@ void Numerov::printToFile() {
   std::ofstream myfile ("wavefunction.dat");
   if (myfile.is_open())
   {
-    std::vector<double> base_coords = this->potential.getCoordsFromBase();
+    std::vector<double> base_coords = this->potential.getBase().getCoords();
     for(int i = 0; i < base_coords.size(); i ++){
         myfile << base_coords[i] <<" " << this->wavefunction.at(i)<< std::endl ;
     }
-
     myfile.close();
   }
 }
