@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <stdbool.h>
 #include <fstream>
+#include <iostream>
+#include <sstream>
 #include <Base.h>
 
 /*! Class Potential contains the potential used in the Schroedinger equation.
@@ -41,9 +43,11 @@ class Potential
     };
 
     Potential();
+    Potential(Base base, std::vector<double> potentialValues);
     Potential(Base, PotentialType, double, double, double, bool);
-    std::vector<double> getValues();
-    std::vector<double> getCoordsFromBase();
+
+    const std::vector<double>& getValues() { return this->v; }
+  
     std::vector<Potential> getSeparatedPotentials();
 
     Base getBase();
@@ -60,10 +64,13 @@ class Potential
         double width = 5.0;
         double height = 10.0;
         bool separable = false;
+        bool fromFile  = false;
         std::vector<Potential> separated_potentials;
+        std::vector<double> potentialValues;
 
       public:
         Builder(Base b);
+        Builder(std::string filename);
         Builder setK(double k_new);
         Builder setWidth(double width_new);
         Builder setHeight(double height_new);

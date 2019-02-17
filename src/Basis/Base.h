@@ -15,10 +15,12 @@ public:
 	enum baseType { Radial = 0, Momentum = 1, Other = 2};
 
 	Base(basePreset, int, std::vector< ContinuousBase >, std::vector< DiscreteBase >);
+	Base(std::vector<double> coords);
 	Base() {}
 	int getDim();
 	std::vector<ContinuousBase> getContinuous();
 	std::vector<DiscreteBase> getDiscrete();
+	std::vector<double> getCoords();
 	friend std::ostream& operator<< (std::ostream& stream, Base& base);
 
 private:

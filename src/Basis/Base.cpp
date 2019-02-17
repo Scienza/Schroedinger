@@ -1,6 +1,10 @@
 #include <Base.h>
 #include "BasisManager.h"
 
+Base::Base(std::vector<double> coords) {
+	this->dimensions = 1;
+	this->continuous.push_back(ContinuousBase(coords));
+}
 Base::Base(basePreset t, int n_dimension, std::vector< ContinuousBase > c_base, std::vector< DiscreteBase > d_base) {
 
 	switch (t) {
@@ -55,3 +59,21 @@ std::ostream& operator<<(std::ostream& stream, Base& base) {
 
     return stream;
  }
+
+// This method let you get basis coords when it has only one dimension
+std::vector<double> Base::getCoords() 
+{
+    if (this->getContinuous().size() == 1) {
+		std::vector<double> toreturn = this->getContinuous().at(0).getCoords();
+		return toreturn;
+	}
+         
+ 
+    else if (this->getDiscrete().size() == 1) {
+        // tricky conversion taking each std::vector<int> value and returning a final std::vector<double> 
+        std::vector<int> original_coords = this->getDiscrete().at(0).getCoords();
+		std::vector<double> toreturn = std::vector<double>(original_coords.begin(), original_coords.end());
+        return toreturn;
+    }
+	else throw std::runtime_error("Can't get coords from multidimensional basis using this method. ");
+}

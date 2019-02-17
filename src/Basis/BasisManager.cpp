@@ -53,6 +53,7 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension) {
 }
 
 // --- Factory Methods --- //
+// CHECK CHECK CHECK!!!!
 Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh, int nbox) {
     //TODO: Eventually add controls...
 
@@ -62,8 +63,6 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
             for(int i = 0; i < dimension; i++) 
                 this->addContinuous(mesh, nbox);
             break;
-
-        // todo: find criterium criterium to define Lmax given only r. Harmonic oscillator r/l relation?
         case Base::basePreset::Cylindrical: 
 			throw std::invalid_argument("Wrong parameters for Cylindrical basis");
             break;
@@ -76,9 +75,7 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
         default: 
 			throw std::invalid_argument("Wrong basis type or initialization meaningless!");
             break;
-
     }
-
     return Base(b, dimension, c_base, d_base);
 }
 

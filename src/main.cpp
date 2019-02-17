@@ -3,11 +3,12 @@
 #include <BasisManager.h>
 #include <Base.h>
 #include <Potential.h>
+#include <State.h>
 #include <Numerov.h>
 
 void box_potential_example() {
-	unsigned int nbox = 1000;
-	double mesh       = 0.1;
+	unsigned int nbox = 500;
+	double mesh       = 0.01;
 	double k          = 0.0;
 	double height     = 0.0;
 	double width      = 0.0;
@@ -15,13 +16,13 @@ void box_potential_example() {
 	double e_min      = 0.0;
 	double e_max      = 2.0;
 	double e_step     = 0.01;
-
+	int dimension     = 1;
 	std::vector<double> wavefunction;
 
 	// Initialize the base using preset and parameters
 	BasisManager::Builder baseBuilder;
-	Base base = baseBuilder.build(Base::basePreset::Cartesian, 1, mesh, nbox);
-	
+	Base base = baseBuilder.addContinuous(mesh, nbox).build(dimension);
+
 	Potential::Builder potentialBuilder(base);
 
 	// No need to setup Box_potential, is just 0 and the above defined cartesian basis sets up the box. 
@@ -29,16 +30,19 @@ void box_potential_example() {
     Potential V = potentialBuilder.setType(Potential::PotentialType::BOX_POTENTIAL).build();
     
     Numerov solver = Numerov(V, nbox);
-    solver.solve(e_min, e_max, e_step);
+    State state    = solver.solve(e_min, e_max, e_step);
 
-    wavefunction  = solver.getWavefunction();
-    energy        = solver.getSolutionEnergy();
+    wavefunction  = state.getWavefunction();
+    energy        = state.getEnergy();
 
-	// Print everything 
-	std::cout << solver;
+	std::cout << std::endl << energy << std::endl;
+
+	// Printing state
+	std::cout << "Printing state" << std::endl;
+	std::cout << state;
 
 	// Save to file wavefunction and probability
-	solver.printToFile();
+	state.printToFile();
 }
 
 void finite_well_example() {
@@ -63,23 +67,58 @@ void finite_well_example() {
 								  .setWidth(width)
 								  .build();
     
-
     Numerov solver = Numerov(V, nbox);
-    solver.solve(e_min, e_max, e_step);
+    State state    = solver.solve(e_min, e_max, e_step);
 
-    wavefunction  = solver.getWavefunction();
-    energy        = solver.getSolutionEnergy();
+    wavefunction  = state.getWavefunction();
+    energy        = state.getEnergy();
 
-	// Print everything 
-	std::cout << solver;
+	std::cout << std::endl << energy << std::endl;
 
-	std::cout << "Energy: " << energy << std::endl;
+	// Printing state
+	std::cout << "Printing state" << std::endl;
+	std::cout << state;
+	
 	// Save to file wavefunction and probability
-	solver.printToFile();
-	V.printToFile();
+	state.printToFile();
 }
 
 void harmonic_oscillator_example() {
+	unsigned int nbox = 1000;
+	double mesh       = 0.01;
+	double k          = 1.0;
+	double energy     = 0.0;
+	double e_min      = 0.0;
+	double e_max      = 2.0;
+	double e_step     = 0.01;
+	int dimension     = 1;
+	std::vector<double> wavefunction;
+
+	BasisManager::Builder baseBuilder;
+	Base base = baseBuilder.addContinuous(mesh, nbox).build(dimension);
+
+	Potential::Builder potentialBuilder(base);
+    Potential V = potentialBuilder.setType(Potential::PotentialType::HARMONIC_OSCILLATOR)
+								  .setK(k)
+								  .build();
+    
+    Numerov solver = Numerov(V, nbox);
+    State state    = solver.solve(e_min, e_max, e_step);
+
+    wavefunction  = state.getWavefunction();
+    energy        = state.getEnergy();
+
+	std::cout << std::endl << energy << std::endl;
+
+	// Printing state
+	std::cout << "Printing state" << std::endl;
+	std::cout << state;
+	
+	// Save to file wavefunction and probability
+	state.printToFile();
+}
+
+void harmonic_oscillator_2D_example() {
 	unsigned int nbox = 1000;
 	double mesh       = 0.1;
 	double k          = 0.5;
@@ -91,25 +130,25 @@ void harmonic_oscillator_example() {
 	std::vector<double> wavefunction;
 
 	BasisManager::Builder baseBuilder;
-	Base base = baseBuilder.build(Base::basePreset::Cartesian, 1, mesh, nbox);
+	Base base = baseBuilder.build(Base::basePreset::Cartesian, 2, mesh, nbox);
 	
 	Potential::Builder potentialBuilder(base);
     Potential V = potentialBuilder.setType(Potential::PotentialType::HARMONIC_OSCILLATOR)
+								  .setSeparable(true)
 								  .setK(k)
 								  .build();
     
 
     Numerov solver = Numerov(V, nbox);
-    solver.solve(e_min, e_max, e_step);
+    State state    = solver.solve(e_min, e_max, e_step);
 
-    wavefunction  = solver.getWavefunction();
-    energy        = solver.getSolutionEnergy();
+    wavefunction  = state.getWavefunction();
+    energy        = state.getEnergy();
 
-	// Print everything 
-	std::cout << solver;
+	std::cout << std::endl << energy << std::endl;
 
 	// Save to file wavefunction and probability
-	solver.printToFile();
+	state.printToFile();
 }
 
 void harmonic_oscillator_2D_example() {
@@ -145,8 +184,6 @@ void harmonic_oscillator_2D_example() {
 	// Save to file wavefunction and probability
 	solver.printToFile();
 }
-
-
 
 void custom_workflow() {
 	BasisManager::Builder builder = BasisManager::Builder();

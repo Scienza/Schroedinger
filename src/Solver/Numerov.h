@@ -16,22 +16,17 @@
 #include <string>
 #include <fstream> 
 #include <Potential.h>
+#include <State.h>
 
 class Numerov {
         public:
-                Potential *potential;
+                Potential potential;
                 int nbox;
 
                 Numerov(Potential, int);
-                std::vector<double> getWavefunction();
-                std::vector<double> getProbability();
-                double getSolutionEnergy();
-                void solve(double, double, double);
-                void printToFile();
-	        friend std::ostream& operator<< (std::ostream& stream, Numerov& solver);
+                State solve(double, double, double);
 
-                // Integrate with the trapezoidal rule method, from a to b position in a function array
-                // This is static and public in order to be used by analytical functions outside of this class
+                /*! Integrate with the trapezoidal rule method, from a to b position in a function array*/
                 static double trapezoidalRule(int a, int b, double stepx, std::vector<double> function) {
                         double sum = 0.0;
                         for (int j = a + 1; j < b; j++) 
@@ -43,17 +38,9 @@ class Numerov {
         private:
                 double solutionEnergy;
                 std::vector<double> wavefunction;
-                std::vector<double> tempWavefunction;
                 std::vector<double> probability;
-                void findWavefunction(double, std::vector<double>&);
-                void multiplyWavefunction();
-                double bisection(double, double, std::vector<double>&);
-                double findEnergy(double, double, double, std::vector<double>&);
-                void normalize();
-                std::vector<double> findProbability();
-                void initializeWavefunction();
-                std::vector<std::vector<double>> getPotentialsValues();
-
+                void functionSolve(double energy);
+                double bisection(double, double);
 };
 
 #endif

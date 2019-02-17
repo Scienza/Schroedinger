@@ -1,7 +1,10 @@
 #include "Potential.h"
 
-Potential::Potential() {
-    throw std::invalid_argument("Can't initialize a potential without specifying parameters");
+Potential::Potential() {}
+Potential::Potential(Base base, std::vector<double> potentialValues)
+{
+    this->base = base;
+    this->v = potentialValues;
 }
 
 Potential::Potential(Base base, PotentialType type, double k, double width, double height, bool separable)
@@ -45,7 +48,6 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
 
             // Create new potential with the new base
             Potential separated_potential = Potential(monodimensional, this->type, this->k, this->width, this->height, false);
-
             // Add the new Potential to the separated potenial vector associated to the main potential
             this->separated_potentials.push_back(separated_potential);
         }
@@ -67,43 +69,37 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
             this->separated_potentials.push_back(separated_potential);
         }
     }
+    this->printToFile();
 }
 
 void Potential::ho_potential()
-{
-    std::vector<double> x = this->getCoordsFromBase();
-    for(double value : x)
-            this->v.push_back(value * value * this->k);
+{   
+    std::vector<double> x = this->base.getCoords();
+    this->v = std::vector<double>(this->base.getCoords().size());
+    std::fill(this->v.begin(), this->v.end(), 0.0);
+    int i = 0;
+    for(double value : x) {
+            this->v[i] = (value * value * this->k);
+            i++;
+    }
 }
 
 void Potential::box_potential()
 {
-    this->v = this->getCoordsFromBase();
+    this->v = this->base.getCoords();
     std::fill(this->v.begin(), this->v.end(), 0.0);
 }
 
 void Potential::finite_well_potential()
 {
-    std::vector<double> x = this->getCoordsFromBase();
-    for(double value : x) 
-        this->v.push_back((value > -this->width/2.0 && value < this->width/2.0) ? 0.0 : this->height);
-}
+    std::vector<double> x = this->base.getCoords();
+    this->v = x;
+    std::fill(this->v.begin(), this->v.end(), 0.0);
 
-std::vector<double> Potential::getValues()
-{
-    this->printToFile();
-    return this->v;
-}
-
-std::vector<double> Potential::getCoordsFromBase() 
-{
-    if (this->base.getContinuous().size() == 1)
-        return this->base.getContinuous().at(0).getCoords();
- 
-    else if (this->base.getDiscrete().size() == 1) {
-        // In DiscreteBase we have int, so this is a way to return a vector of double
-        std::vector<int> original_coords = this->base.getDiscrete().at(0).getCoords();
-        return std::vector<double>(original_coords.begin(), original_coords.end());
+    int i = 0;
+    for(double value : x)  {
+        this->v[i] = (value > -this->width/2.0 && value < this->width/2.0) ? 0.0 : this->height;
+        i++;
     }
 }
 
@@ -117,37 +113,22 @@ std::vector<Potential> Potential::getSeparatedPotentials() {
 }
 
 void Potential::printToFile() {
-    std::ofstream myfile ("potential.dat");
-    int size = 0;
-    
-    if (this->isSeparated()) {
-        int coords_size = this->separated_potentials.at(0).getValues().size();
+  std::ofstream myfile ("potential.dat");
+  if (myfile.is_open()) {
+    std::vector<double> base_coords = this->base.getCoords();
 
-        if (myfile.is_open()) {
-            for (int i = 0; i < coords_size; i++) {
-                for (Potential &pot : this->separated_potentials) {
-                    myfile << pot.getCoordsFromBase().at(i);
-                    myfile << " ";
-                    myfile << pot.getValues().at(i);
-                    myfile << " ";                   
-                }   
-                myfile << std::endl ;
-            }
-            myfile.close();
-        }
-
-    }
-    else {
-        if (myfile.is_open()) {
-            for (int i = 0; i < this->getValues().size(); i++) {
-                    myfile << this->getCoordsFromBase().at(i);
-                    myfile << " ";
-                    myfile << this->getValues().at(i);
-                    myfile << " ";   
-                    myfile << std::endl; 
-                }   
-            myfile.close();
-        }
-    }
+    for(int i = 0; i < base_coords.size(); i ++)
+        myfile << base_coords[i] <<" " << this->v.at(i)<< std::endl ;
+    myfile.close();
+  }
 }
 
+std::ostream& operator<<(std::ostream& stream, Potential& potential) {
+	for (double val : potential.getValues())
+        stream << val << std::endl;
+    return stream;
+ }
+
+Base Potential::getBase() {
+    return this->base;
+}
