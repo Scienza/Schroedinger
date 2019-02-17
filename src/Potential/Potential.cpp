@@ -16,6 +16,7 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
     this->type      = type;
     this->separable = separable;
     
+    // If is not separable, evaluate it 
     if (!this->separable) {
         switch(type) {
             case BOX_POTENTIAL:
@@ -31,6 +32,7 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
                 throw std::invalid_argument("Wrong potential type or initialization meaningless!");
         }
     }
+
     // If the potential is separable, then n potentials (one for each base's representation)
     else {
         for (ContinuousBase this_base : base.getContinuous()) {
@@ -51,7 +53,6 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
         }
 
         for (DiscreteBase this_base : base.getDiscrete()) {
-
             std::vector<ContinuousBase> c_base;
             std::vector<DiscreteBase> d_base;
 
@@ -91,7 +92,6 @@ void Potential::box_potential()
 
 void Potential::finite_well_potential()
 {
-
     std::vector<double> x = this->base.getCoords();
     this->v = x;
     std::fill(this->v.begin(), this->v.end(), 0.0);
@@ -101,9 +101,6 @@ void Potential::finite_well_potential()
         this->v[i] = (value > -this->width/2.0 && value < this->width/2.0) ? 0.0 : this->height;
         i++;
     }
-
-    //for(double value : x) 
-    //    this->v.push_back((value > -this->width/2.0 && value < this->width/2.0) ? 0.0 : this->height);
 }
 
 bool Potential::isSeparated() {
@@ -135,4 +132,3 @@ std::ostream& operator<<(std::ostream& stream, Potential& potential) {
 Base Potential::getBase() {
     return this->base;
 }
-

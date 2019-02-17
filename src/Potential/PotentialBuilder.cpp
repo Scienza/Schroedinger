@@ -90,4 +90,3 @@ Potential Potential::Builder::build(){
         return Potential(this->base, this->potentialValues);
     }
 }
-

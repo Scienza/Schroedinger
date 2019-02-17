@@ -146,7 +146,6 @@ double Numerov::bisection(double e_min, double e_max) {
                 e_max = energy_middle;
         }
     }
-
     std::cerr << "INFO: Solution not found using the bisection method, " << this->wavefunction.at(this->nbox) << " > " << err << std::endl;
     return energy_middle;
 }
