@@ -1,6 +1,12 @@
 #include "Potential.h"
 
 Potential::Potential() {}
+Potential::Potential(Base base, std::vector<double> potentialValues)
+{
+    this->base = base;
+    this->v = potentialValues;
+}
+
 Potential::Potential(Base base, PotentialType type, double k, double width, double height, bool separable)
 {
     this->base      = base; 

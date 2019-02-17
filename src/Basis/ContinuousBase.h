@@ -15,6 +15,7 @@ private:
 public:
 	std::vector<double> getCoords();
 	ContinuousBase();	
+	ContinuousBase(std::vector<double> coords);
 	ContinuousBase(double, unsigned int);
 	ContinuousBase(double, double, double);
 	ContinuousBase(double, double, unsigned int);

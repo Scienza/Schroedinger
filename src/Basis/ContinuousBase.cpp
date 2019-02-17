@@ -1,6 +1,12 @@
 #include <ContinuousBase.h>
 
 ContinuousBase::ContinuousBase() {}
+
+ContinuousBase::ContinuousBase(std::vector<double> coords)
+{
+	this->coords = coords;
+}
+
 ContinuousBase::ContinuousBase(double mesh, unsigned int nbox)
 {
 	this->start  = -(nbox / 2.) * mesh;
