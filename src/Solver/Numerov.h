@@ -15,15 +15,13 @@
 #include <vector>
 #include <string>
 #include <fstream> 
+#include <Solver.h>
 #include <Potential.h>
 #include <State.h>
 
-class Numerov {
+class Numerov : public Solver {
         public:
-                Potential potential;
-                int nbox;
-
-                Numerov(Potential, int);
+                Numerov(Potential potential, int nbox);
                 State solve(double, double, double);
 
                 /*! Integrate with the trapezoidal rule method, from a to b position in a function array*/
@@ -35,10 +33,8 @@ class Numerov {
                         sum = (sum) * stepx;
                         return sum;
                 }
+                
         private:
-                double solutionEnergy;
-                std::vector<double> wavefunction;
-                std::vector<double> probability;
                 void functionSolve(double energy);
                 double bisection(double, double);
 };

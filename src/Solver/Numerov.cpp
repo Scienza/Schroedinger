@@ -1,12 +1,6 @@
 #include "Numerov.h"
 
-Numerov::Numerov(Potential potential, int nbox) {
-    this->potential      = potential;
-    this->nbox           = nbox;
-    this->solutionEnergy = 0;
-    this->probability    = std::vector<double>(nbox+1);
-    this->wavefunction   = std::vector<double>(nbox+1);
-
+Numerov::Numerov(Potential potential, int nbox) : Solver(potential, nbox) {
     this->wavefunction.at(0) = 0;
     this->wavefunction.at(1) = 0.1;
     this->wavefunction.at(2) = 0.1;
@@ -27,7 +21,7 @@ void Numerov::functionSolve(double energy) {
         //Build Numerov f(x) solution from left. 
         for (int i = 2; i <= this->nbox; i++) {
             x = (-this->nbox / 2 + i) * dx;
-            double &value = this->wavefunction[i];
+            double &value = this->wavefunction.at(i);
             double &pot_1 = pot.at(i-1);
             double &pot_2 = pot.at(i-2);
             double &pot_a = pot.at(i);
@@ -37,9 +31,7 @@ void Numerov::functionSolve(double energy) {
 
             value = 2 * (1.0 - (5 * c) * (energy - pot_1 )) * wave_1 - (1.0 + (c) * (energy - pot_2)) * wave_2;
             value /= (1.0 + (c) * (energy - pot_a));  
-
-            //std::cout << i << " " << this->wavefunction.at(i) << std::endl;
-    }
+        }
     }catch (const std::out_of_range & ex)
     {
         std::cout << "out_of_range Exception Caught :: " << ex.what() << std::endl;
@@ -68,7 +60,7 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
     for (n = 0; n < (e_max - e_min) / e_step; n++) {
         energy = e_min + n * e_step;
         this->functionSolve(energy);
-        double &last_wavefunction_value = this->wavefunction[this->nbox];
+        double &last_wavefunction_value = this->wavefunction.at(this->nbox);
 
         if ( fabs(last_wavefunction_value) < err ) {
             std::cout << "Solution found" << last_wavefunction_value << std::endl;
