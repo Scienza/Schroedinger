@@ -4,6 +4,7 @@
 Base::Base(std::vector<double> coords) {
 	this->dimensions = 1;
 	this->continuous.push_back(ContinuousBase(coords));
+	this->boundary = ZEROEDGE;
 }
 Base::Base(basePreset t, int n_dimension, std::vector< ContinuousBase > c_base, std::vector< DiscreteBase > d_base) {
 
@@ -24,20 +25,10 @@ Base::Base(basePreset t, int n_dimension, std::vector< ContinuousBase > c_base, 
 	this->dimensions = n_dimension;
 	this->continuous.insert(continuous.end(), c_base.begin(), c_base.end());
 	this->discrete.insert(discrete.end(), d_base.begin(), d_base.end());
+	this->boundary = ZEROEDGE;
 
 	BasisManager::getInstance()->selectBase(*this);
 };
-
-
-int Base::getDim() {
-	return this->dimensions;
-}
-std::vector<ContinuousBase> Base::getContinuous() {
-	return this->continuous;
-}
-std::vector<DiscreteBase> Base::getDiscrete() {
-	return this->discrete;
-}
 
 std::ostream& operator<<(std::ostream& stream, Base& base) {
 

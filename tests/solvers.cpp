@@ -50,7 +50,14 @@ void testWavefunction(unsigned int nbox, Potential::PotentialType potType, doubl
         FAIL() << "Analytic wavefunction and Numerov wavefunction haven't the same size " << analytic_Wf.size() << " " << numerov_Wf.size();
 
     ASSERT_NEAR(E_numerov, E_analytic, 1e-3);
-    std::cout << "Energy found: " << E_numerov << std::endl;
+
+    // std::cout << std::fixed << std::setprecision(2);
+    // std::cout << "Test completed" << std::endl;
+    // std::cout << "Energies: " << E_numerov << " " << E_analytic << std:: endl;
+    // std::cout << "num wf: " << numerov_Wf.at(0) << " " << numerov_Wf.at(numerov_Wf.size()/2) 
+    //           << " " << numerov_Wf.at(numerov_Wf.size() - 1) << " " << std::endl;
+    // std::cout << "ana wf: " << analytic_Wf.at(0) << " " << analytic_Wf.at(analytic_Wf.size()/2)
+    //           << " " << analytic_Wf.at(analytic_Wf.size()-1) << std::endl;
 }
 
 TEST(Wavefunction_and_energy, Numerov_HarmonicOscillator)

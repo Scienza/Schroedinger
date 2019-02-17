@@ -1,9 +1,16 @@
 #include "Numerov.h"
 
 Numerov::Numerov(Potential potential, int nbox) : Solver(potential, nbox) {
-    this->wavefunction.at(0) = 0;
-    this->wavefunction.at(1) = 0.1;
-    this->wavefunction.at(2) = 0.1;
+    Base::boundaryCondition boundary = this->potential.getBase().getBoundary();
+
+    switch(boundary) {
+        case Base::boundaryCondition::ZEROEDGE:
+            this->wavefunction.at(0) = 0;
+            this->wavefunction.at(1) = 0.1;
+            this->wavefunction.at(2) = 0.1;
+        default:
+            throw std::invalid_argument("Wrong boundary condition initialization or condition not implemented!");
+    }
 }
 
 /*! 
