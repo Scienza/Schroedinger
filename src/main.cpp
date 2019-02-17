@@ -151,40 +151,6 @@ void harmonic_oscillator_2D_example() {
 	state.printToFile();
 }
 
-void harmonic_oscillator_2D_example() {
-	unsigned int nbox = 1000;
-	double mesh       = 0.1;
-	double k          = 1.0;
-	double energy     = 0.0;
-	double e_min      = 0.0;
-	double e_max      = 2.0;
-	double e_step     = 0.01;
-
-	std::vector<double> wavefunction;
-
-	BasisManager::Builder baseBuilder;
-	Base base = baseBuilder.build(Base::basePreset::Cartesian, 2, mesh, nbox);
-	
-	Potential::Builder potentialBuilder(base);
-    Potential V = potentialBuilder.setType(Potential::PotentialType::HARMONIC_OSCILLATOR)
-								  .setSeparable(true)
-								  .setK(k)
-								  .build();
-    
-
-    Numerov solver = Numerov(V, nbox);
-    solver.solve(e_min, e_max, e_step);
-
-    wavefunction  = solver.getWavefunction();
-    energy        = solver.getSolutionEnergy();
-
-	// Print everything 
-	std::cout << solver;
-
-	// Save to file wavefunction and probability
-	solver.printToFile();
-}
-
 void custom_workflow() {
 	BasisManager::Builder builder = BasisManager::Builder();
 	BasisManager *manager = BasisManager::getInstance();
