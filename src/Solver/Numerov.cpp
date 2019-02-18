@@ -2,12 +2,13 @@
 
 Numerov::Numerov(Potential potential, int nbox) : Solver(potential, nbox) {
     Base::boundaryCondition boundary = this->potential.getBase().getBoundary();
-
+    
     switch(boundary) {
         case Base::boundaryCondition::ZEROEDGE:
+            std::cout << "boundary" << std::endl;
             this->wavefunction.at(0) = 0;
             this->wavefunction.at(1) = 0.1;
-            this->wavefunction.at(2) = 0.1;
+            break;
         default:
             throw std::invalid_argument("Wrong boundary condition initialization or condition not implemented!");
     }
