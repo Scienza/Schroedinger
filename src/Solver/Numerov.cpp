@@ -1,13 +1,11 @@
 #include "Numerov.h"
 
-Numerov::Numerov(Potential potential, int nbox) : Solver(potential, nbox) {
-    Base::boundaryCondition boundary = this->potential.getBase().getBoundary();
-    
-    switch(boundary) {
+Numerov::Numerov(Potential potential, int nbox) : Solver(potential, nbox) {    
+    switch(this->boundary) {
         case Base::boundaryCondition::ZEROEDGE:
-            std::cout << "boundary" << std::endl;
             this->wavefunction.at(0) = 0;
             this->wavefunction.at(1) = 0.1;
+            this->wfAtBoundary = 0;
             break;
         default:
             throw std::invalid_argument("Wrong boundary condition initialization or condition not implemented!");
@@ -70,17 +68,17 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
         this->functionSolve(energy);
         double &last_wavefunction_value = this->wavefunction.at(this->nbox);
 
-        if ( fabs(last_wavefunction_value) < err ) {
+        if ( fabs(last_wavefunction_value - this->wfAtBoundary) < err ) {
             std::cout << "Solution found" << last_wavefunction_value << std::endl;
             this->solutionEnergy = energy;
             break;
         }
 
         if (n == 0)
-            sign = (last_wavefunction_value > 0) ? 1 : -1;
+            sign = (last_wavefunction_value - this->wfAtBoundary > 0) ? 1 : -1;
 
         // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus calls bisection rule.
-        if (sign * last_wavefunction_value < 0) {
+        if (sign * (last_wavefunction_value - this->wfAtBoundary) < 0) {
             std::cout << "Bisection " << last_wavefunction_value << std::endl;
             this->solutionEnergy = this->bisection(energy - e_step, energy + e_step);
             break;
@@ -118,6 +116,7 @@ with the correct boundary conditions (@param wavefunction[0] == @param wavefunct
 */
 double Numerov::bisection(double e_min, double e_max) {
     double energy_middle, fx1, fb, fa;
+    double solutionAt;
     std::cout.precision(17);
 
     // The number of iterations that the bisection routine needs can be evaluated in advance
@@ -127,10 +126,10 @@ double Numerov::bisection(double e_min, double e_max) {
         energy_middle = (e_max + e_min) / 2.0;
 
         this->functionSolve(energy_middle);
-        fx1 = this->wavefunction.at(this->nbox);
+        fx1 = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
         
         this->functionSolve(e_max);
-        fb = this->wavefunction.at(this->nbox);
+        fb = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
 
         if (std::abs(fx1) < err) {
             return energy_middle;
@@ -140,12 +139,13 @@ double Numerov::bisection(double e_min, double e_max) {
             e_min = energy_middle;
         } else {
             this->functionSolve(e_min);
-            fa = this->wavefunction.at(this->nbox);
+            fa = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
 
             if (fa * fx1 < 0.)
                 e_max = energy_middle;
         }
     }
-    std::cerr << "INFO: Solution not found using the bisection method, " << this->wavefunction.at(this->nbox) << " > " << err << std::endl;
+
+    std::cerr << "WARNING: Solution not found at the set precision using the bisection method, " << this->wavefunction.at(this->nbox) << " > " << err << std::endl;
     return energy_middle;
 }
