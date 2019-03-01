@@ -1,6 +1,8 @@
-#include <gtest/gtest.h>
-#include <BasisManager.h>
 #include <algorithm>
+
+#include <gtest/gtest.h>
+#include "BasisManager.h"
+
 #define err 1E-10
 
 TEST(Basis, IsSingleton)
