@@ -29,7 +29,7 @@ endif()
 set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/src/)
 set(TEST_DIR ${PROJECT_SOURCE_DIR}/tests/)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-set(GOOGLETEST_DIR external/googletest/googletest)
+set(GOOGLETEST_DIR external/googletest)
 set(GOOGLETEST_SOURCES
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/src/gtest-all.cc
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/src/gtest_main.cc
