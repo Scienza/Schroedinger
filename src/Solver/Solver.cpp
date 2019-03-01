@@ -1,4 +1,4 @@
-#include <Solver.h>
+#include "Solver.h"
 
 Solver::Solver(Potential potential, int nbox) {
     this->potential      = potential;

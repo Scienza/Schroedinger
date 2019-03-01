@@ -1,4 +1,4 @@
-#include <DiscreteBase.h>
+#include "DiscreteBase.h"
 
 DiscreteBase::DiscreteBase() {}
 DiscreteBase::DiscreteBase(int start, int end, int step) {

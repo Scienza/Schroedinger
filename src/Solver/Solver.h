@@ -15,8 +15,9 @@
 #include <vector>
 #include <string>
 #include <fstream> 
-#include <Potential.h>
-#include <State.h>
+
+#include "Potential.h"
+#include "State.h"
 
 class Solver {
         public:

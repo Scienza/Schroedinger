@@ -15,9 +15,10 @@
 #include <vector>
 #include <string>
 #include <fstream> 
-#include <Solver.h>
-#include <Potential.h>
-#include <State.h>
+
+#include "Solver.h"
+#include "Potential.h"
+#include "State.h"
 
 class Numerov : public Solver {
         public:
