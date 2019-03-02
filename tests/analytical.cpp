@@ -43,17 +43,17 @@ double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height,
     double tolerance = 1e-10;
     int counter = 0;
 
-    eta_old = 1. + pi / 2. * (nlevel - 1);
+    eta_old = 1. + pi_2 * (nlevel - 1);
     // std::cout << "#" << eta_old << std::endl;
     do {
         counter++;
         eta = eta_old;
 
         if (nlevel % 2 == 0) { //looking for solution has n even, thus is odd parity
-            eta_old = atan(sqrt(xi*xi / eta / eta - 1) + pi / 2.) + pi / 2. * (nlevel - 1);
+            eta_old = atan(sqrt(xi*xi / eta / eta - 1) + pi_2) + pi_2 * (nlevel - 1);
         }
         else {             //looking for has n odd, thus is even parity
-            eta_old = atan(sqrt(xi*xi / eta / eta - 1)) - pi / 2. * (nlevel - 1);
+            eta_old = atan(sqrt(xi*xi / eta / eta - 1)) - pi_2 * (nlevel - 1);
         }
         //    std::cout << "#" << eta << " - " << eta_old << std::endl;
     } while (fabs((eta_old - eta) / eta) > tolerance && counter < 100);
