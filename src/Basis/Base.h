@@ -5,8 +5,9 @@
 #include <map>
 #include <stdexcept>
 #include <iostream>
-#include <DiscreteBase.h>
-#include <ContinuousBase.h>
+
+#include "DiscreteBase.h"
+#include "ContinuousBase.h"
 
 class Base
 {

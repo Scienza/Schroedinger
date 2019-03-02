@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include <Numerov.h>
-#include <BasisManager.h>
-#include <Potential.h>
-#include <State.h>
+#include "Numerov.h"
+#include "BasisManager.h"
+#include "Potential.h"
+#include "State.h"
 #include "analytical.cpp"
 
 void testWavefunction(unsigned int nbox, Potential::PotentialType potType, double k,

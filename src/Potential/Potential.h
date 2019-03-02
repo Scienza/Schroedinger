@@ -10,7 +10,8 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <Base.h>
+
+#include "Base.h"
 
 /*! Class Potential contains the potential used in the Schroedinger equation.
  * takes the necessary input: std::vector x at definition Builder(x),

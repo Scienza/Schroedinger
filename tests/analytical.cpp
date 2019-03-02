@@ -1,4 +1,4 @@
-#include <Numerov.h>
+#include "Numerov.h"
 
 /*! Calculates the analytical wavefunction of a particle in a box
 allowed energy levels :   $E_n = n^2 \pi^2 \hbar^2 / (2 m L)$

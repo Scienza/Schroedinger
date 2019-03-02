@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <Potential.h>
-#include <BasisManager.h>
+#include "Potential.h"
+#include "BasisManager.h"
 #define err 1E-10
 
 TEST(Potentials, widthMustBePositive) {

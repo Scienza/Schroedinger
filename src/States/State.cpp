@@ -1,4 +1,4 @@
-#include <State.h>
+#include "State.h"
 
 State::State(std::vector<double> wavefunction, std::vector<double> probability, double energy, Base base)
 {

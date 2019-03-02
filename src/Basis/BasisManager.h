@@ -1,8 +1,8 @@
 #ifndef BASISMANAGER_H
 #define BASISMANAGER_H
 
-#include <Base.h>
-#include <Initializer.h>
+#include "Base.h"
+#include "Initializer.h"
 
 class BasisManager
 {

@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
-#include <BasisManager.h>
-#include <Base.h>
-#include <Potential.h>
-#include <State.h>
-#include <Numerov.h>
+
+#include "BasisManager.h"
+#include "Base.h"
+#include "Potential.h"
+#include "State.h"
+#include "Numerov.h"
 
 void box_potential_example() {
 	unsigned int nbox = 500;
