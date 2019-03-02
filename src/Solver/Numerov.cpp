@@ -68,7 +68,7 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
         this->functionSolve(energy);
         double &last_wavefunction_value = this->wavefunction.at(this->nbox);
 
-        if ( fabs(last_wavefunction_value - this->wfAtBoundary) < err ) {
+        if ( fabs(last_wavefunction_value - this->wfAtBoundary) < err_thres ) {
             std::cout << "Solution found" << last_wavefunction_value << std::endl;
             this->solutionEnergy = energy;
             break;
@@ -120,7 +120,7 @@ double Numerov::bisection(double e_min, double e_max) {
     std::cout.precision(17);
 
     // The number of iterations that the bisection routine needs can be evaluated in advance
-    int itmax = ceil(log2(e_max - e_min) - log2(err)) - 1;
+    int itmax = ceil(log2(e_max - e_min) - log2(err_thres)) - 1;
 
     for (int i = 0; i < itmax; i++) {
         energy_middle = (e_max + e_min) / 2.0;
@@ -131,7 +131,7 @@ double Numerov::bisection(double e_min, double e_max) {
         this->functionSolve(e_max);
         fb = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
 
-        if (std::abs(fx1) < err) {
+        if (std::abs(fx1) < err_thres) {
             return energy_middle;
         }
 
@@ -146,6 +146,6 @@ double Numerov::bisection(double e_min, double e_max) {
         }
     }
 
-    std::cerr << "WARNING: Solution not found at the set precision using the bisection method, " << this->wavefunction.at(this->nbox) << " > " << err << std::endl;
+    std::cerr << "WARNING: Solution not found at the set precision using the bisection method, " << this->wavefunction.at(this->nbox) << " > " << err_thres << std::endl;
     return energy_middle;
 }

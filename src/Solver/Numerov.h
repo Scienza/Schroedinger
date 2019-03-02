@@ -3,18 +3,21 @@
 
 #define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
 
-#define dx 0.01
-#define err 1E-10
-
-#define pi 3.14159265359
-#define hbar 1
-#define mass 1
-
 #include <cmath>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <fstream> 
+
+#ifndef _MSC_VER
+        #if __STDCPP_MATH_SPEC_FUNCS__ < 201003L
+                #error "Special mathematical functions are not available \
+        in this cmath implementation. Cannot continue."
+        #endif
+#elif _MSC_VER < 1914
+        #error "Special mathematical functions are not available \
+in this MSVC version (need at least 19.14). Cannot continue."
+#endif
 
 #include "Solver.h"
 #include "Potential.h"
@@ -24,7 +27,7 @@ class Numerov : public Solver {
         public:
                 Numerov(Potential potential, int nbox);
                 State solve(double, double, double);
-
+                
                 /*! Integrate with the trapezoidal rule method, from a to b position in a function array*/
                 static double trapezoidalRule(int a, int b, double stepx, std::vector<double> function) {
                         double sum = 0.0;
@@ -34,7 +37,7 @@ class Numerov : public Solver {
                         sum = (sum) * stepx;
                         return sum;
                 }
-                
+
         private:
                 void functionSolve(double energy);
                 double bisection(double, double);
