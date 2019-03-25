@@ -1,6 +1,6 @@
 #include "ContinuousBase.h"
 
-ContinuousBase::ContinuousBase() {}
+ContinuousBase::ContinuousBase() = default;
 
 ContinuousBase::ContinuousBase(std::vector<double> coords)
 {

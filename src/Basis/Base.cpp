@@ -4,7 +4,7 @@
 
 Base::Base(std::vector<double> coords) {
 	this->dimensions = 1;
-	this->continuous.push_back(ContinuousBase(coords));
+	this->continuous.emplace_back(coords);
 	this->boundary = ZEROEDGE;
 }
 

@@ -1,6 +1,6 @@
 #include "Potential.h"
 
-Potential::Potential() {}
+Potential::Potential() = default;
 Potential::Potential(Base base, std::vector<double> potentialValues)
 {
     this->base = base;

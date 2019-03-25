@@ -1,6 +1,6 @@
 #include "DiscreteBase.h"
 
-DiscreteBase::DiscreteBase() {}
+DiscreteBase::DiscreteBase() = default;
 DiscreteBase::DiscreteBase(int start, int end, int step) {
 	if ((end - start) / step % 1 != 0)
 		throw std::invalid_argument("invalid discrete basis given (check interval and step).");

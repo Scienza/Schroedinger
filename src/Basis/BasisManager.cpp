@@ -1,7 +1,7 @@
 #include "BasisManager.h"
 #include "LogManager.h"
 
-BasisManager* BasisManager::instance = 0;
+BasisManager* BasisManager::instance = nullptr;
 BasisManager* BasisManager::getInstance()
 {
 	if (!instance) {
@@ -114,21 +114,21 @@ Base BasisManager::Builder::build(ContinuousInitializer ini) {
 
 BasisManager::Builder BasisManager::Builder::addDiscrete(int start, int end, int step) {
 	//TODO: Eventually add controls...
-	d_base.push_back(DiscreteBase(start, end, step));
+	d_base.emplace_back(start, end, step);
 	return *this;
 }
 BasisManager::Builder BasisManager::Builder::addContinuous(double mesh, unsigned int nbox) {
 	//TODO: Eventually add controls...
-	c_base.push_back(ContinuousBase(mesh, nbox));
+	c_base.emplace_back(mesh, nbox);
 	return *this;
 }
 BasisManager::Builder BasisManager::Builder::addContinuous(double start, double end, double mesh) {
 	//TODO: Eventually add controls...
-	c_base.push_back(ContinuousBase(start, end, mesh));
+	c_base.emplace_back(start, end, mesh);
 	return *this;
 }
 BasisManager::Builder BasisManager::Builder::addContinuous(double start, double end, unsigned int nbox) {
 	//TODO: Eventually add controls...
-	c_base.push_back(ContinuousBase(start, end, nbox));
+	c_base.emplace_back(start, end, nbox);
 	return *this;
 }
