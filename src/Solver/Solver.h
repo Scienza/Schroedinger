@@ -17,6 +17,9 @@ constexpr double dx = 0.01;
 
 constexpr double err_thres = 10E-10;
 
+static_assert(std::numeric_limits<double>::is_iec559,
+        "Floating-point representation not supported");
+
 class Solver {
         public:
                 Solver(Potential, int);
