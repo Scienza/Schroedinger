@@ -2,8 +2,7 @@
 
 #include <gtest/gtest.h>
 #include "BasisManager.h"
-
-#define err 1E-10
+#include "Solver.h"
 
 TEST(Basis, IsSingleton)
 {
@@ -24,17 +23,16 @@ TEST(Basis, Dimension_1_continuous_mesh_nbox)
     ContinuousBase firstContinuousBase = base.getContinuous().at(0);
     std::vector<double> baseCoords = firstContinuousBase.getCoords();
 
-    std::vector<double> groundTruthCoords; 
+    std::vector<double> groundTruthCoords;
     groundTruthCoords.reserve(1001);
-
     double value = -50.0;
     for (int i = 0; i <= nbox; i++)  {
         groundTruthCoords.push_back(value);
-        value+=mesh;
+        value += mesh;
     }
 
-    for (std::vector<int>::size_type i = 0; i <= baseCoords.size(); i++) 
-        ASSERT_NEAR(groundTruthCoords[i], baseCoords[i], err);
+    for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++) 
+        ASSERT_NEAR(groundTruthCoords[i], baseCoords[i], err_thres);
 }
 
 TEST(Basis, Dimension_1_continuous_start_end_mesh)
@@ -53,15 +51,14 @@ TEST(Basis, Dimension_1_continuous_start_end_mesh)
 
     std::vector<double> groundTruthCoords; 
     groundTruthCoords.reserve(1001);
-
     double value = 0.0;
     for (int i = 0; i <= nbox; i++)  {
         groundTruthCoords.push_back(value);
-        value+=mesh;
+        value += mesh;
     }
 
-    for (std::vector<int>::size_type i = 0; i <= baseCoords.size(); i++)
-        ASSERT_NEAR(groundTruthCoords[i], baseCoords[i], err);
+    for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
+        ASSERT_NEAR(groundTruthCoords[i], baseCoords[i], err_thres);
 }
 
 TEST(Basis, Dimension_1_continuous_start_end_nbox)
@@ -78,15 +75,14 @@ TEST(Basis, Dimension_1_continuous_start_end_nbox)
     ContinuousBase firstContinuousBase = base.getContinuous().at(0);
     std::vector<double> baseCoords = firstContinuousBase.getCoords();
 
-    std::vector<double> groundTruthCoords; 
+    std::vector<double> groundTruthCoords;
     groundTruthCoords.reserve(1001);
-
     double value = 0.0;
     for (int i = 0; i <= nbox; i++)  {
         groundTruthCoords.push_back(value);
-        value+=mesh;
+        value += mesh;
     }
 
-    for (std::vector<int>::size_type i = 0; i <= baseCoords.size(); i++)
-        ASSERT_NEAR(groundTruthCoords[i], baseCoords[i], err);
+    for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
+        ASSERT_NEAR(groundTruthCoords[i], baseCoords[i], err_thres);
 }

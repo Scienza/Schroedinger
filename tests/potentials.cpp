@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "Potential.h"
 #include "BasisManager.h"
-#define err 1E-10
+#include "Solver.h"
 
 TEST(Potentials, widthMustBePositive) {
     Base b;
@@ -43,7 +43,7 @@ TEST(Potentials, createAndReadFromFile) {
         FAIL() << "Size of original values ( " << originalValues.size() << ") and read values (" << readValues.size() << ") not corresponding";
 
     for (int i = 0; i < originalValues.size(); i++) {
-        ASSERT_NEAR(originalValues[i], readValues[i], err);
+        ASSERT_NEAR(originalValues[i], readValues[i], err_thres);
     }
 }
 
