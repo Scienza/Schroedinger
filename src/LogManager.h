@@ -1,3 +1,9 @@
+
+/*
+ * Schroedinger - Scienza (c) 2019
+ * Licensed under the LGPL 2.1; see the included LICENSE for details
+ */
+
 #ifndef LOG_MGR_H_
 #define LOG_MGR_H_
 
@@ -101,8 +107,7 @@ public:
 
 private:
 	std::array<std::shared_ptr<spdlog::logger>, Sink::SINKS_NO> loggers;
-	std::shared_ptr<spdlog::logger> log_console;
-	std::shared_ptr<spdlog::logger> log_file;
+	std::shared_ptr<spdlog::logger> log_console, log_file;
 
 	size_t const maxsize = 4194304; // 4MB
 	size_t const maxfiles = 4;
