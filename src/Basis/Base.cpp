@@ -3,76 +3,82 @@
 #include "LogManager.h"
 
 Base::Base(const std::vector<double>& coords) {
-	this->dimensions = 1;
-	this->continuous.emplace_back(coords);
-	this->boundary = ZEROEDGE;
+    this->dimensions = 1;
+    this->continuous.emplace_back(coords);
+    this->boundary = ZEROEDGE;
 }
 
-Base::Base(basePreset t, int n_dimension, std::vector< ContinuousBase > c_base, std::vector< DiscreteBase > d_base) {
+Base::Base(basePreset t, int n_dimension, std::vector<ContinuousBase> c_base,
+           std::vector<DiscreteBase> d_base) {
 
-	switch (t) {
-		//TODO: add here, for each base type, a control for dimensions
-		case Custom:
-			INFO("Initializing custom basis");
-			break;
-		case Cartesian:
-			INFO("Initializing cartesian basis");
-			break;
-		case Spherical:
-			INFO("Initializing Spherical Basis");
-			break;
-		case Cylindrical:
-			INFO("Initializing Cylindrical Basis");
-			break;
-		default: throw std::invalid_argument("Wrong basis type or initialization meaningless!");
-			break;
-	}
+    switch (t) {
+        // TODO: add here, for each base type, a control for dimensions
+        case Custom:
+            INFO("Initializing custom basis");
+            break;
+        case Cartesian:
+            INFO("Initializing cartesian basis");
+            break;
+        case Spherical:
+            INFO("Initializing Spherical Basis");
+            break;
+        case Cylindrical:
+            INFO("Initializing Cylindrical Basis");
+            break;
+        default:
+            throw std::invalid_argument("Wrong basis type or initialization meaningless!");
+            break;
+    }
 
-	this->dimensions = n_dimension;
-	this->continuous.insert(continuous.end(), c_base.begin(), c_base.end());
-	this->discrete.insert(discrete.end(), d_base.begin(), d_base.end());
-	this->boundary = ZEROEDGE;
+    this->dimensions = n_dimension;
+    this->continuous.insert(continuous.end(), c_base.begin(), c_base.end());
+    this->discrete.insert(discrete.end(), d_base.begin(), d_base.end());
+    this->boundary = ZEROEDGE;
 
-	BasisManager::getInstance()->selectBase(*this);
+    BasisManager::getInstance()->selectBase(*this);
 };
 
 std::ostream& operator<<(std::ostream& stream, Base& base) {
 
-	// Print continuous dimension values (if present)
-	if (!base.getContinuous().empty()) {
-		for (int i = 0; i < base.getContinuous().size(); i++) {
-			for (int coord_counter = 0; coord_counter < base.getContinuous().at(i).getCoords().size(); coord_counter++) {
-				stream << base.getContinuous().at(i).getCoords().at(coord_counter) << "; ";
-}
-		}
-}
+    // Print continuous dimension values (if present)
+    if (!base.getContinuous().empty()) {
+        for (int i = 0; i < base.getContinuous().size(); i++) {
+            for (int coord_counter = 0;
+                 coord_counter < base.getContinuous().at(i).getCoords().size(); coord_counter++) {
+                stream << base.getContinuous().at(i).getCoords().at(coord_counter) << "; ";
+            }
+        }
+    }
 
-	stream << "\n\n";
+    stream << "\n\n";
 
-	// Print discrete dimension values (if present)
-	if (!base.getDiscrete().empty()) {
-		for (int i = 0; i < base.getContinuous().size(); i++) {
-			for (int coord_counter = 0; coord_counter < base.getDiscrete().at(i).getCoords().size(); coord_counter++) {
-				stream << base.getDiscrete().at(i).getCoords().at(coord_counter) << "; ";
-}
-		}
-}
+    // Print discrete dimension values (if present)
+    if (!base.getDiscrete().empty()) {
+        for (int i = 0; i < base.getContinuous().size(); i++) {
+            for (int coord_counter = 0; coord_counter < base.getDiscrete().at(i).getCoords().size();
+                 coord_counter++) {
+                stream << base.getDiscrete().at(i).getCoords().at(coord_counter) << "; ";
+            }
+        }
+    }
 
     return stream;
- }
+}
 
 // This method let you get basis coords when it has only one dimension
-std::vector<double> Base::getCoords() 
-{
+std::vector<double> Base::getCoords() {
     if (this->getContinuous().size() == 1) {
-		std::vector<double> toreturn = this->getContinuous().at(0).getCoords();
-		return toreturn;
-	} else if (this->getDiscrete().size() == 1) {
-        // tricky conversion taking each std::vector<int> value and returning a final std::vector<double> 
-        std::vector<int> original_coords = this->getDiscrete().at(0).getCoords();
-		std::vector<double> toreturn = std::vector<double>(original_coords.begin(), original_coords.end());
+        std::vector<double> toreturn = this->getContinuous().at(0).getCoords();
         return toreturn;
-    } else { 
-		throw std::runtime_error("Can't get coords from multidimensional basis using this method. ");
-	}
+    } else if (this->getDiscrete().size() == 1) {
+        // tricky conversion taking each std::vector<int> value and returning a final
+        // std::vector<double>
+        std::vector<int> original_coords = this->getDiscrete().at(0).getCoords();
+        std::vector<double> toreturn =
+            std::vector<double>(original_coords.begin(), original_coords.end());
+        return toreturn;
+    } else {
+        throw std::runtime_error(
+            "Can't get coords from multidimensional basis using this method. ");
+    }
 }

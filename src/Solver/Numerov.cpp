@@ -3,50 +3,55 @@
 
 #include <utility>
 
-Numerov::Numerov(Potential potential, int nbox) : Solver(std::move(potential), nbox) {    
-    switch(this->boundary) {
+Numerov::Numerov(Potential potential, int nbox) : Solver(std::move(potential), nbox) {
+    switch (this->boundary) {
         case Base::boundaryCondition::ZEROEDGE:
             this->wavefunction.at(0) = 0;
             this->wavefunction.at(1) = 0.1;
-            this->wfAtBoundary = 0;
+            this->wfAtBoundary       = 0;
             break;
         default:
-            throw std::invalid_argument("Wrong boundary condition initialization or condition not implemented!");
+            throw std::invalid_argument(
+                "Wrong boundary condition initialization or condition not implemented!");
     }
 }
 
-/*! 
+/*!
     Numerov Algorithm solves f''(x) + v(x)f(x) = 0,
     by considering
-    \left( 1+ \frac{h^2}{12} v(x+h) \right) f(x+h) = 2 \left( 1 - \frac{5h^2}{12} v(x) \right) f(x) - \left( 1 + \frac{h^2}{12} v(x-h) \right) f(x-h).
-    for the Shroedinger equation v(x) = V(x) - E, where V(x) is the potential and E the eigenenergy
+    \left( 1+ \frac{h^2}{12} v(x+h) \right) f(x+h) = 2 \left( 1 - \frac{5h^2}{12} v(x) \right) f(x)
+   - \left( 1 + \frac{h^2}{12} v(x-h) \right) f(x-h). for the Shroedinger equation v(x) = V(x) - E,
+   where V(x) is the potential and E the eigenenergy
 */
 void Numerov::functionSolve(double energy) {
     std::vector<double> pot = this->potential.getValues();
 
-    c = (2.0 * mass / hbar / hbar) * (dx * dx / 12.0);
+    double c = (2.0 * mass / hbar / hbar) * (dx * dx / 12.0);
     try {
-        //Build Numerov f(x) solution from left. 
+        // Build Numerov f(x) solution from left.
         for (int i = 2; i <= this->nbox; i++) {
             double &value = this->wavefunction.at(i);
-            double &pot_1 = pot.at(i-1);
-            double &pot_2 = pot.at(i-2);
+            double &pot_1 = pot.at(i - 1);
+            double &pot_2 = pot.at(i - 2);
             double &pot_a = pot.at(i);
 
-            double &wave_1 = this->wavefunction.at(i-1);
-            double &wave_2 = this->wavefunction.at(i-2);
+            double &wave_1 = this->wavefunction.at(i - 1);
+            double &wave_2 = this->wavefunction.at(i - 2);
 
-            value = 2 * (1.0 - (5 * c) * (energy - pot_1 )) * wave_1 - (1.0 + (c) * (energy - pot_2)) * wave_2;
-            value /= (1.0 + (c) * (energy - pot_a));  
+            value = 2 * (1.0 - (5 * c) * (energy - pot_1)) * wave_1 -
+                    (1.0 + (c) * (energy - pot_2)) * wave_2;
+            value /= (1.0 + (c) * (energy - pot_a));
         }
-    } catch (const std::out_of_range & ex) {
+    } catch (const std::out_of_range &ex) {
         ERROR("Out of range exception caught, {}", ex.what());
     }
 }
 
-/*! 
-    \brief a solver of differential equation using Numerov algorithm and selecting non-trivial solutions.
-    @param (*potential) is the pointer to the potential function, takes function of 1 variable as input
+/*!
+    \brief a solver of differential equation using Numerov algorithm and selecting non-trivial
+   solutions.
+    @param (*potential) is the pointer to the potential function, takes function of 1 variable as
+   input
     @param wavefunction, takes array of @param nbox size as input (for preconditioning)
     and gives the output the normalizedwf solution
 
@@ -68,7 +73,7 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
         this->functionSolve(energy);
         double &last_wavefunction_value = this->wavefunction.at(this->nbox);
 
-        if ( fabs(last_wavefunction_value - this->wfAtBoundary) < err_thres ) {
+        if (fabs(last_wavefunction_value - this->wfAtBoundary) < err_thres) {
             INFO("Solution found {}", last_wavefunction_value);
             this->solutionEnergy = energy;
             break;
@@ -78,7 +83,8 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
             sign = (last_wavefunction_value - this->wfAtBoundary > 0) ? 1 : -1;
         }
 
-        // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus calls bisection rule.
+        // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus
+        // calls bisection rule.
         if (sign * (last_wavefunction_value - this->wfAtBoundary) < 0) {
             INFO("Bisection {}", last_wavefunction_value);
             this->solutionEnergy = this->bisection(energy - e_step, energy + e_step);
@@ -90,7 +96,7 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
     for (int i = 0; i <= nbox; i++) {
         double &value      = this->wavefunction[i];
         double &prob_value = this->probability[i];
-        prob_value = value*value;
+        prob_value         = value * value;
     }
 
     // Evaluation of the norm
@@ -108,12 +114,14 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
         value /= norm;
     }
 
-    return State(this->wavefunction, this->probability, this->solutionEnergy, this->potential.getBase());
+    return State(this->wavefunction, this->probability, this->solutionEnergy,
+                 this->potential.getBase());
 }
 
 /*! Applies a bisection algorith to the numerov method to find
 the energy that gives the non-trivial (non-exponential) solution
-with the correct boundary conditions (@param wavefunction[0] == @param wavefunction[@param nbox] == 0)
+with the correct boundary conditions (@param wavefunction[0] == @param wavefunction[@param nbox] ==
+0)
 */
 double Numerov::bisection(double e_min, double e_max) {
     double energy_middle = 0, fx1, fb, fa;
@@ -127,7 +135,7 @@ double Numerov::bisection(double e_min, double e_max) {
 
         this->functionSolve(energy_middle);
         fx1 = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
-        
+
         this->functionSolve(e_max);
         fb = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
 
@@ -147,6 +155,7 @@ double Numerov::bisection(double e_min, double e_max) {
         }
     }
 
-    WARN("Failed to find solution using bisection method, {} > {}", wavefunction.at(nbox), err_thres);
+    WARN("Failed to find solution using bisection method, {} > {}", wavefunction.at(nbox),
+         err_thres);
     return energy_middle;
 }
