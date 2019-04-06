@@ -15,6 +15,7 @@ if(NOT CMAKE_BUILD_TYPE)
       "Build type (Release/Debug/RelWithDebInfo/MinSizeRel)" FORCE)
 endif()
 
+
 ### Dependencies ###
 find_package(Threads REQUIRED)
 
@@ -23,6 +24,13 @@ if(ENABLE_TESTS)
   add_subdirectory(external/googletest EXCLUDE_FROM_ALL)
 else()
   message(STATUS "Unit testing was disabled")
+endif()
+
+find_program(CLANG_FORMAT_EXE NAMES "clang-format")
+if(NOT CLANG_FORMAT_EXE)
+  message(STATUS "Could not find clang-format")
+else()
+  message(STATUS "Found clang-format: ${CLANG_FORMAT_EXE}")
 endif()
 
 ### Project directories ###
@@ -65,7 +73,7 @@ add_executable (
 
 if(ENABLE_TESTS)
     # Create ${TESTS}, using test's main.cpp instead of ${SOURCE}'s one
-    set(TESTS ${SOURCES} src/Basis/Initializer.cpp src/Basis/Initializer.h)
+    set(TESTS ${SOURCES})
     list(REMOVE_ITEM TESTS ${SOURCE_DIR}/main.cpp)
     list(APPEND TESTS ${TEST_DIR}/main.cpp )
 
@@ -95,4 +103,30 @@ if(ENABLE_TESTS)
             pthread
         )
     endif()
+endif()
+
+if(CLANG_FORMAT_EXE)
+
+    file(GLOB_RECURSE TO_FORMAT
+        ${SOURCE_DIR}/*.cpp
+        ${SOURCE_DIR}/Basis/*.cpp
+        ${SOURCE_DIR}/Potential/*.cpp
+        ${SOURCE_DIR}/Solver/*.cpp
+        ${SOURCE_DIR}/World/*.cpp
+        ${SOURCE_DIR}/States/*.cpp
+        ${SOURCE_DIR}/*.h
+        ${SOURCE_DIR}/Basis/*.h
+        ${SOURCE_DIR}/Potential/*.h
+        ${SOURCE_DIR}/Solver/*.h
+        ${SOURCE_DIR}/World/*.h
+        ${SOURCE_DIR}/States/*.h
+        ${TEST_DIR}/*.cpp
+        ${TEST_DIR}/*.h
+    )
+
+  add_custom_target(
+    format
+    COMMAND ${CLANG_FORMAT_EXE} -i -style=file ${TO_FORMAT}
+    COMMENT "Formatting source files..."
+  )
 endif()
