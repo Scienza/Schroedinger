@@ -25,7 +25,7 @@ public:
     void printToFile();
 	
     friend std::ostream& operator<< (std::ostream& stream, const State& state);
-	friend std::ostream& operator^ (const State& state_1, const State& state_2);
+	//friend std::ostream& operator^ (const State& state_1, const State& state_2);
 
 private:
     Base base;

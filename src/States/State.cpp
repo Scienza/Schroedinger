@@ -66,7 +66,8 @@ std::ostream &operator<<(std::ostream &stream, const State &st)
     return stream;
 }
 
-// TODO: implement the overload to get the resulting state W(x,y) = W(x)^W(y)
-std::ostream& operator^ (const State& state_1, const State& state_2) {
+/*
+TODO: implement the overload to get the resulting state W(x,y) = W(x)^W(y)
+std::ostream& operator^ (const State& state_1, const State& state_2) {}
+*/
 
-}
