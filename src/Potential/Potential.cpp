@@ -1,10 +1,12 @@
 #include "Potential.h"
 
+#include <utility>
+
 Potential::Potential() = default;
 Potential::Potential(Base base, std::vector<double> potentialValues)
 {
-    this->base = base;
-    this->v = potentialValues;
+    this->base = std::move(base);
+    this->v = std::move(potentialValues);
 }
 
 Potential::Potential(Base base, PotentialType type, double k, double width, double height, bool separable)

@@ -1,6 +1,8 @@
 #include "BasisManager.h"
 #include "LogManager.h"
 
+#include <utility>
+
 BasisManager* BasisManager::instance = nullptr;
 BasisManager* BasisManager::getInstance()
 {
@@ -15,11 +17,11 @@ BasisManager* BasisManager::getInstance()
 
 void BasisManager::selectBase(Base b) {
 	// TODO: add controls here, such as: b must be an element of basis vector
-	this->selected = b;
+	this->selected = std::move(b);
 }
 
-void BasisManager::addBase(Base b) {
-	this-> bases.push_back(b);
+void BasisManager::addBase(const Base& b) {
+	this->bases.push_back(b);
 
 	// If it's there's just this one in the vector, then it's automatically selected
 	if (this->bases.size() == 1)
@@ -82,13 +84,18 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
     return Base(b, dimension, c_base, d_base);
 }
 
-Base BasisManager::Builder::build(SphericalInitializer ini) {
-    if(ini.Lmax == 0) 
+Base BasisManager::Builder::build(const SphericalInitializer& ini) {
+    if(ini.Lmax == 0) { 
 		throw std::invalid_argument("Spherical basis with Lmax = 0 does not have sense");
-    if(ini.mesh <= 0 ) 
+	}
+    
+	if(ini.mesh <= 0 ) { 
 		throw std::invalid_argument("mesh < 0 does not have sense");
-    if(ini.end <= ini.mesh ) 
+	}
+    
+	if(ini.end <= ini.mesh ) { 
 		throw std::invalid_argument("Spherical basis with r < mesh does not have sense");
+	}
 
     this->addContinuous(ini.start,ini.end,ini.mesh);
     this->addDiscrete(ini.Lmin,ini.Lmax,ini.Lstep);

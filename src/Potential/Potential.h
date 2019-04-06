@@ -71,7 +71,7 @@ class Potential
 
       public:
         Builder(Base b);
-        Builder(std::string filename);
+        Builder(const std::string& filename);
         Builder setK(double k_new);
         Builder setWidth(double width_new);
         Builder setHeight(double height_new);

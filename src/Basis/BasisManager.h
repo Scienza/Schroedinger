@@ -15,7 +15,7 @@ public:
 	std::vector<Base> getBasisList();
 	Base selected;
 	void selectBase(Base);
-	void addBase(Base);
+	void addBase(const Base&);
 
     class Builder {
 		std::vector< DiscreteBase > d_base;
@@ -23,14 +23,14 @@ public:
 	public:
         Base build(int dimension);
         Base build(ContinuousInitializer);
-        Base build(SphericalInitializer);
+        Base build(const SphericalInitializer&);
         Base build(Base::basePreset, int dimension);
         Base build(Base::basePreset, int, double, int);
 
         Builder addDiscrete(int, int, int);
-		Builder addContinuous(double, unsigned int);
-		Builder addContinuous(double, double, double);
-		Builder addContinuous(double, double, unsigned int);
+				Builder addContinuous(double, unsigned int);
+				Builder addContinuous(double, double, double);
+				Builder addContinuous(double, double, unsigned int);
 	};
 
 	BasisManager(const BasisManager&) = delete;

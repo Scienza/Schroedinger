@@ -2,7 +2,7 @@
 #include "BasisManager.h"
 #include "LogManager.h"
 
-Base::Base(std::vector<double> coords) {
+Base::Base(const std::vector<double>& coords) {
 	this->dimensions = 1;
 	this->continuous.emplace_back(coords);
 	this->boundary = ZEROEDGE;

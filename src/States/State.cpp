@@ -1,11 +1,13 @@
 #include "State.h"
 
+#include <utility>
+
 State::State(std::vector<double> wavefunction, std::vector<double> probability, double energy, Base base)
 {
-    this->wavefunction = wavefunction;
-    this->probability = probability;
+    this->wavefunction = std::move(wavefunction);
+    this->probability = std::move(probability);
+    this->base = std::move(base);
     this->energy = energy;
-    this->base = base;
 }
 
 const std::vector<double> &State::getWavefunction()

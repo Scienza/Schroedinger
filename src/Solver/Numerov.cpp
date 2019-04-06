@@ -1,7 +1,9 @@
 #include "Numerov.h"
 #include "LogManager.h"
 
-Numerov::Numerov(Potential potential, int nbox) : Solver(potential, nbox) {    
+#include <utility>
+
+Numerov::Numerov(Potential potential, int nbox) : Solver(std::move(potential), nbox) {    
     switch(this->boundary) {
         case Base::boundaryCondition::ZEROEDGE:
             this->wavefunction.at(0) = 0;

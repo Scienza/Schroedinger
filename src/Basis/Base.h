@@ -17,7 +17,7 @@ public:
 	enum boundaryCondition { ZEROEDGE = 0, PERIODIC = 1 };
 
 	Base(basePreset, int, std::vector< ContinuousBase >, std::vector< DiscreteBase >);
-	Base(std::vector<double> coords);
+	Base(const std::vector<double>& coords);
 	Base() {}
 
 	int getDim() { return this->dimensions; };

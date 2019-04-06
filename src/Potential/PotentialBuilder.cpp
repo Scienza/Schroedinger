@@ -1,12 +1,14 @@
+#include <utility>
+
 #include "Potential.h"
 #include "LogManager.h"
 
 Potential::Builder::Builder(Base b)
 {
-    this->base = b;
+    this->base = std::move(b);
 }
 
-Potential::Builder::Builder(std::string filename) 
+Potential::Builder::Builder(const std::string& filename) 
 {
     this->fromFile = true;
 
@@ -77,7 +79,7 @@ Potential::Builder Potential::Builder::setSeparable(bool separable)
 
 Potential::Builder Potential::Builder::setBase(Base b) {
     if (!this->fromFile) {
-        this->base = b;
+        this->base = std::move(b);
         return *this;
     }
  }
