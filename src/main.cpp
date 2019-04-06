@@ -38,8 +38,9 @@ void box_potential_example() {
     energy        = state.getEnergy();
 
 	INFO("Energy {}", energy);
+	INFO("Printing state");
 
-	std::cout << "Printing state" << std::endl;
+	// This is find being output to console
 	std::cout << state;
 
 	// Save to file wavefunction and probability
@@ -75,9 +76,8 @@ void finite_well_example() {
     energy        = state.getEnergy();
 
 	INFO("Energy {}", energy);
+	INFO("Printing state");
 
-	// Printing state
-	std::cout << "Printing state" << std::endl;
 	std::cout << state;
 	
 	// Save to file wavefunction and probability
@@ -110,9 +110,8 @@ void harmonic_oscillator_example() {
     energy        = state.getEnergy();
 
 	INFO("Energy {}", energy);
-
-	// Printing state
-	std::cout << "Printing state" << std::endl;
+	INFO("Printing state");
+	
 	std::cout << state;
 	
 	// Save to file wavefunction and probability
