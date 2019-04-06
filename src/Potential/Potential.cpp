@@ -108,8 +108,11 @@ bool Potential::isSeparated() {
 }
 
 std::vector<Potential> Potential::getSeparatedPotentials() {
-    if (this->separable == true && this->separated_potentials.size() > 0)
-        return this->separated_potentials;
+    if (separable == true && !separated_potentials.empty())
+        return separated_potentials;
+
+    // fixme: need to throw instead?
+    return {};
 }
 
 void Potential::printToFile() {

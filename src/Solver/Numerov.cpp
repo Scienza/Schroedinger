@@ -59,7 +59,7 @@ void Numerov::functionSolve(double energy) {
 */
 
 State Numerov::solve(double e_min, double e_max, double e_step) {
-    double c, x, first_step, norm, energy = 0.0;
+    double norm, energy = 0.0;
     int n, sign;
 
     // scan energies to find when the Numerov solution is = 0 at the right extreme of the box.
@@ -93,7 +93,7 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
     }
 
     // Evaluation of the norm
-    norm = trapezoidalRule(0.0, this->nbox, dx, this->probability);
+    norm = trapezoidalRule(0, this->nbox, dx, this->probability);
 
     // Normalization of the wavefunction
     for (int i = 0; i <= nbox; i++) {
@@ -116,11 +116,10 @@ with the correct boundary conditions (@param wavefunction[0] == @param wavefunct
 */
 double Numerov::bisection(double e_min, double e_max) {
     double energy_middle, fx1, fb, fa;
-    double solutionAt;
     std::cout.precision(17);
 
     // The number of iterations that the bisection routine needs can be evaluated in advance
-    int itmax = ceil(log2(e_max - e_min) - log2(err_thres)) - 1;
+    int itmax = static_cast<int>(ceil(log2(e_max - e_min) - log2(err_thres)) - 1);
 
     for (int i = 0; i < itmax; i++) {
         energy_middle = (e_max + e_min) / 2.0;
