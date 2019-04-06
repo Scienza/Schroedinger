@@ -36,6 +36,7 @@ set(GOOGLETEST_SOURCES
 )
 
 include_directories(
+    ${PROJECT_SOURCE_DIR}/external
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_DIR}/include
     ${PROJECT_SOURCE_DIR}/src/Basis
