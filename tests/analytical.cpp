@@ -38,7 +38,7 @@ double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height,
     std::cout << "width: " << pot_width << " height: " << pot_height << std::endl;
     double xi = pot_width / 2.*sqrt(2. * mass * pot_height / hbar / hbar);
 
-    double k, alpha, G, H, A, B, E_n;
+    double k, G, H, A, B, E_n;
     double eta_old, eta;
     double tolerance = 1e-10;
     int counter = 0;
@@ -60,7 +60,7 @@ double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height,
 
     if (counter == 100) {
         std::cerr << "transcendent equation in finite_well_wf() not converging" << std::endl;
-        exit;
+        exit(-1);
     }
     else {
         E_n = 2. * hbar * hbar * eta * eta / pot_width / pot_width / mass;
@@ -113,7 +113,7 @@ double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height,
         double &wavefunction_value = wavefunction.at(i);
         probab = wavefunction_value * wavefunction_value;
     }
-    double norm = Numerov::trapezoidalRule(0.0, nbox, dx, probability);
+    double norm = Numerov::trapezoidalRule(0, nbox, dx, probability);
     for (int i = 0; i < wavefunction.size(); i++) {
         double &wavefunction_value = wavefunction.at(i);
         wavefunction_value /= sqrt(norm);

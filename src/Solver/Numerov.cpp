@@ -20,14 +20,12 @@ Numerov::Numerov(Potential potential, int nbox) : Solver(potential, nbox) {
     for the Shroedinger equation v(x) = V(x) - E, where V(x) is the potential and E the eigenenergy
 */
 void Numerov::functionSolve(double energy) {
-    double c, x;
     std::vector<double> pot = this->potential.getValues();
 
     c = (2.0 * mass / hbar / hbar) * (dx * dx / 12.0);
     try {
         //Build Numerov f(x) solution from left. 
         for (int i = 2; i <= this->nbox; i++) {
-            x = (-this->nbox / 2 + i) * dx;
             double &value = this->wavefunction.at(i);
             double &pot_1 = pot.at(i-1);
             double &pot_2 = pot.at(i-2);
@@ -115,7 +113,7 @@ the energy that gives the non-trivial (non-exponential) solution
 with the correct boundary conditions (@param wavefunction[0] == @param wavefunction[@param nbox] == 0)
 */
 double Numerov::bisection(double e_min, double e_max) {
-    double energy_middle, fx1, fb, fa;
+    double energy_middle = 0, fx1, fb, fa;
     std::cout.precision(17);
 
     // The number of iterations that the bisection routine needs can be evaluated in advance
