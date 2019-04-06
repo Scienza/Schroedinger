@@ -47,8 +47,9 @@ Potential::Builder Potential::Builder::setWidth(double width_new)
         if (width_new >= 0) {
             this->width = width_new;
             return *this;
+        } else {
+         throw std::invalid_argument("Width parameter cannot be negative.");
         }
-        else throw std::invalid_argument("Width parameter cannot be negative.");
     }
 }
 
@@ -88,7 +89,7 @@ Potential Potential::Builder::build(){
     if (!this->fromFile) {
         return Potential(this->base,this->type,this->k,this->width,this->height, this->separable);
     }
-    else {
-        return Potential(this->base, this->potentialValues);
-    }
+    
+    return Potential(this->base, this->potentialValues);
+    
 }

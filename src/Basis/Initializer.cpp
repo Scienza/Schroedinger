@@ -35,17 +35,22 @@ ContinuousInitializer::ContinuousInitializer(double start, double end, double me
     this->start = start;
     this->end = end;
     this->mesh = mesh;
-    this->nbox = (unsigned int)((end - start) / mesh);
+    this->nbox = static_cast<unsigned int>((end - start) / mesh);
 }
 
 // DiscreteInitializer //
 DiscreteInitializer::DiscreteInitializer(int start, int end, int step) {
-    if ((end - start) / step % 1 != 0)
+    if ((end - start) / step % 1 != 0) {
         throw std::invalid_argument("invalid discrete basis given (check interval and step).");
-    if ((end - start) / step < 1)
+    }
+    
+    if ((end - start) / step < 1) {
         throw std::invalid_argument("invalid discrete basis given (check interval and step).");
-    if ((end - start) / step == 0)
+    }
+    
+    if ((end - start) / step == 0) {
         throw std::invalid_argument("Empty dimensions basis given.");
+    }
 
     this->base_value = (end - start) / step;
     this->min = start;

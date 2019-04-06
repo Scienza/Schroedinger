@@ -32,7 +32,7 @@ ContinuousBase::ContinuousBase(double start, double end, double mesh)
 	this->start  = start;
 	this->end    = end;
 	this->mesh   = mesh;
-	this->nbox   = (unsigned int)((end - start) / mesh);
+	this->nbox   = static_cast<unsigned int>((end - start) / mesh);
 	this->coords = evaluate();
 }
 
@@ -52,8 +52,9 @@ ContinuousBase::ContinuousBase(double start, double end, unsigned int nbox)
 std::vector<double> ContinuousBase::evaluate()
 {
 	std::vector<double> coord;	
-	for (int i = 0; i <= this->nbox; i++)
+	for (int i = 0; i <= this->nbox; i++) {
 		coord.push_back(this->start + (this->mesh * i));
+	}
 	return coord;
 }
 

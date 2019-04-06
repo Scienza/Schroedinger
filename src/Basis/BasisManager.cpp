@@ -4,15 +4,14 @@
 #include <utility>
 
 BasisManager* BasisManager::instance = nullptr;
-BasisManager* BasisManager::getInstance()
-{
-	if (!instance) {
+BasisManager* BasisManager::getInstance() {
+	if (instance == nullptr) {
 		instance = new BasisManager();
 		return instance;
 	}
-	else {
-		return instance;
-	}
+	
+	return instance;
+	
 };
 
 void BasisManager::selectBase(Base b) {
@@ -24,8 +23,9 @@ void BasisManager::addBase(const Base& b) {
 	this->bases.push_back(b);
 
 	// If it's there's just this one in the vector, then it's automatically selected
-	if (this->bases.size() == 1)
-	this->selectBase(b);
+	if (this->bases.size() == 1) {
+		this->selectBase(b);
+	}
 }
 
 std::vector<Base> BasisManager::getBasisList() {
@@ -105,10 +105,13 @@ Base BasisManager::Builder::build(const SphericalInitializer& ini) {
 
 Base BasisManager::Builder::build(ContinuousInitializer ini) {
 
-	if(ini.mesh <= 0 ) 
+	if(ini.mesh <= 0 ) { 
 		throw std::invalid_argument("mesh < 0 does not have sense");
-	if(ini.end <= ini.mesh ) 
+	}
+
+	if(ini.end <= ini.mesh ) { 
 		throw std::invalid_argument("xmax < mesh does not have sense");
+	}
 
 	this->addContinuous(ini.start,ini.end,ini.mesh);
 

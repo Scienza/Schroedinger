@@ -74,8 +74,9 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
             break;
         }
 
-        if (n == 0)
+        if (n == 0) {
             sign = (last_wavefunction_value - this->wfAtBoundary > 0) ? 1 : -1;
+        }
 
         // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus calls bisection rule.
         if (sign * (last_wavefunction_value - this->wfAtBoundary) < 0) {
@@ -140,8 +141,9 @@ double Numerov::bisection(double e_min, double e_max) {
             this->functionSolve(e_min);
             fa = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
 
-            if (fa * fx1 < 0.)
+            if (fa * fx1 < 0.) {
                 e_max = energy_middle;
+            }
         }
     }
 

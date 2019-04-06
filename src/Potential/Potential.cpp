@@ -37,7 +37,7 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
 
     // If the potential is separable, then n potentials (one for each base's representation)
     else {
-        for (ContinuousBase this_base : base.getContinuous()) {
+        for (const ContinuousBase& this_base : base.getContinuous()) {
 
             std::vector<ContinuousBase> c_base;
             std::vector<DiscreteBase> d_base;
@@ -54,7 +54,7 @@ Potential::Potential(Base base, PotentialType type, double k, double width, doub
             this->separated_potentials.push_back(separated_potential);
         }
 
-        for (DiscreteBase this_base : base.getDiscrete()) {
+        for (const DiscreteBase& this_base : base.getDiscrete()) {
             std::vector<ContinuousBase> c_base;
             std::vector<DiscreteBase> d_base;
 
@@ -110,8 +110,9 @@ bool Potential::isSeparated() {
 }
 
 std::vector<Potential> Potential::getSeparatedPotentials() {
-    if (separable == true && !separated_potentials.empty())
+    if (separable && !separated_potentials.empty()) {
         return separated_potentials;
+    }
 
     // fixme: need to throw instead?
     return {};
@@ -122,15 +123,18 @@ void Potential::printToFile() {
   if (myfile.is_open()) {
     std::vector<double> base_coords = this->base.getCoords();
 
-    for(int i = 0; i < base_coords.size(); i ++)
+    for(int i = 0; i < base_coords.size(); i ++) {
         myfile << base_coords[i] <<" " << this->v.at(i)<< std::endl ;
+    }
     myfile.close();
   }
 }
 
 std::ostream& operator<<(std::ostream& stream, Potential& potential) {
-	for (double val : potential.getValues())
+	for (double val : potential.getValues()) {
         stream << val << std::endl;
+    }
+    
     return stream;
  }
 
