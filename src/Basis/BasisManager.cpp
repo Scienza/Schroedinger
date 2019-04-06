@@ -1,4 +1,5 @@
 #include "BasisManager.h"
+#include "LogManager.h"
 
 BasisManager* BasisManager::instance = 0;
 BasisManager* BasisManager::getInstance()
@@ -59,9 +60,11 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
 
     switch(b){
         case Base::basePreset::Cartesian:
-            std::cout<< "Building Cartesian basis in " << dimension << "dimensions, with nbox = " << nbox << ", mesh = " << mesh << std::endl;
-            for(int i = 0; i < dimension; i++) 
+            INFO("Building {}-dimensional cartesian basis with nbox = {}, mesh = {}", dimension, nbox, mesh);
+            for(int i = 0; i < dimension; i++)  {
                 this->addContinuous(mesh, nbox);
+			}
+
             break;
         case Base::basePreset::Cylindrical: 
 			throw std::invalid_argument("Wrong parameters for Cylindrical basis");
@@ -102,7 +105,8 @@ Base BasisManager::Builder::build(ContinuousInitializer ini) {
 
 	this->addContinuous(ini.start,ini.end,ini.mesh);
 
-	std::cout<< "Building Cartesian basis between " << ini.start << ", " << ini.end << "  mesh = " << ini.mesh << std::endl;
+	INFO("Building Cartesian basis between {}, {} mesh = {}", ini.start, ini.end, ini.mesh);
+
 	return Base(Base::basePreset::Spherical, 3, c_base, d_base);
 }
 // --- End Factory --- //

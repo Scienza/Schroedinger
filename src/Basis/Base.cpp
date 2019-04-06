@@ -1,22 +1,28 @@
 #include "Base.h"
 #include "BasisManager.h"
+#include "LogManager.h"
 
 Base::Base(std::vector<double> coords) {
 	this->dimensions = 1;
 	this->continuous.push_back(ContinuousBase(coords));
 	this->boundary = ZEROEDGE;
 }
+
 Base::Base(basePreset t, int n_dimension, std::vector< ContinuousBase > c_base, std::vector< DiscreteBase > d_base) {
 
 	switch (t) {
 		//TODO: add here, for each base type, a control for dimensions
-		case Custom: std::cout << "Initializing Custom Basis" << std::endl;
+		case Custom:
+			INFO("Initializing custom basis");
 			break;
-		case Cartesian: std::cout << "Initializing Cartesian Basis" << std::endl;
+		case Cartesian:
+			INFO("Initializing cartesian basis");
 			break;
-		case Spherical: std::cout << "Initializing Spherical Basis" << std::endl;
+		case Spherical:
+			INFO("Initializing Spherical Basis");
 			break;
-		case Cylindrical: std::cout << "Initializing Cylindrical Basis" << std::endl;
+		case Cylindrical:
+			INFO("Initializing Cylindrical Basis");
 			break;
 		default: throw std::invalid_argument("Wrong basis type or initialization meaningless!");
 			break;
