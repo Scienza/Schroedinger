@@ -1,0 +1,19 @@
+version: 0.{build}
+image: Visual Studio 2017
+
+branches:
+  only:
+    - master
+    - dev
+
+clone_folder: c:\projects\source
+
+build_script:
+- cmd: >-
+    mkdir build
+    cd build
+    cmake c:\projects\source -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE:STRING=Release
+    cmake --build . --config "Release"
+
+test_script:
+- cmd: C:\projects\source\build\bin\Release\unit_tests.exe

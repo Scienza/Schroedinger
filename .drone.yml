@@ -1,0 +1,15 @@
+kind: pipeline
+name: CI
+
+steps:
+- name: build
+  image: pandry/minideb-cpp
+  commands:
+  - mkdir build && cd build
+  - cmake ..
+  - make
+  
+- name: tests
+  image: bitnami/minideb
+  commands:
+  - build/bin/unit_tests
