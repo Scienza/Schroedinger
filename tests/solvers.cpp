@@ -3,7 +3,8 @@
 #include "Numerov.h"
 #include "Potential.h"
 #include "State.h"
-#include "analytical.cpp"
+
+#include "analytical.h"
 
 void testWavefunction(unsigned int nbox, Potential::PotentialType potType, double k, double width,
                       double height, Base base, std::vector<double> &pot,

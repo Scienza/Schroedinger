@@ -1,9 +1,8 @@
 #define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
 
 #include <gtest/gtest.h>
-#include "basis.cpp"
-#include "potentials.cpp"
-#include "solvers.cpp"
+#include <cmath>
+#include "Numerov.h"
 
 double H3(double x) { return 8 * std::pow(x, 3) - 12 * x; }
 double H4(double x) { return 16 * std::pow(x, 4) - 48 * x * x + 12; }
