@@ -1,26 +1,21 @@
 #include <gtest/gtest.h>
-#include "Numerov.h"
 #include "BasisManager.h"
+#include "Numerov.h"
 #include "Potential.h"
 #include "State.h"
 #include "analytical.cpp"
 
-void testWavefunction(unsigned int nbox, Potential::PotentialType potType, double k,
-                      double width, double height, Base base, std::vector<double> &pot, std::vector<double> &numerov_Wf,
-                      std::vector<double> &analytic_Wf)
-{
+void testWavefunction(unsigned int nbox, Potential::PotentialType potType, double k, double width,
+                      double height, Base base, std::vector<double> &pot,
+                      std::vector<double> &numerov_Wf, std::vector<double> &analytic_Wf) {
 
     Potential::Builder b(base);
-    Potential V = b.setType(potType)
-                      .setK(k)
-                      .setHeight(height)
-                      .setWidth(width)
-                      .build();
+    Potential V = b.setType(potType).setK(k).setHeight(height).setWidth(width).build();
 
     Numerov solver = Numerov(V, nbox);
-    State state = solver.solve(0.0, 2.0, 0.01);
+    State state    = solver.solve(0.0, 2.0, 0.01);
 
-    numerov_Wf = state.getWavefunction();
+    numerov_Wf  = state.getWavefunction();
     analytic_Wf = numerov_Wf;
 
     double E_numerov = state.getEnergy();
@@ -41,30 +36,28 @@ void testWavefunction(unsigned int nbox, Potential::PotentialType potType, doubl
             exit(8);
     }
 
-    if (analytic_Wf.size() == numerov_Wf.size())
-    {
+    if (analytic_Wf.size() == numerov_Wf.size()) {
         for (int i = 0; i < analytic_Wf.size(); i++)
-            EXPECT_NEAR(numerov_Wf.at(i), analytic_Wf.at(i), 1e-2); //improve error definition
-    }
-    else
-        FAIL() << "Analytic wavefunction and Numerov wavefunction haven't the same size " << analytic_Wf.size() << " " << numerov_Wf.size();
+            EXPECT_NEAR(numerov_Wf.at(i), analytic_Wf.at(i), 1e-2);  // improve error definition
+    } else
+        FAIL() << "Analytic wavefunction and Numerov wavefunction haven't the same size "
+               << analytic_Wf.size() << " " << numerov_Wf.size();
 
     ASSERT_NEAR(E_numerov, E_analytic, 1e-3);
 
     // std::cout << std::fixed << std::setprecision(2);
     // std::cout << "Test completed" << std::endl;
     // std::cout << "Energies: " << E_numerov << " " << E_analytic << std:: endl;
-    // std::cout << "num wf: " << numerov_Wf.at(0) << " " << numerov_Wf.at(numerov_Wf.size()/2) 
+    // std::cout << "num wf: " << numerov_Wf.at(0) << " " << numerov_Wf.at(numerov_Wf.size()/2)
     //           << " " << numerov_Wf.at(numerov_Wf.size() - 1) << " " << std::endl;
     // std::cout << "ana wf: " << analytic_Wf.at(0) << " " << analytic_Wf.at(analytic_Wf.size()/2)
     //           << " " << analytic_Wf.at(analytic_Wf.size()-1) << std::endl;
 }
 
-TEST(Wavefunction_and_energy, Numerov_HarmonicOscillator)
-{
+TEST(Wavefunction_and_energy, Numerov_HarmonicOscillator) {
     unsigned int nbox = 1000;
-    double mesh = 0.01;
-    int dimension = 1;
+    double mesh       = 0.01;
+    int dimension     = 1;
 
     std::vector<double> numerov_Wf;
     std::vector<double> analytic_Wf;
@@ -73,19 +66,19 @@ TEST(Wavefunction_and_energy, Numerov_HarmonicOscillator)
     BasisManager::Builder b;
     Base base = b.addContinuous(mesh, nbox).build(dimension);
 
-    testWavefunction(nbox, Potential::PotentialType::HARMONIC_OSCILLATOR, 0.500, 0.0, 0.0, base, pot, numerov_Wf, analytic_Wf);
+    testWavefunction(nbox, Potential::PotentialType::HARMONIC_OSCILLATOR, 0.500, 0.0, 0.0, base,
+                     pot, numerov_Wf, analytic_Wf);
 
-    if (HasFailure())
-    {
+    if (HasFailure()) {
         for (int i = 0; i < nbox; i++)
-            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " "
+                      << analytic_Wf[i] - numerov_Wf[i] << std::endl;
     }
 }
 
-TEST(Wavefunction_and_energy, Numerov_HarmonicOscillator2)
-{
+TEST(Wavefunction_and_energy, Numerov_HarmonicOscillator2) {
     unsigned int nbox = 1000;
-    double mesh = 0.01;
+    double mesh       = 0.01;
     std::vector<double> numerov_Wf;
     std::vector<double> analytic_Wf;
     std::vector<double> pot;
@@ -93,20 +86,20 @@ TEST(Wavefunction_and_energy, Numerov_HarmonicOscillator2)
     BasisManager::Builder b;
     Base base = b.build(Base::basePreset::Cartesian, 1, mesh, nbox);
 
-    testWavefunction(nbox, Potential::PotentialType::HARMONIC_OSCILLATOR, 1.0, 0.0, 0.0, base, pot, numerov_Wf, analytic_Wf);
+    testWavefunction(nbox, Potential::PotentialType::HARMONIC_OSCILLATOR, 1.0, 0.0, 0.0, base, pot,
+                     numerov_Wf, analytic_Wf);
 
-    if (HasFailure())
-    {
+    if (HasFailure()) {
         for (int i = 0; i < nbox; i++)
-            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " "
+                      << analytic_Wf[i] - numerov_Wf[i] << std::endl;
     }
 }
 
-TEST(Wavefunction_and_energy, Numerov_Box)
-{
-    double mesh = 0.01;
+TEST(Wavefunction_and_energy, Numerov_Box) {
+    double mesh       = 0.01;
     unsigned int nbox = 1000;
-    int dimension = 1;
+    int dimension     = 1;
 
     std::vector<double> numerov_Wf;
     std::vector<double> analytic_Wf;
@@ -115,20 +108,20 @@ TEST(Wavefunction_and_energy, Numerov_Box)
     BasisManager::Builder b;
     Base base = b.addContinuous(mesh, nbox).build(dimension);
 
-    testWavefunction(nbox, Potential::PotentialType::BOX_POTENTIAL, 0.0, 0.0, 0.0, base, pot, numerov_Wf, analytic_Wf);
+    testWavefunction(nbox, Potential::PotentialType::BOX_POTENTIAL, 0.0, 0.0, 0.0, base, pot,
+                     numerov_Wf, analytic_Wf);
 
-    if (HasFailure())
-    {
+    if (HasFailure()) {
         for (int i = 0; i < nbox; i++)
-            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " "
+                      << analytic_Wf[i] - numerov_Wf[i] << std::endl;
     }
 }
 
-TEST(Wavefunction_and_energy, Numerov_Box2)
-{
-    double mesh = 0.01;
+TEST(Wavefunction_and_energy, Numerov_Box2) {
+    double mesh       = 0.01;
     unsigned int nbox = 500;
-    int dimension = 1;
+    int dimension     = 1;
 
     std::vector<double> numerov_Wf;
     std::vector<double> analytic_Wf;
@@ -137,21 +130,21 @@ TEST(Wavefunction_and_energy, Numerov_Box2)
     BasisManager::Builder b;
     Base base = b.addContinuous(mesh, nbox).build(dimension);
 
-    testWavefunction(nbox, Potential::PotentialType::BOX_POTENTIAL, 0.0, 0.0, 0.0, base, pot, numerov_Wf, analytic_Wf);
+    testWavefunction(nbox, Potential::PotentialType::BOX_POTENTIAL, 0.0, 0.0, 0.0, base, pot,
+                     numerov_Wf, analytic_Wf);
 
-    if (HasFailure())
-    {
+    if (HasFailure()) {
         for (int i = 0; i < nbox; i++)
-            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " "
+                      << analytic_Wf[i] - numerov_Wf[i] << std::endl;
     }
 }
 
-TEST(Wavefunction_and_energy, Numerov_FiniteWell1)
-{
+TEST(Wavefunction_and_energy, Numerov_FiniteWell1) {
     unsigned int nbox = 2000;
-    double mesh = dx;
-    double width = 10.0;
-    double height = 3.0;
+    double mesh       = dx;
+    double width      = 10.0;
+    double height     = 3.0;
     std::vector<double> numerov_Wf;
     std::vector<double> analytic_Wf;
     std::vector<double> pot;
@@ -159,19 +152,19 @@ TEST(Wavefunction_and_energy, Numerov_FiniteWell1)
     ContinuousInitializer x_ini(mesh, nbox);
     BasisManager::Builder b;
     Base base = b.build(x_ini);
-    testWavefunction(nbox, Potential::PotentialType::FINITE_WELL_POTENTIAL, 0.0, width, height, base, pot, numerov_Wf, analytic_Wf);
+    testWavefunction(nbox, Potential::PotentialType::FINITE_WELL_POTENTIAL, 0.0, width, height,
+                     base, pot, numerov_Wf, analytic_Wf);
 
-    if (HasFailure())
-    {
+    if (HasFailure()) {
         for (int i = 0; i < nbox; i++)
-            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " "
+                      << analytic_Wf[i] - numerov_Wf[i] << std::endl;
     }
 }
 
-TEST(Wavefunction_and_energy, Numerov_FiniteWell2)
-{
+TEST(Wavefunction_and_energy, Numerov_FiniteWell2) {
     unsigned int nbox = 1000;
-    double mesh = dx;
+    double mesh       = dx;
     BasisManager::Builder b;
     Base base = b.build(Base::basePreset::Cartesian, 1, mesh, nbox);
 
@@ -180,11 +173,12 @@ TEST(Wavefunction_and_energy, Numerov_FiniteWell2)
     std::vector<double> analytic_Wf;
     std::vector<double> pot;
 
-    testWavefunction(nbox, Potential::PotentialType::FINITE_WELL_POTENTIAL, 0.0, width, height, base, pot, numerov_Wf, analytic_Wf);
+    testWavefunction(nbox, Potential::PotentialType::FINITE_WELL_POTENTIAL, 0.0, width, height,
+                     base, pot, numerov_Wf, analytic_Wf);
 
-    if (HasFailure())
-    {
+    if (HasFailure()) {
         for (int i = 0; i < nbox; i++)
-            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " " << analytic_Wf[i] - numerov_Wf[i] << std::endl;
+            std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " "
+                      << analytic_Wf[i] - numerov_Wf[i] << std::endl;
     }
 }

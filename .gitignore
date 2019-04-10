@@ -6,6 +6,7 @@ out
 bin
 .idea
 cmake-*
+*.dat
 
 build/
 CMakeCache.txt

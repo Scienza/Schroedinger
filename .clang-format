@@ -1,0 +1,13 @@
+# See Clang docs: http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+BasedOnStyle: Google
+Standard: Cpp11
+IndentWidth: 4
+ColumnLimit: 100
+IndentCaseLabels: true
+PointerAlignment: Right
+AlignOperands: true
+AlignConsecutiveAssignments: true
+AccessModifierOffset: -2
+AllowShortCaseLabelsOnASingleLine: false
+KeepEmptyLinesAtTheStartOfBlocks: true
+IndentPPDirectives: AfterHash
