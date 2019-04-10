@@ -6,6 +6,7 @@
 #include "Potential.h"
 #include "State.h"
 #include "Numerov.h"
+#include "LogManager.h"
 
 void box_potential_example() {
 	unsigned int nbox = 500;
@@ -36,10 +37,10 @@ void box_potential_example() {
     wavefunction  = state.getWavefunction();
     energy        = state.getEnergy();
 
-	std::cout << std::endl << energy << std::endl;
+	INFO("Energy {}", energy);
+	INFO("Printing state");
 
-	// Printing state
-	std::cout << "Printing state" << std::endl;
+	// This is find being output to console
 	std::cout << state;
 
 	// Save to file wavefunction and probability
@@ -74,10 +75,9 @@ void finite_well_example() {
     wavefunction  = state.getWavefunction();
     energy        = state.getEnergy();
 
-	std::cout << std::endl << energy << std::endl;
+	INFO("Energy {}", energy);
+	INFO("Printing state");
 
-	// Printing state
-	std::cout << "Printing state" << std::endl;
 	std::cout << state;
 	
 	// Save to file wavefunction and probability
@@ -109,10 +109,9 @@ void harmonic_oscillator_example() {
     wavefunction  = state.getWavefunction();
     energy        = state.getEnergy();
 
-	std::cout << std::endl << energy << std::endl;
-
-	// Printing state
-	std::cout << "Printing state" << std::endl;
+	INFO("Energy {}", energy);
+	INFO("Printing state");
+	
 	std::cout << state;
 	
 	// Save to file wavefunction and probability
@@ -146,7 +145,7 @@ void harmonic_oscillator_2D_example() {
     wavefunction  = state.getWavefunction();
     energy        = state.getEnergy();
 
-	std::cout << std::endl << energy << std::endl;
+	INFO("Energy {}", energy);
 
 	// Save to file wavefunction and probability
 	state.printToFile();
@@ -190,8 +189,9 @@ void custom_workflow() {
 }
 
 int main(int argc, char **argv) {
-	int c = 0;
+	LogManager::getInstance().Init();
 
+	int c = 0;
 	std::cout << "Choose: " << std::endl;
 	std::cout << "1) Harmonic oscillator (example)" << std::endl;
 	std::cout << "2) Box (example)" << std::endl;
@@ -212,13 +212,13 @@ int main(int argc, char **argv) {
 			finite_well_example();
 			break;
 		case 4:
-			std::cout << "Not ready yet" << std::endl;
+			WARN("Not yet implemented");
 			break;
 		case 5:
 			harmonic_oscillator_2D_example();
 			break;     	
 		default:
-			std::cout << "Not a valid option" << std::endl;
+			ERROR("Not a valid option");
 			break;
 	}
 

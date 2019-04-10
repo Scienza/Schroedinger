@@ -42,16 +42,11 @@ void State::printToFile()
     }
 }
 
-Base State::getBase() {
-    return this->base;
-}
-
-std::ostream &operator<<(std::ostream &stream, State &st)
+std::ostream &operator<<(std::ostream &stream, const State &st)
 {
     std::vector<double> base_coords = st.getBase().getCoords();
 
-    stream << std::endl << std::endl;
-    stream  << std::setw(20) << std::right << "Coord from basis";
+    stream  << std::setw(20) << std::right << "Basis coordinates";
     stream  << std::setw(20) << std::right << "Wavefunction";
     stream  << std::setw(20) << std::right << "Probability" << std::endl;
     

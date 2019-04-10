@@ -1,4 +1,5 @@
 #include "Potential.h"
+#include "LogManager.h"
 
 Potential::Builder::Builder(Base b)
 {
@@ -25,9 +26,8 @@ Potential::Builder::Builder(std::string filename)
         }
 
         this->base = Base(baseCoords);
-    }
-    catch (const std::ifstream::failure& e) {
-        std::cout << "Exception opening/reading file";
+    } catch (const std::ifstream::failure& e) {
+        ERROR("Exception opening/reading file: {}", e.what());
     }
 }
 

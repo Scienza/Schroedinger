@@ -1,4 +1,5 @@
 #include "Numerov.h"
+#include "LogManager.h"
 
 Numerov::Numerov(Potential potential, int nbox) : Solver(potential, nbox) {    
     switch(this->boundary) {
@@ -23,7 +24,7 @@ void Numerov::functionSolve(double energy) {
     std::vector<double> pot = this->potential.getValues();
 
     c = (2.0 * mass / hbar / hbar) * (dx * dx / 12.0);
-    try{
+    try {
         //Build Numerov f(x) solution from left. 
         for (int i = 2; i <= this->nbox; i++) {
             x = (-this->nbox / 2 + i) * dx;
@@ -38,9 +39,8 @@ void Numerov::functionSolve(double energy) {
             value = 2 * (1.0 - (5 * c) * (energy - pot_1 )) * wave_1 - (1.0 + (c) * (energy - pot_2)) * wave_2;
             value /= (1.0 + (c) * (energy - pot_a));  
         }
-    }catch (const std::out_of_range & ex)
-    {
-        std::cout << "out_of_range Exception Caught :: " << ex.what() << std::endl;
+    } catch (const std::out_of_range & ex) {
+        ERROR("Out of range exception caught, {}", ex.what());
     }
 }
 
@@ -69,7 +69,7 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
         double &last_wavefunction_value = this->wavefunction.at(this->nbox);
 
         if ( fabs(last_wavefunction_value - this->wfAtBoundary) < err_thres ) {
-            std::cout << "Solution found" << last_wavefunction_value << std::endl;
+            INFO("Solution found {}", last_wavefunction_value);
             this->solutionEnergy = energy;
             break;
         }
@@ -79,7 +79,7 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
 
         // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus calls bisection rule.
         if (sign * (last_wavefunction_value - this->wfAtBoundary) < 0) {
-            std::cout << "Bisection " << last_wavefunction_value << std::endl;
+            INFO("Bisection {}", last_wavefunction_value);
             this->solutionEnergy = this->bisection(energy - e_step, energy + e_step);
             break;
         }
@@ -146,6 +146,6 @@ double Numerov::bisection(double e_min, double e_max) {
         }
     }
 
-    std::cerr << "WARNING: Solution not found at the set precision using the bisection method, " << this->wavefunction.at(this->nbox) << " > " << err_thres << std::endl;
+    WARN("Failed to find solution using bisection method, {} > {}", wavefunction.at(nbox), err_thres);
     return energy_middle;
 }
