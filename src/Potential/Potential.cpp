@@ -110,10 +110,9 @@ bool Potential::isSeparated() { return this->separable; }
 std::vector<Potential> Potential::getSeparatedPotentials() {
     if (separable && !separated_potentials.empty()) {
         return separated_potentials;
+    } else {
+        throw std::runtime_error("Cannot get separated potentials from unseparable potentials!");
     }
-
-    // fixme: need to throw instead?
-    return {};
 }
 
 void Potential::printToFile() {
