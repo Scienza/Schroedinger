@@ -1,6 +1,6 @@
 # Schroedinger Solver
 
-[![CircleCI](https://circleci.com/gh/Scienza/Schroedinger/tree/master.svg?style=shield)](https://circleci.com/gh/Scienza/Schroedinger/tree/dev)
+[![Build Status](https://drone.geekfor.science/api/badges/Scienza/Schroedinger/status.svg)](https://drone.geekfor.science/Scienza/Schroedinger)
 ![Linux](https://img.shields.io/badge/linux-supported-brightgreen.svg)
 ![License](https://img.shields.io/badge/license-LGPL%20v2.1-blue.svg)
 
