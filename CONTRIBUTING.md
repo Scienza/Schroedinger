@@ -1,8 +1,8 @@
 ### Resources
 To contribute, considers the [issues](https://github.com/AndreaIdini/Schroedinger/issues) and the [to-do](https://github.com/AndreaIdini/Schroedinger/projects) lists. 
-Watch the introduction video [video \(IT\)](https://www.youtube.com/watch?v=KH8xd0TKkz4)
-and contact [Andrea Idini](mailto:andrea.idini@gmail.com).
+Watch the introduction video [video \(IT\)](https://www.youtube.com/watch?v=KH8xd0TKkz4) and contact [Andrea Idini](mailto:andrea.idini@gmail.com).
 Priviledge channel for contributions is the telegram group [@scienza](https://t.me/Scienza).
+All contributors will be properly accredited in eventual publications or other releases. 
 
 ### Styling guide
 This is based on the [Google C++ Styling guide](https://google.github.io/styleguide/cppguide.html), here's the most important things:
