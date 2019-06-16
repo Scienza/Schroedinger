@@ -24,7 +24,9 @@ Every contributor to the project will be properly accredited.
 The project aim to automatize the definition of basis, which is one of the most important, but overlooked part of any quantum mechanical calculation. The reason why physicist grudge to explore different bases for their calculations is because of the heavy handed calculations (either analytical or computational) involved. Very often the market is full of a fauna of codes, with the only difference being the definition of the basis and related solver.
 
 The quantum mechanical wavefunctions live in an Hilbert space, that is a complex vector field of arbitrary dimension with the definition of inner product. The Hilbert space is described by a (complete) basis, that is a set of vectors. A familiar example of a basis is the cartesian set, made by the unitary vectors corresponding to the perpendicular directions that defines the coordinates (usually in 2 or 3 Dimensions denoted with x,y,z). 
-[The cartesian Plane](https://upload.wikimedia.org/wikipedia/commons/0/0e/Cartesian-coordinate-system.svg)
+
+![The cartesian Plane](https://upload.wikimedia.org/wikipedia/commons/0/0e/Cartesian-coordinate-system.svg)
+
 Changing basis implies the construction of a transformation (isomorphism) from one set of coordinate to the other, often in matrix form. This is necessary to define the interaction, that is usually given in coordinate form (e.g. the Coulomb interaction ~1/r ) but that we might want to use in another basis for solver convenience. This is also important to obtain the fastest convergence.
 
 The objectives of this problem are to set up:
