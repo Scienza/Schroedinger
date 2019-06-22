@@ -50,7 +50,7 @@ The missing ingredient for a first usable case, is to implement the following te
 - 3D cylindrical: $$ (r, \theta, z) $$, angular part covered with Bessel function in the case of 0 boundary condition (cf. below). _Would be nice to implement as well but the explicit calculation is not requested for the moment_.
 - 2D polar basis: $$ (r, \theta) $$, angular part covered with Bessel function in the case of 0 boundary condition (cf. below). _Would be nice to implement as well but the explicit calculation is not requested for the moment_.
 - Momentum basis, is the Fourier transform of the coordinate basis.
-- An additional point that would be extremely powerful would be the use of previously calculated numerical solution as basis for future calculations. E.g., solve the system with the Coulomb potential in 3D, the obtained (numerical) Coulomb 3D wavefunction can be used as basis for a perturbed Coulomb calculation (this would be key for a physics publication).
+- An additional point that would be extremely powerful would be the use of previously calculated numerical solution as basis for future calculations. E.g., solve the system with the Coulomb potential in 3D, the obtained (numerical) Coulomb 3D wavefunction can be used as basis for a perturbed Coulomb calculation (this would be key for a physics publication, cf. [Paper2](#Fission-overlaps)).
 
 What is also missing, which is not a basis per-se but can be considered part of the initialization and description of the model space are the boundary conditions. These are sometimes implicit in the type of basis (e.g. Harmonic Oscillator), but often different type of basis are applicable to the same cartesian coordinate. Right now null boundary conditions are implemented ( wavefunction = 0 at the border ). But the implementation of the other types could be envisaged for completeness. 
 There are in total [three types of general boundary conditions](http://mathworld.wolfram.com/BoundaryConditions.html) and ideally all three could be implement, but in particular:
@@ -88,15 +88,70 @@ An automated tool to analytically calculate the coupling and avoiding most of th
 
 cf. [Ripoche](https://abinitio.triumf.ca/2019/ripoche_SlidesTriumf2019.pdf)
 
-## [Publication 2] Imaginary basis for non hamiltonian time evolution
+![Plan](./Schroedinger1.png)
+
+## [Publication 2] Non Hamiltonian processes
 
 ### Prerequisites
 
 - Basic quantum mechanics in first quantization*
+- Object Oriented programming
+- Advanced first quantization and open systems
+- Second quantization
 
 ### Project
 
-Implement an imaginary basis and disappearing boundary conditions. 
+The idea is to find prescriptions to treat continuum and open quantum systems in an affordable way, in order to describe interesting precesses like nuclear fission and reactions (or chemical reactions).
 
-- Try to model non-hamiltonian systems where the wave function current is not conserved, compare to one-body Green functions with imaginary self-energy.
-- Model fission in an exact 1-D toy-model
+#### Hamiltonian Solution
+
+First of all the current definition of the Hamiltonian and solution methods must be refined. The inclusion centrifugal terms and the ability to treat spin-orbit is necessary to describe most systems of interest. This has to be done with an eye of regard concerning flexibility and modularization, as by the prescriptions used up to now.
+
+- Solution as Diagonalization (cf. [Paper1](#Solver-rules))
+- Implement different boundary conditions (cf. [Paper1](#Initialization-of-Basis)).
+- Generalize the centrifugal term to work with 3D-2D systems of different notable system of references.
+- Verify and compare with published results.
+
+#### Fission overlaps
+
+Nuclear fission is the division of a mother nucleus in two daughters nuclei. It is a phenomenon of extreme importance for energy and weapon production.
+The process is one of the most complex in quantum physics and the most intensive to model. Even using semi-phenomenological models millions of CPU hours required to model a single fission process.
+Despite this huge effort, many calculated properties are orders of magnitudes away from experimental result.
+Any insight into this process might provide a huge advantage in the calculation. One of the most difficult ingredient to examine is the evolution of the separation between mother and daughters and the interaction with the continuum and later on the disappearing.
+
+In this context, Schroedinger can provide an exact description of a radial system and calculating the overlaps between different potentials.
+
+- Calculate the wavefunctions of a [Woods-Saxon](https://en.wikipedia.org/wiki/Woods–Saxon_potential) in 1D and use them as basis (cf. [Paper1](#initialization-of-basis)).
+- Calculate in this basis the exact solution of 2 Woods Saxon potentials one after the other.
+- Vary the parameter of the Woods-Saxons and their relative distances.
+- Do a Routine to calculate the overlaps of the wavefunction for a state with a given set of parameter with the same state with another set.
+- Simulate the fission process taking the Wood saxon far apart and see the distribution of the states.
+- Do the same thing with disappearing boundary conditions.
+
+#### Time evolution
+
+It would be fun, and a further confirmation, to describe the time evolution of systems through the [time-dependent Schroedinger equation](https://en.wikipedia.org/wiki/Schrödinger_equation#Time-dependent_equation). Together with the flexible basis configuration, this might put Schroedinger uniquely positioned and open up other publication possibilities.
+
+NB: Time dependent description of fission processes has been implemented only few years ago.
+
+#### Non Hamiltonian terms
+
+Non Hamiltonian processes are those processes in which the quantum system communicates with an external environment. Nuclear and chemical reactions, for example, happen because electrons or nucleons come from outside the modelled system and interact and then disappear, eventually exchaning energy/momentum/particles.
+
+The way to model these process include:
+
+- Disappearing boundary (current is taken away when interacts with the boundary).
+- Complex basis (the basis account for absorption).
+- Complex potential (the potential account for absorption, like the optical refraction coefficient).
+
+A comparison between these different prescription will shed light on the open system processes.
+
+#### Comparison with Green functions
+
+Green function is a power many-body method to describe both stationary and time-dependent systems.
+
+Currently there is a discussion in the commuinity on how and with which method Green functions can model open systems such as direct and compound nuclear reactions. 
+A comparison between the exact Hamiltonian solutions and a Green function representation will shed light on this discussion potentially resolving in an important physics publication.
+
+![Plan](./Schroedinger2.png)
+
