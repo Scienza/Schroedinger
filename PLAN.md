@@ -2,7 +2,7 @@
 
 Right now Schroedinger is a unique piece of software in search of use cases. 
 Its uniqueness sits on the flexible definition of the basis as Singleton, and OO construction of the Hilbert space (basis) and Hamiltonian (potential). 
-The particle then move in the world constructed above, and this is guaranteed by the Schroedinger solve (Numerov).
+The particle then move in the world constructed above, and this is guaranteed by the Schroedinger solver (Numerov).
 
 Of course this is nothing new and Schroedinger equations solvers have been used since computers existed. However, the difficult part and the hard ground is laid down. Now, with the right work, the possibility of easily extending basis provides with opportunities both scientifically and computationally.
 
