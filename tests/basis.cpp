@@ -96,15 +96,15 @@ TEST(Basis, Basis_concatenation) {
 
     Base base3 = base1 + base2;
 
-    //ContinuousBase firstContinuousBase  = base3.getContinuous().at(0);
-    //ContinuousBase secondContinuousBase = base3.getContinuous().at(0);
+    ContinuousBase firstContinuousBase  = base3.getContinuous().at(0);
+    ContinuousBase secondContinuousBase = base3.getContinuous().at(0);
 
-    //std::vector<double> baseCoords     = firstContinuousBase.getCoords();
-    /*for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
+    std::vector<double> baseCoords     = firstContinuousBase.getCoords();
+    for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
         ASSERT_NEAR(base1.getContinuous().at(0).getCoords().at(i), baseCoords[i], err_thres);
         
     baseCoords = secondContinuousBase.getCoords();
     for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
         ASSERT_NEAR(base1.getContinuous().at(0).getCoords().at(i), baseCoords[i], err_thres);
-        */
+        
 }

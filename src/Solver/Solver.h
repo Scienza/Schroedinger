@@ -13,7 +13,6 @@ constexpr double pi   = 3.14159265358979323846;
 constexpr double pi_2 = 1.57079632679489661923;
 constexpr double hbar = 1;
 constexpr double mass = 1;
-constexpr double dx   = 0.01;
 
 constexpr double err_thres = 10E-10;
 

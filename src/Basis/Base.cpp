@@ -38,6 +38,7 @@ Base::Base(basePreset t, int n_dimension, std::vector<ContinuousBase> c_base,
     BasisManager::getInstance()->selectBase(*this);
 };
 
+
 std::ostream& operator<<(std::ostream& stream, Base& base) {
 
     // Print continuous dimension values (if present)

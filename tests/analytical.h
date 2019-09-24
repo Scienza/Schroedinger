@@ -110,7 +110,7 @@ double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height,
         double &wavefunction_value = wavefunction.at(i);
         probab                     = wavefunction_value * wavefunction_value;
     }
-    double norm = Numerov::trapezoidalRule(0, nbox, dx, probability);
+    double norm = State::trapezoidalRule(0, nbox, dx, probability);
     for (int i = 0; i < wavefunction.size(); i++) {
         double &wavefunction_value = wavefunction.at(i);
         wavefunction_value /= sqrt(norm);

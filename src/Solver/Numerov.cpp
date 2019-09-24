@@ -55,7 +55,7 @@ void Numerov::functionSolve(double energy, std::vector<double> potential_values,
 */
 
 State Numerov::solve(double e_min, double e_max, double e_step) {
-    double norm, energy = 0.0;
+    double energy = 0.0;
     int n, sign;
     std::vector<Potential> potentials;
     std::vector<State> states;
@@ -110,30 +110,8 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
             }
         }
 
-        // Evaluation of the probability
-        for (int i = 0; i <= nbox; i++) {
-            double &value      = wavefunction[i];
-            double &prob_value = probability[i];
-            prob_value         = value * value;
-        }
-
-        // Evaluation of the norm
-        norm = trapezoidalRule(0, this->nbox, dx, probability);
-
-        // Normalization of the wavefunction
-        for (int i = 0; i <= nbox; i++) {
-            double &value = wavefunction[i];
-            value /= sqrt(norm);
-        }
-
-        // Normalization of the potential
-        for (int i = 0; i <= nbox; i++) {
-            double &value = probability[i];
-            value /= norm;
-        }
-
-        states.push_back(State(wavefunction, probability, solutionEnergy,
-                    local_potential.getBase()));
+        states.push_back(State(wavefunction, local_potential, solutionEnergy,
+                    local_potential.getBase(), nbox));
     }
 
     // Get the resulting state
