@@ -26,6 +26,7 @@ class Base {
 
     std::vector<double> getCoords();
     friend std::ostream& operator<<(std::ostream& stream, Base& base);
+    friend const Base operator+(Base& base1, Base& base2);
 
   private:
     std::vector<DiscreteBase> discrete;

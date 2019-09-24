@@ -82,3 +82,29 @@ TEST(Basis, Dimension_1_continuous_start_end_nbox) {
     for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
         ASSERT_NEAR(groundTruthCoords[i], baseCoords[i], err_thres);
 }
+
+TEST(Basis, Basis_concatenation) {
+    unsigned int nbox = 1000;
+    double start      = 0;
+    double end        = 100;
+    double mesh       = 0.1;
+    int dimension     = 1;
+
+    BasisManager::Builder b = BasisManager::Builder();
+    Base base1              = b.addContinuous(start, end, nbox).build(dimension);
+    Base base2              = b.addContinuous(start, end, nbox).build(dimension);
+
+    Base base3 = base1 + base2;
+
+    //ContinuousBase firstContinuousBase  = base3.getContinuous().at(0);
+    //ContinuousBase secondContinuousBase = base3.getContinuous().at(0);
+
+    //std::vector<double> baseCoords     = firstContinuousBase.getCoords();
+    /*for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
+        ASSERT_NEAR(base1.getContinuous().at(0).getCoords().at(i), baseCoords[i], err_thres);
+        
+    baseCoords = secondContinuousBase.getCoords();
+    for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
+        ASSERT_NEAR(base1.getContinuous().at(0).getCoords().at(i), baseCoords[i], err_thres);
+        */
+}

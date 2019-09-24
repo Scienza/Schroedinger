@@ -28,10 +28,6 @@ class Solver {
   protected:
     Potential potential;
     int nbox;
-    double solutionEnergy;
-    double wfAtBoundary;
-    std::vector<double> wavefunction;
-    std::vector<double> probability;
     Base::boundaryCondition boundary;
 };
 

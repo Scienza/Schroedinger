@@ -43,8 +43,7 @@ std::ostream& operator<<(std::ostream& stream, Base& base) {
     // Print continuous dimension values (if present)
     if (!base.getContinuous().empty()) {
         for (int i = 0; i < base.getContinuous().size(); i++) {
-            for (int coord_counter = 0;
-                 coord_counter < base.getContinuous().at(i).getCoords().size(); coord_counter++) {
+            for (int coord_counter = 0; coord_counter < base.getContinuous().at(i).getCoords().size(); coord_counter++) {
                 stream << base.getContinuous().at(i).getCoords().at(coord_counter) << "; ";
             }
         }
@@ -53,17 +52,41 @@ std::ostream& operator<<(std::ostream& stream, Base& base) {
     stream << "\n\n";
 
     // Print discrete dimension values (if present)
-    if (!base.getDiscrete().empty()) {
-        for (int i = 0; i < base.getContinuous().size(); i++) {
-            for (int coord_counter = 0; coord_counter < base.getDiscrete().at(i).getCoords().size();
-                 coord_counter++) {
-                stream << base.getDiscrete().at(i).getCoords().at(coord_counter) << "; ";
-            }
-        }
-    }
+    //if (!base.getDiscrete().empty()) {
+    //    for (int i = 0; i < base.getContinuous().size(); i++) {
+    //        for (int coord_counter = 0; coord_counter < base.getDiscrete().at(i).getCoords().size();
+    //             coord_counter++) {
+    //            stream << base.getDiscrete().at(i).getCoords().at(coord_counter) << "; ";
+    //        }
+    //    }
+    //}
 
     return stream;
 }
+
+    const Base operator+(Base& base1, Base& base2) {
+        std::vector<DiscreteBase> discrete_dimension = std::vector<DiscreteBase>();
+        std::vector<ContinuousBase> continuous_dimension = std::vector<ContinuousBase>();
+        
+        for (int i = 0; i < base1.getDiscrete().size(); i++)
+            discrete_dimension.push_back(base1.getDiscrete().at(i));
+
+        for (int i = 0; i < base2.getDiscrete().size(); i++)
+            discrete_dimension.push_back(base2.getDiscrete().at(i));
+
+        for (int i = 0; i < base1.getContinuous().size(); i++)
+            continuous_dimension.push_back(base1.getContinuous().at(i));
+
+        for (int i = 0; i < base2.getContinuous().size(); i++)
+            continuous_dimension.push_back(base2.getContinuous().at(i));
+
+        const Base& base = Base(Base::basePreset::Custom, 
+                        (base1.getDim() + base2.getDim()), 
+                        continuous_dimension, 
+                        discrete_dimension);
+        return base;
+
+    }
 
 // This method let you get basis coords when it has only one dimension
 std::vector<double> Base::getCoords() {

@@ -40,8 +40,8 @@ class Numerov : public Solver {
     }
 
   private:
-    void functionSolve(double energy);
-    double bisection(double, double);
+    void functionSolve(double energy, std::vector<double> potential_values, std::vector<double> &wavefunction);
+    double bisection(double e_min, double e_max, std::vector<double> potential_values, std::vector<double> &wavefunction,  double wfAtBoundary);
 };
 
 #endif
