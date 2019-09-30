@@ -21,7 +21,7 @@ Every contributor to the project will be properly accredited.
 
 ### Project
 
-The project aim to automatize the definition of basis, which is one of the most important, but overlooked part of any quantum mechanical calculation. The reason why physicist grudge to explore different bases for their calculations is because of the heavy handed calculations (either analytical or computational) involved. Very often the market is full of a fauna of codes, with the only difference being the definition of the basis and related solver.
+The project aim to automatize the definition of basis, which is one of the most important parts (but most often overlooked) of any quantum mechanical calculation. The reason why physicist grudge to explore different bases for their calculations is because of the heavy handed calculations involved (either analytical and/or computational). Very often the market is populated with a zoo of codes, with the only difference being the definition of the basis and related solver.
 
 The quantum mechanical wavefunctions live in an Hilbert space, that is a complex vector field of arbitrary dimension with the definition of inner product. The Hilbert space is described by a (complete) basis, that is a set of vectors. A familiar example of a basis is the cartesian set, made by the unitary vectors corresponding to the perpendicular directions that defines the coordinates (usually in 2 or 3 Dimensions denoted with x,y,z). 
 
@@ -40,7 +40,7 @@ This project will not concern physics cases or properties. Therefore, the knowle
 
 #### Solver rules
 
-#### Automated calculus for basis change
+#### Automated calculus for basis definition and change
 
 Automate basis changes through implementation of Yutis Graph for handling of spherical harmonics and generalise the basis change as a network problem.
 
@@ -58,3 +58,6 @@ Implement an imaginary basis and disappearing boundary conditions.
 
 - Try to model non-hamiltonian systems where the wave function current is not conserved, compare to one-body Green functions with imaginary self-energy.
 - Model fission in an exact 1-D toy-model
+
+
+
