@@ -68,18 +68,16 @@ void Numerov::functionSolve(double energy, int potential_index) {
 */
 
 State Numerov::solve(double e_min, double e_max, double e_step) {
-    double norm, energy = 0.0;
-    int n, sign;
+    int sign = 1;
     std::vector<std::vector<double>> temp;
     std::vector<State> states;
 
-    Base basis;
     for (int potential_index = 0; potential_index < this->potential.getValues().size(); potential_index++) {
         initialize();
-        temp = std::vector<std::vector<double>>();
+        temp.clear();
         // scan energies to find when the Numerov solution is = 0 at the right extreme of the box.
-        for (n = 0; n < (e_max - e_min) / e_step; n++) {
-            energy = e_min + n * e_step;
+        for (int n = 0; n < (e_max - e_min) / e_step; n++) {
+            double energy = e_min + n * e_step;
             this->functionSolve(energy, potential_index);
             double &last_wavefunction_value = this->wavefunction.at(this->nbox);
 
@@ -110,29 +108,22 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
         }
 
         // Evaluation of the norm
-        norm = trapezoidalRule(0, this->nbox, dx, this->probability);
+        double norm = trapezoidalRule(0, this->nbox, dx, this->probability);
 
-        // Normalization of the wavefunction
-        for (int i = 0; i <= nbox; i++) {
-            double &value = this->wavefunction[i];
-            value /= sqrt(norm);
-        }
-
-        // Normalization of the potential
-        for (int i = 0; i <= nbox; i++) {
-            double &value = this->probability[i];
-            value /= norm;
-        }
+		// Normalize wavefunction and probabiliy
+        auto norm_fun = [norm](double val) { return val / sqrt(norm); };
+        std::transform(wavefunction.begin(), wavefunction.end(), wavefunction.begin(), norm_fun);
+        std::transform(probability.begin(), probability.end(), probability.begin(), norm_fun);
 
         temp.push_back(this->potential.getValues().at(potential_index));
-        std::vector<double> coords = this->potential.getBase().getContinuous().at(potential_index).getCoords(); 
-        Base basis = Base(coords);
-        states.push_back(State(this->wavefunction, this->probability, temp, this->solutionEnergy,
-                 basis, this->nbox));
+        const std::vector<double>& coords = this->potential.getBase().getContinuous().at(potential_index).getCoords(); 
+
+        states.emplace_back(State{this->wavefunction, this->probability, temp, this->solutionEnergy,
+                             Base(coords), this->nbox});
 
     }
-    State state = makeStateFromVector(states); 
-    return state;
+
+    return makeStateFromVector(states);
 }
 
 /*! Applies a bisection algorith to the numerov method to find
