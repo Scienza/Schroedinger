@@ -15,7 +15,7 @@ Y = base[:,1]
 
 ax.plot3D(X, Y, potential[:])
 #ax.plot3D(X, Y, probability[:])
-ax.plot3D(X, Y, wavefunction[:])
+ax.plot3D(X, Y, wavefunction[:]*10)
 
 plt.show()
 

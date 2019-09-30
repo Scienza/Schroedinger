@@ -189,3 +189,83 @@ TEST(Wavefunction_and_energy, Numerov_FiniteWell2) {
                       << analytic_Wf[i] - numerov_Wf[i] << '\n';
     }
 }
+
+TEST(NDimensional, harmonic_oscillator_2D) {
+    unsigned int nbox = 1000;
+    double mesh       = 0.01;
+    double k          = 1.0;
+    double energy     = 0.0;
+    double e_min      = 0.0;
+    double e_max      = 2.0;
+    double e_step     = 0.01;
+
+    std::vector<double> wavefunction;
+
+    BasisManager::Builder baseBuilder;
+    Base base = baseBuilder.build(Base::basePreset::Cartesian, 2, mesh, nbox);
+
+    Potential::Builder potentialBuilder(base);
+    Potential V = potentialBuilder.setType(Potential::PotentialType::HARMONIC_OSCILLATOR)
+                      .setK(k)
+                      .build();
+
+    Numerov solver = Numerov(V, nbox);
+    State state    = solver.solve(e_min, e_max, e_step);
+
+    wavefunction = state.getWavefunction();
+    energy       = state.getEnergy();
+    
+    state.printToFile();
+    V.printToFile();
+
+    std::vector<double> analytic_Wf = wavefunction;
+    double E_analytic = 2.*harmonic_wf(0, nbox, sqrt(2. * k), analytic_Wf);
+
+
+    //if (analytic_Wf.size() == numerov_Wf.size()) {
+        for (int i = 0; i < analytic_Wf.size(); i++)
+            ASSERT_NEAR(wavefunction.at(i), analytic_Wf.at(i), 1e-2);  // improve error definition
+    //} //else
+    //    FAIL() << "Analytic wavefunction and Numerov wavefunction haven't the same size "
+    //           << analytic_Wf.size() << " " << wavefunction.size();
+
+    ASSERT_NEAR(energy, E_analytic, 1e-3);
+}
+
+TEST(NDimensional, harmonic_oscillator_3D) {
+    unsigned int nbox = 100;
+    double mesh       = 0.05;
+    double k          = 1.0;
+    double energy     = 0.0;
+    double e_min      = 0.0;
+    double e_max      = 2.0;
+    double e_step     = 0.01;
+
+    std::vector<double> wavefunction;
+
+    BasisManager::Builder baseBuilder;
+    Base base = baseBuilder.build(Base::basePreset::Cartesian, 3, mesh, nbox);
+
+    Potential::Builder potentialBuilder(base);
+    Potential V = potentialBuilder.setType(Potential::PotentialType::HARMONIC_OSCILLATOR)
+                      .setK(k)
+                      .build();
+
+    Numerov solver = Numerov(V, nbox);
+    State state    = solver.solve(e_min, e_max, e_step);
+
+    wavefunction = state.getWavefunction();
+    energy       = state.getEnergy();
+    
+    std::vector<double> analytic_Wf = wavefunction;
+    double E_analytic = 3.*harmonic_wf(0, nbox, sqrt(2. * k), analytic_Wf);
+
+    //if (analytic_Wf.size() == numerov_Wf.size()) {
+        // for (int i = 0; i < analytic_Wf.size(); i++)
+        //     ASSERT_NEAR(wavefunction.at(i), analytic_Wf.at(i), 1e-2);  // improve error definition
+    //} //else
+    //    FAIL() << "Analytic wavefunction and Numerov wavefunction haven't the same size "
+    //           << analytic_Wf.size() << " " << wavefunction.size();
+
+    ASSERT_NEAR(energy, E_analytic, 1e-3);
+}
