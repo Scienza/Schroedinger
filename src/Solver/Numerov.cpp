@@ -3,7 +3,12 @@
 
 #include <utility>
 
-Numerov::Numerov(Potential potential, int nbox) : Solver(std::move(potential), nbox) {
+Numerov::Numerov(Potential potential, int nbox) : Solver(std::move(potential), nbox) {}
+
+void Numerov::initialize() {
+    this->solutionEnergy = 0;
+    this->probability    = std::vector<double>(nbox + 1);
+    this->wavefunction   = std::vector<double>(nbox + 1);
     switch (this->boundary) {
         case Base::boundaryCondition::ZEROEDGE:
             this->wavefunction.at(0) = 0;
@@ -15,7 +20,6 @@ Numerov::Numerov(Potential potential, int nbox) : Solver(std::move(potential), n
                 "Wrong boundary condition initialization or condition not implemented!");
     }
 }
-
 /*!
     Numerov Algorithm solves f''(x) + v(x)f(x) = 0,
     by considering
@@ -23,8 +27,8 @@ Numerov::Numerov(Potential potential, int nbox) : Solver(std::move(potential), n
    - \left( 1 + \frac{h^2}{12} v(x-h) \right) f(x-h). for the Shroedinger equation v(x) = V(x) - E,
    where V(x) is the potential and E the eigenenergy
 */
-void Numerov::functionSolve(double energy) {
-    std::vector<double> pot = this->potential.getValues();
+void Numerov::functionSolve(double energy, int potential_index) {
+    std::vector<double> pot = this->potential.getValues().at(potential_index);
 
     double c = (2.0 * mass / hbar / hbar) * (dx * dx / 12.0);
     try {
@@ -43,7 +47,7 @@ void Numerov::functionSolve(double energy) {
             value /= (1.0 + (c) * (energy - pot_a));
         }
     } catch (const std::out_of_range &ex) {
-        ERROR("Out of range exception caught, {}", ex.what());
+        S_ERROR("Out of range exception caught, {}", ex.what());
     }
 }
 
@@ -66,56 +70,69 @@ void Numerov::functionSolve(double energy) {
 State Numerov::solve(double e_min, double e_max, double e_step) {
     double norm, energy = 0.0;
     int n, sign;
+    std::vector<std::vector<double>> temp;
+    std::vector<State> states;
 
-    // scan energies to find when the Numerov solution is = 0 at the right extreme of the box.
-    for (n = 0; n < (e_max - e_min) / e_step; n++) {
-        energy = e_min + n * e_step;
-        this->functionSolve(energy);
-        double &last_wavefunction_value = this->wavefunction.at(this->nbox);
+    Base basis;
+    for (int potential_index = 0; potential_index < this->potential.getValues().size(); potential_index++) {
+        initialize();
+        temp = std::vector<std::vector<double>>();
+        // scan energies to find when the Numerov solution is = 0 at the right extreme of the box.
+        for (n = 0; n < (e_max - e_min) / e_step; n++) {
+            energy = e_min + n * e_step;
+            this->functionSolve(energy, potential_index);
+            double &last_wavefunction_value = this->wavefunction.at(this->nbox);
 
-        if (fabs(last_wavefunction_value - this->wfAtBoundary) < err_thres) {
-            INFO("Solution found {}", last_wavefunction_value);
-            this->solutionEnergy = energy;
-            break;
+            if (fabs(last_wavefunction_value - this->wfAtBoundary) < err_thres) {
+                S_INFO("Solution found {}", last_wavefunction_value);
+                this->solutionEnergy = energy;
+                break;
+            }
+
+            if (n == 0) {
+                sign = (last_wavefunction_value - this->wfAtBoundary > 0) ? 1 : -1;
+            }
+
+            // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus
+            // calls bisection rule.
+            if (sign * (last_wavefunction_value - this->wfAtBoundary) < 0) {
+                S_INFO("Bisection {}", last_wavefunction_value);
+                this->solutionEnergy = this->bisection(energy - e_step, energy + e_step, potential_index);
+                break;
+            }
         }
 
-        if (n == 0) {
-            sign = (last_wavefunction_value - this->wfAtBoundary > 0) ? 1 : -1;
+        // Evaluation of the probability
+        for (int i = 0; i <= nbox; i++) {
+            double &value      = this->wavefunction[i];
+            double &prob_value = this->probability[i];
+            prob_value         = value * value;
         }
 
-        // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus
-        // calls bisection rule.
-        if (sign * (last_wavefunction_value - this->wfAtBoundary) < 0) {
-            INFO("Bisection {}", last_wavefunction_value);
-            this->solutionEnergy = this->bisection(energy - e_step, energy + e_step);
-            break;
+        // Evaluation of the norm
+        norm = trapezoidalRule(0, this->nbox, dx, this->probability);
+
+        // Normalization of the wavefunction
+        for (int i = 0; i <= nbox; i++) {
+            double &value = this->wavefunction[i];
+            value /= sqrt(norm);
         }
+
+        // Normalization of the potential
+        for (int i = 0; i <= nbox; i++) {
+            double &value = this->probability[i];
+            value /= norm;
+        }
+
+        temp.push_back(this->potential.getValues().at(potential_index));
+        std::vector<double> coords = this->potential.getBase().getContinuous().at(potential_index).getCoords(); 
+        Base basis = Base(coords);
+        states.push_back(State(this->wavefunction, this->probability, temp, this->solutionEnergy,
+                 basis, this->nbox));
+
     }
-
-    // Evaluation of the probability
-    for (int i = 0; i <= nbox; i++) {
-        double &value      = this->wavefunction[i];
-        double &prob_value = this->probability[i];
-        prob_value         = value * value;
-    }
-
-    // Evaluation of the norm
-    norm = trapezoidalRule(0, this->nbox, dx, this->probability);
-
-    // Normalization of the wavefunction
-    for (int i = 0; i <= nbox; i++) {
-        double &value = this->wavefunction[i];
-        value /= sqrt(norm);
-    }
-
-    // Normalization of the potential
-    for (int i = 0; i <= nbox; i++) {
-        double &value = this->probability[i];
-        value /= norm;
-    }
-
-    return State(this->wavefunction, this->probability, this->solutionEnergy,
-                 this->potential.getBase());
+    State state = makeStateFromVector(states); 
+    return state;
 }
 
 /*! Applies a bisection algorith to the numerov method to find
@@ -123,7 +140,7 @@ the energy that gives the non-trivial (non-exponential) solution
 with the correct boundary conditions (@param wavefunction[0] == @param wavefunction[@param nbox] ==
 0)
 */
-double Numerov::bisection(double e_min, double e_max) {
+double Numerov::bisection(double e_min, double e_max, int potential_index) {
     double energy_middle = 0, fx1, fb, fa;
     std::cout.precision(17);
 
@@ -133,10 +150,10 @@ double Numerov::bisection(double e_min, double e_max) {
     for (int i = 0; i < itmax; i++) {
         energy_middle = (e_max + e_min) / 2.0;
 
-        this->functionSolve(energy_middle);
+        this->functionSolve(energy_middle, potential_index);
         fx1 = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
 
-        this->functionSolve(e_max);
+        this->functionSolve(e_max, potential_index);
         fb = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
 
         if (std::abs(fx1) < err_thres) {
@@ -146,7 +163,7 @@ double Numerov::bisection(double e_min, double e_max) {
         if (fb * fx1 < 0.) {
             e_min = energy_middle;
         } else {
-            this->functionSolve(e_min);
+            this->functionSolve(e_min, potential_index);
             fa = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
 
             if (fa * fx1 < 0.) {
@@ -155,7 +172,7 @@ double Numerov::bisection(double e_min, double e_max) {
         }
     }
 
-    WARN("Failed to find solution using bisection method, {} > {}", wavefunction.at(nbox),
+    S_WARN("Failed to find solution using bisection method, {} > {}", wavefunction.at(nbox),
          err_thres);
     return energy_middle;
 }

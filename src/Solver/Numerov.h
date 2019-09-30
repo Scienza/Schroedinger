@@ -40,8 +40,9 @@ class Numerov : public Solver {
     }
 
   private:
-    void functionSolve(double energy);
-    double bisection(double, double);
+    void functionSolve(double energy, int potential_index);
+    double bisection(double, double, int potential_index);
+    void initialize();
 };
 
 #endif

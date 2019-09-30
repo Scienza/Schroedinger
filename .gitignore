@@ -23,3 +23,4 @@ CTestTestfile.cmake
 
 *.md
 LICENSE
+/CMakeSettings.json

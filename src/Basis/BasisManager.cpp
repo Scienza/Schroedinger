@@ -59,7 +59,7 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
 
     switch (b) {
         case Base::basePreset::Cartesian:
-            INFO("Building {}-dimensional cartesian basis with nbox = {}, mesh = {}", dimension,
+            S_INFO("Building {}-dimensional cartesian basis with nbox = {}, mesh = {}", dimension,
                  nbox, mesh);
             for (int i = 0; i < dimension; i++) {
                 this->addContinuous(mesh, nbox);
@@ -113,7 +113,7 @@ Base BasisManager::Builder::build(ContinuousInitializer ini) {
 
     this->addContinuous(ini.start, ini.end, ini.mesh);
 
-    INFO("Building Cartesian basis between {}, {} mesh = {}", ini.start, ini.end, ini.mesh);
+    S_INFO("Building Cartesian basis between {}, {} mesh = {}", ini.start, ini.end, ini.mesh);
 
     return Base(Base::basePreset::Spherical, 3, c_base, d_base);
 }

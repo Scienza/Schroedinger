@@ -36,7 +36,7 @@ double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height,
     // double boxLength = nbox * dx;
     wavefunction = std::vector<double>(nbox + 1);
 
-    std::cout << "width: " << pot_width << " height: " << pot_height << std::endl;
+    std::cout << "width: " << pot_width << " height: " << pot_height << '\n';
     double xi = pot_width / 2. * sqrt(2. * mass * pot_height / hbar / hbar);
 
     double k, G, H, A, B, E_n;
@@ -55,16 +55,16 @@ double finite_well_wf(int nlevel, int nbox, double pot_width, double pot_height,
         } else {  // looking for has n odd, thus is even parity
             eta_old = atan(sqrt(xi * xi / eta / eta - 1)) - pi_2 * (nlevel - 1);
         }
-        //    std::cout << "#" << eta << " - " << eta_old << std::endl;
+        //    std::cout << "#" << eta << " - " << eta_old << '\n';
     } while (fabs((eta_old - eta) / eta) > tolerance && counter < 100);
 
     if (counter == 100) {
-        std::cerr << "transcendent equation in finite_well_wf() not converging" << std::endl;
+        std::cerr << "transcendent equation in finite_well_wf() not converging" << '\n';
         exit(-1);
     } else {
         E_n = 2. * hbar * hbar * eta * eta / pot_width / pot_width / mass;
         std::cout << "#" << nlevel << " solution for eta = " << eta << "  E_n =" << E_n
-                  << std::endl;
+                  << '\n';
     }
 
     if (nlevel % 2 == 0) {  // looking for solution has n even, thus is antisymmetric

@@ -1,23 +1,73 @@
-cmake_minimum_required(VERSION 3.5)
+# Schroedinger (c) 2019 Licensed under the GNU LGPL 2.1
+# See the included LICENSE for details
+cmake_minimum_required(VERSION 3.12)
 project(Schroedinger)
 
-# Build options ###
-option(ENABLE_TESTS "Enables unit testing" ON)
+add_library(g_options INTERFACE)
+add_library(g_warnings INTERFACE)
 
-# Force C++17 standard
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-# Default to Release unless another option was set
+# Default to Release if build type wasn't specified
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release"
-      CACHE STRING "Build type (Release/Debug/RelWithDebInfo/MinSizeRel)"
-      FORCE)
+  set(CMAKE_BUILD_TYPE
+      "Release"
+      CACHE STRING "Build type (Release/Debug/RelWithDebInfo/MinSizeRel)" FORCE)
 endif()
 
-# Dependencies ###
-find_package(Threads REQUIRED)
+message(STATUS "Will build in ${CMAKE_BUILD_TYPE} mode")
+
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+
+# Build options
+option(ENABLE_ASAN "Enable address sanitizer" OFF)
+option(ENABLE_TESTS "Enable unit testing" ON)
+option(LIBCPP "Use libc++" OFF)
+
+# Use ccache if present on the system
+find_program(CCACHE ccache)
+if(CCACHE)
+  set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+endif()
+
+# Set the standard to c++17
+target_compile_features(g_options INTERFACE cxx_std_17)
+
+if(MSVC)
+  target_compile_options(g_options
+                         INTERFACE /Zc:strictStrings-
+                                   -DNOMINMAX
+                                   -D_CRT_SECURE_NO_DEPRECATE
+                                   -D_CRT_NONSTDC_NO_DEPRECATE
+                                   -D_CRT_SECURE_NO_WARNINGS)
+  if(NOT ${CMAKE_BUILD_TYPE} MATCHES "Release")
+    target_compile_options(g_warnings
+                           INTERFACE /W3 "/permissive-")
+	target_compile_options(g_options INTERFACE /MTd)
+  else()
+	target_compile_options(g_options INTERFACE /MT)
+  endif()
+else()
+  if(ENABLE_ASAN)
+    target_compile_options(g_options INTERFACE -fsanitize=address)
+    target_link_libraries(g_options INTERFACE -fsanitize=address)
+  endif()
+
+  if(NOT ${CMAKE_BUILD_TYPE} MATCHES "Release")
+    target_compile_options(g_warnings
+                           INTERFACE -Wall
+                                     -Wextra
+                                     -Wshadow
+                                     -Wunused
+                                     -Wold-style-cast
+                                     -Woverloaded-virtual
+                                     -Wcast-align
+                                     -Wnull-dereference)
+  endif()
+
+  if(LIBCPP)
+    target_compile_options(g_options INTERFACE -stdlib=libc++)
+  endif()
+endif()
+
 
 if(ENABLE_TESTS)
   message(STATUS "Using bundled GTest")
@@ -33,10 +83,7 @@ else()
   message(STATUS "Found clang-format: ${CLANG_FORMAT_EXE}")
 endif()
 
-# Project settings ###
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-
-# Targets ###
+# Targets
 add_subdirectory(src)
 if(ENABLE_TESTS)
   enable_testing()

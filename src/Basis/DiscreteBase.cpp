@@ -1,6 +1,5 @@
 #include "DiscreteBase.h"
 
-DiscreteBase::DiscreteBase() = default;
 DiscreteBase::DiscreteBase(int start, int end, int step) {
     if ((end - start) / step % 1 != 0) {
         throw std::invalid_argument("invalid discrete basis given (check interval and step).");
@@ -29,5 +28,3 @@ std::vector<int> DiscreteBase::evaluate() {
     }
     return quantum_numbers;
 }
-
-std::vector<int> DiscreteBase::getCoords() { return this->coords; }
