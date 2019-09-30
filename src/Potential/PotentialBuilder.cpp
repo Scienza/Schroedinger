@@ -20,11 +20,10 @@ Potential::Builder::Builder(const std::string& filename, Base base) {
             potentialValues.push_back(singlePotentialValue);
         }
         this->values.push_back(potentialValues);
-        this->base = base;        
+        this->base = base;
     } catch (const std::ifstream::failure& e) {
         S_ERROR("Exception opening/reading file: {}", e.what());
     }
-    
 }
 
 Potential::Builder Potential::Builder::setK(double k_new) {

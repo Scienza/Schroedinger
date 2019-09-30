@@ -99,10 +99,10 @@ TEST(Basis, BasisConcatenation) {
     ContinuousBase firstContinuousBase  = base3.getContinuous().at(0);
     ContinuousBase secondContinuousBase = base3.getContinuous().at(0);
 
-    std::vector<double> baseCoords     = firstContinuousBase.getCoords();
+    std::vector<double> baseCoords = firstContinuousBase.getCoords();
     for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
         ASSERT_NEAR(base1.getContinuous().at(0).getCoords().at(i), baseCoords[i], err_thres);
-        
+
     baseCoords = secondContinuousBase.getCoords();
     for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
         ASSERT_NEAR(base1.getContinuous().at(0).getCoords().at(i), baseCoords[i], err_thres);
@@ -115,20 +115,20 @@ TEST(Basis, BasisConcatenationAndAssignment) {
     double mesh       = 0.1;
     int dimension     = 1;
 
-    BasisManager::Builder b = BasisManager::Builder();
-    Base base1              = b.addContinuous(start, end, nbox).build(dimension);
-    ContinuousBase firstContinuousBase  = base1.getContinuous().at(0);
-    Base base2              = b.addContinuous(start, end, nbox).build(dimension);
+    BasisManager::Builder b            = BasisManager::Builder();
+    Base base1                         = b.addContinuous(start, end, nbox).build(dimension);
+    ContinuousBase firstContinuousBase = base1.getContinuous().at(0);
+    Base base2                         = b.addContinuous(start, end, nbox).build(dimension);
 
     base1 += base2;
 
     ContinuousBase secondContinuousBase = base2.getContinuous().at(0);
 
-    std::vector<double> baseCoords     = firstContinuousBase.getCoords();
+    std::vector<double> baseCoords = firstContinuousBase.getCoords();
 
     for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
         ASSERT_NEAR(base1.getContinuous().at(0).getCoords().at(i), baseCoords[i], err_thres);
-        
+
     baseCoords = secondContinuousBase.getCoords();
     for (std::vector<int>::size_type i = 0; i < baseCoords.size(); i++)
         ASSERT_NEAR(base1.getContinuous().at(0).getCoords().at(i), baseCoords[i], err_thres);

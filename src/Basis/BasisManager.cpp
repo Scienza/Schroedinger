@@ -60,7 +60,7 @@ Base BasisManager::Builder::build(Base::basePreset b, int dimension, double mesh
     switch (b) {
         case Base::basePreset::Cartesian:
             S_INFO("Building {}-dimensional cartesian basis with nbox = {}, mesh = {}", dimension,
-                 nbox, mesh);
+                   nbox, mesh);
             for (int i = 0; i < dimension; i++) {
                 this->addContinuous(mesh, nbox);
             }

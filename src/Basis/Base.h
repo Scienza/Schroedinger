@@ -15,7 +15,7 @@ class Base {
     enum baseType { Radial = 0, Momentum = 1, Other = 2 };
     enum boundaryCondition { ZEROEDGE = 0, PERIODIC = 1 };
 
-	Base() = default;
+    Base() = default;
     Base(basePreset, int, std::vector<ContinuousBase>, std::vector<DiscreteBase>);
     Base(const std::vector<double>& coords);
 
@@ -26,11 +26,11 @@ class Base {
     std::vector<double> getCoords() const;
     friend const Base operator+(const Base& base1, const Base& base2);
     std::string toString() const;
-	
+
     Base& operator+=(const Base& base2);
 
   private:
-    int dimensions = 0;
+    int dimensions             = 0;
     boundaryCondition boundary = ZEROEDGE;
 
     std::vector<DiscreteBase> discrete{};

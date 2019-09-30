@@ -20,13 +20,13 @@ void testWavefunction(unsigned int nbox, Potential::PotentialType potType, doubl
     Numerov solver = Numerov(V, nbox);
     State state    = solver.solve(e_min, e_max, e_step);
 
-    numerov_Wf  = state.getWavefunction();
+    numerov_Wf = state.getWavefunction();
 
     Potential p      = state.getPotential();
     pot              = p.getValues().at(0);
     double E_numerov = state.getEnergy();
     double mesh      = base.getContinuous().at(0).getMesh();
-	std::pair<std::vector<double>, double> result;
+    std::pair<std::vector<double>, double> result;
 
     switch (potType) {
         case Potential::PotentialType::BOX_POTENTIAL:
@@ -35,7 +35,7 @@ void testWavefunction(unsigned int nbox, Potential::PotentialType potType, doubl
         case Potential::PotentialType::HARMONIC_OSCILLATOR:
             result = harmonic_wf(0, nbox, sqrt(2.0 * k), mesh);
             break;
-        case Potential::PotentialType::FINITE_WELL_POTENTIAL: 
+        case Potential::PotentialType::FINITE_WELL_POTENTIAL:
             result = finite_well_wf(1, nbox, width, height, mesh);
             break;
         default:
@@ -43,7 +43,7 @@ void testWavefunction(unsigned int nbox, Potential::PotentialType potType, doubl
             exit(8);
     }
 
-	auto [anal_wf, anal_energy] = result;
+    auto [anal_wf, anal_energy] = result;
     an_wavefunciton             = anal_wf;
 
     for (int i = 0; i < anal_wf.size(); i++) {
@@ -98,7 +98,8 @@ TEST(Wavefunction_and_energy, Numerov_HarmonicOscillator2) {
 
     // if (HasFailure()) {
     //     for (int i = 0; i < nbox; i++)
-    //         std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << " "
+    //         std::cout << i << " " << numerov_Wf[i] << " " << analytic_Wf[i] << " " << pot[i] << "
+    //         "
     //                   << analytic_Wf[i] - numerov_Wf[i] << '\n';
     // }
 }
@@ -122,7 +123,6 @@ TEST(Wavefunction_and_energy, Numerov_HarmonicOscillator3) {
                       << analytic_Wf[i] - numerov_Wf[i] << '\n';
     }
 }
-
 
 TEST(Wavefunction_and_energy, Numerov_Box) {
     double mesh       = 0.01;
@@ -236,9 +236,10 @@ TEST(NDimensional, harmonic_oscillator_2D) {
     auto [anal_wf, anal_energy] = harmonic_wf(0, nbox, sqrt(2.0 * k), mesh);
 
     int ii = 0;
-    for (int i = 0; i < anal_wf.size(); i++){
-        for (int j = 0; j < anal_wf.size(); j++){
-            ASSERT_NEAR(wavefunction.at(ii), anal_wf.at(i)*anal_wf.at(j), 1e-2);  // improve error definition
+    for (int i = 0; i < anal_wf.size(); i++) {
+        for (int j = 0; j < anal_wf.size(); j++) {
+            ASSERT_NEAR(wavefunction.at(ii), anal_wf.at(i) * anal_wf.at(j),
+                        1e-2);  // improve error definition
             ii++;
         }
     }
@@ -270,13 +271,14 @@ TEST(NDimensional, harmonic_oscillator_3D) {
     wavefunction = state.getWavefunction();
     energy       = state.getEnergy();
 
-    auto [anal_wf, anal_energy]     = harmonic_wf(0, nbox, sqrt(2.0 * k), mesh);
+    auto [anal_wf, anal_energy] = harmonic_wf(0, nbox, sqrt(2.0 * k), mesh);
 
     int ii = 0;
-    for (int i = 0; i < anal_wf.size(); i++){
-        for (int j = 0; j < anal_wf.size(); j++){
-            for (int l = 0; l < anal_wf.size(); l++){
-                ASSERT_NEAR(wavefunction.at(ii), anal_wf.at(i)*anal_wf.at(j)*anal_wf.at(l), 1e-2);  // improve error definition
+    for (int i = 0; i < anal_wf.size(); i++) {
+        for (int j = 0; j < anal_wf.size(); j++) {
+            for (int l = 0; l < anal_wf.size(); l++) {
+                ASSERT_NEAR(wavefunction.at(ii), anal_wf.at(i) * anal_wf.at(j) * anal_wf.at(l),
+                            1e-2);  // improve error definition
                 ii++;
             }
         }
@@ -284,7 +286,6 @@ TEST(NDimensional, harmonic_oscillator_3D) {
 
     ASSERT_NEAR(energy, 3.0 * anal_energy, 1e-3);
 }
-
 
 TEST(NDimensional, FiniteWell_2D) {
     unsigned int nbox = 1000;
@@ -303,25 +304,27 @@ TEST(NDimensional, FiniteWell_2D) {
     std::vector<double> analytic_Wf;
 
     Potential::Builder potentialBuilder(base);
-    Potential V =
-        potentialBuilder.setType(Potential::PotentialType::FINITE_WELL_POTENTIAL).setHeight(height).setWidth(width).build();
+    Potential V = potentialBuilder.setType(Potential::PotentialType::FINITE_WELL_POTENTIAL)
+                      .setHeight(height)
+                      .setWidth(width)
+                      .build();
 
     Numerov solver = Numerov(V, nbox);
     State state    = solver.solve(e_min, e_max, e_step);
 
-    numerov_Wf     = state.getWavefunction();
-    energy         = state.getEnergy();
+    numerov_Wf = state.getWavefunction();
+    energy     = state.getEnergy();
 
-    auto [anal_wf, anal_energy]     = finite_well_wf(1, nbox, width, height, mesh);
+    auto [anal_wf, anal_energy] = finite_well_wf(1, nbox, width, height, mesh);
 
     int ii = 0;
-    for (int i = 0; i < anal_wf.size(); i++){
-        for (int j = 0; j < anal_wf.size(); j++){
-            ASSERT_NEAR(numerov_Wf.at(ii), anal_wf.at(i)*anal_wf.at(j), 1e-2);  // improve error definition
+    for (int i = 0; i < anal_wf.size(); i++) {
+        for (int j = 0; j < anal_wf.size(); j++) {
+            ASSERT_NEAR(numerov_Wf.at(ii), anal_wf.at(i) * anal_wf.at(j),
+                        1e-2);  // improve error definition
             ii++;
         }
     }
 
     ASSERT_NEAR(energy, 2.0 * anal_energy, 1e-3);
-
 }

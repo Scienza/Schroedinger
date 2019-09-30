@@ -46,7 +46,7 @@ std::string Base::toString() const {
         arr.emplace_back(c.getCoords());
     }
 
-	// number of arrays
+    // number of arrays
     int n = arr.size();
 
     // to keep track of next element in each of
