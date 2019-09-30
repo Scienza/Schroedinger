@@ -30,6 +30,7 @@ endif()
 
 # Set the standard to c++17
 target_compile_features(g_options INTERFACE cxx_std_17)
+target_compile_definitions(g_options INTERFACE -DFMT_HEADER_ONLY)
 
 if(MSVC)
   target_compile_options(g_options
