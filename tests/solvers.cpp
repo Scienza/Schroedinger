@@ -44,6 +44,7 @@ void testWavefunction(unsigned int nbox, Potential::PotentialType potType, doubl
     }
 
 	auto [anal_wf, anal_energy] = result;
+    an_wavefunciton             = anal_wf;
 
     for (int i = 0; i < anal_wf.size(); i++) {
         ASSERT_NEAR(numerov_Wf.at(i), anal_wf.at(i), 1e-2);  // improve error definition
