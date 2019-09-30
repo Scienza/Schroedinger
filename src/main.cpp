@@ -81,8 +81,6 @@ void finite_well_example() {
     S_INFO("Energy {}", energy);
     S_INFO("Printing state");
 
-    //std::cout << state;
-
     // Save to file wavefunction and probability
     state.printToFile();
 }

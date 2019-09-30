@@ -34,7 +34,6 @@ nlevel > 1
 */
 std::pair<std::vector<double>, double> finite_well_wf(int nlevel, int nbox, double pot_width,
                                                       double pot_height, double mesh) {
-    // double boxLength = nbox * dx;
     std::vector<double> wavefunction(nbox + 1);
 
     std::cout << "width: " << pot_width << " height: " << pot_height << '\n';

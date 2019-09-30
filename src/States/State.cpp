@@ -80,7 +80,7 @@ void State::printToFile() {
     std::ofstream probabilityfile("probability.dat");
     std::ofstream potentialfile("potential.dat");
 
-    if (wavefunctionfile.is_open() && probabilityfile.is_open() && basefile.is_open()) {
+    if (wavefunctionfile.is_open() && probabilityfile.is_open() && basefile.is_open() && potentialfile.is_open()) {
         fmt::memory_buffer writer;
 
         std::for_each(wavefunction.begin(), wavefunction.end(),
@@ -95,7 +95,13 @@ void State::printToFile() {
 
         basefile << toString(base);
         potentialfile << potential.toString();
+
+        basefile.close();
+        wavefunctionfile.close();
+        probabilityfile.close();
+        potentialfile.close();
     }
+
 }
 
 std::ostream &operator<<(std::ostream &stream, const State &st) {
