@@ -55,22 +55,20 @@ State makeStateFromVector(std::vector<State> states) {
     // Maybe we should check probability here
     probability = probabilities.at(0);
 
-    return {wavefunction, probability, p, en, b, 0};
+    return {wavefunction, probability, p, en, b};
 }
 
 State::State(std::vector<double> i_wavefunction, std::vector<double> i_probability,
-             std::vector<std::vector<double>> i_potential, double i_energy, Base i_base, int i_nbox)
+             std::vector<std::vector<double>> i_potential, double i_energy, Base i_base)
     : potential(std::move(Potential(base, i_potential))),
-      nbox(i_nbox),
       probability(std::move(i_probability)),
       wavefunction(std::move(i_wavefunction)),
       base(std::move(i_base)),
       energy(i_energy) {}
 
 State::State(std::vector<double> i_wavefunction, std::vector<double> i_probability,
-             Potential i_potential, double i_energy, Base i_base, int i_nbox)
+             Potential i_potential, double i_energy, Base i_base)
     : potential(i_potential),
-      nbox(i_nbox),
       probability(std::move(i_probability)),
       wavefunction(std::move(i_wavefunction)),
       base(std::move(i_base)),
@@ -80,6 +78,7 @@ void State::printToFile() {
     std::ofstream basefile("base.dat");
     std::ofstream wavefunctionfile("wavefunction.dat");
     std::ofstream probabilityfile("probability.dat");
+    std::ofstream potentialfile("potential.dat");
 
     if (wavefunctionfile.is_open() && probabilityfile.is_open() && basefile.is_open()) {
         fmt::memory_buffer writer;
@@ -95,6 +94,7 @@ void State::printToFile() {
         probabilityfile << to_string(writer);
 
         basefile << toString(base);
+        potentialfile << potential.toString();
     }
 }
 

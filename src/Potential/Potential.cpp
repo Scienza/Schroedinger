@@ -100,12 +100,12 @@ void Potential::finite_well_potential() {
 void Potential::printToFile() {
     std::ofstream myfile("potential.dat");
     if (myfile.is_open()) {
-        myfile << toString(*this);
+        myfile << toString();
     }
 }
 
-std::string Potential::toString(const Potential& potential) const {
-    std::vector<std::vector<double>> arr = potential.getValues();
+std::string Potential::toString() const {
+    std::vector<std::vector<double>> arr = getValues();
     // number of arrays
     int n = arr.size();
 

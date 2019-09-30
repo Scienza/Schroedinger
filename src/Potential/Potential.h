@@ -48,8 +48,8 @@ class Potential {
     const std::vector<std::vector<double>>& getValues() const noexcept { return this->values; }
     const Base& getBase() const noexcept { return base; };
 
-	void printToFile();
-    std::string toString(const Potential& potential) const;
+	  void printToFile();
+    std::string toString() const;
 
     //bool isSeparated(); assuming always separable potentials
     friend const Potential operator+(const Potential& potential1, const Potential& potential2);

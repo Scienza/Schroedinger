@@ -25,18 +25,18 @@ void testWavefunction(unsigned int nbox, Potential::PotentialType potType, doubl
     Potential p      = state.getPotential();
     pot              = p.getValues().at(0);
     double E_numerov = state.getEnergy();
-
+    double mesh      = base.getContinuous().at(0).getMesh();
 	std::pair<std::vector<double>, double> result;
 
     switch (potType) {
         case Potential::PotentialType::BOX_POTENTIAL:
-            result = box_wf(1, nbox);
+            result = box_wf(1, nbox, mesh);
             break;
         case Potential::PotentialType::HARMONIC_OSCILLATOR:
-            result = harmonic_wf(0, nbox, sqrt(2.0 * k));
+            result = harmonic_wf(0, nbox, sqrt(2.0 * k), mesh);
             break;
         case Potential::PotentialType::FINITE_WELL_POTENTIAL: 
-            result = finite_well_wf(1, nbox, width, height);
+            result = finite_well_wf(1, nbox, width, height, mesh);
             break;
         default:
             std::cerr << "ERROR: Wrong potential type!";
@@ -170,7 +170,7 @@ TEST(Wavefunction_and_energy, Numerov_Box2) {
 
 TEST(Wavefunction_and_energy, Numerov_FiniteWell1) {
     unsigned int nbox = 2000;
-    double mesh       = dx;
+    double mesh       = 0.01;
     double width      = 10.0;
     double height     = 3.0;
     std::vector<double> numerov_Wf;
@@ -192,7 +192,7 @@ TEST(Wavefunction_and_energy, Numerov_FiniteWell1) {
 
 TEST(Wavefunction_and_energy, Numerov_FiniteWell2) {
     unsigned int nbox = 1000;
-    double mesh       = dx;
+    double mesh       = 0.01;
     BasisManager::Builder b;
     Base base = b.build(Base::basePreset::Cartesian, 1, mesh, nbox);
 
@@ -233,7 +233,7 @@ TEST(NDimensional, harmonic_oscillator_2D) {
     std::vector<double> wavefunction = state.getWavefunction();
     energy                           = state.getEnergy();
 
-    auto [anal_wf, anal_energy] = harmonic_wf(0, nbox, sqrt(2.0 * k));
+    auto [anal_wf, anal_energy] = harmonic_wf(0, nbox, sqrt(2.0 * k), mesh);
 
     int ii = 0;
     for (int i = 0; i < anal_wf.size(); i++){
@@ -270,7 +270,7 @@ TEST(NDimensional, harmonic_oscillator_3D) {
     wavefunction = state.getWavefunction();
     energy       = state.getEnergy();
 
-    auto [anal_wf, anal_energy]     = harmonic_wf(0, nbox, sqrt(2.0 * k));
+    auto [anal_wf, anal_energy]     = harmonic_wf(0, nbox, sqrt(2.0 * k), mesh);
 
     int ii = 0;
     for (int i = 0; i < anal_wf.size(); i++){
@@ -312,7 +312,7 @@ TEST(NDimensional, FiniteWell_2D) {
     numerov_Wf     = state.getWavefunction();
     energy         = state.getEnergy();
 
-    auto [anal_wf, anal_energy]     = finite_well_wf(1, nbox, width, height);
+    auto [anal_wf, anal_energy]     = finite_well_wf(1, nbox, width, height, mesh);
 
     int ii = 0;
     for (int i = 0; i < anal_wf.size(); i++){

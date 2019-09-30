@@ -6,15 +6,15 @@ wavefcuntion: $A*sin(n \pi/L * x)$
 Analytically exact
 nlevel > 0,
 */
-std::pair<std::vector<double>, double> box_wf(int nlevel, int nbox) {
+std::pair<std::vector<double>, double> box_wf(int nlevel, int nbox, double mesh) {
     std::vector<double> wavefunction(nbox + 1);
 
-    double boxLength = (nbox)*dx;
+    double boxLength = (nbox)*mesh;
     double E_n       = nlevel * nlevel * pi * pi * hbar * hbar / 2. / mass / boxLength / boxLength;
     double norm      = sqrt(2 / boxLength);
 
     for (int i = 0; i < wavefunction.size(); i++) {
-        double x                   = i * dx;
+        double x                   = i * mesh;
         double &wavefunction_value = wavefunction.at(i);
         wavefunction_value         = norm * sin(nlevel * pi * x / boxLength);
         // remember to translate by half box length, eventually
@@ -33,7 +33,7 @@ Check by expanding the box, and/or deepening the potential.
 nlevel > 1
 */
 std::pair<std::vector<double>, double> finite_well_wf(int nlevel, int nbox, double pot_width,
-                                                      double pot_height) {
+                                                      double pot_height, double mesh) {
     // double boxLength = nbox * dx;
     std::vector<double> wavefunction(nbox + 1);
 
@@ -88,7 +88,7 @@ std::pair<std::vector<double>, double> finite_well_wf(int nlevel, int nbox, doub
     }
 
     for (int i = 0; i < nbox; i++) {
-        double x                   = (-nbox / 2 + i) * dx;
+        double x                   = (-nbox / 2 + i) * mesh;
         double &wavefunction_value = wavefunction.at(i);
 
         if (x <= -pot_width / 2.) {
@@ -111,7 +111,7 @@ std::pair<std::vector<double>, double> finite_well_wf(int nlevel, int nbox, doub
         double &wavefunction_value = wavefunction.at(i);
         probab                     = wavefunction_value * wavefunction_value;
     }
-    double norm = Numerov::trapezoidalRule(0, nbox, dx, probability);
+    double norm = Numerov::trapezoidalRule(0, nbox, mesh, probability);
     for (int i = 0; i < wavefunction.size(); i++) {
         double &wavefunction_value = wavefunction.at(i);
         wavefunction_value /= sqrt(norm);
@@ -127,14 +127,14 @@ inline int factorial(int x, int result = 1) {
         return factorial(x - 1, x * result);
 }
 
-std::pair <std::vector<double> , double> harmonic_wf(int nlevel, int nbox, double omega) {
+std::pair <std::vector<double> , double> harmonic_wf(int nlevel, int nbox, double omega, double mesh) {
     std::vector<double> wavefunction(nbox + 1);
     double c     = mass * omega / hbar;
     double E_n   = hbar * omega * (nlevel + 0.5);
 
     for (int i = 0; i < nbox; i++) {
         double &wavefunction_value = wavefunction.at(i);
-        double x                   = (-nbox / 2 + i) * dx;
+        double x                   = (-nbox / 2 + i) * mesh;
         wavefunction_value         = sqrt(1 / pow(2, nlevel) / factorial(nlevel) * sqrt(c / pi)) *
                              exp(-c / 2. * x * x) * std::hermite(nlevel, sqrt(c) * x);
     }

@@ -3,9 +3,10 @@
 
 #include <utility>
 
-Numerov::Numerov(Potential potential, int nbox) : Solver(std::move(potential), nbox) {}
+Numerov::Numerov(Potential potential, int nbox) : Solver(std::move(potential)) {}
 
 void Numerov::initialize() {
+    double nbox = this->potential.getBase().getContinuous().at(0).getNbox();
     this->solutionEnergy = 0;
     this->probability    = std::vector<double>(nbox + 1);
     this->wavefunction   = std::vector<double>(nbox + 1);
@@ -27,13 +28,14 @@ void Numerov::initialize() {
    - \left( 1 + \frac{h^2}{12} v(x-h) \right) f(x-h). for the Shroedinger equation v(x) = V(x) - E,
    where V(x) is the potential and E the eigenenergy
 */
-void Numerov::functionSolve(double energy, int potential_index) {
+void Numerov::functionSolve(double energy, int potential_index) { 
     std::vector<double> pot = this->potential.getValues().at(potential_index);
-
-    double c = (2.0 * mass / hbar / hbar) * (dx * dx / 12.0);
+    double mesh = this->potential.getBase().getContinuous().at(potential_index).getMesh();
+    double nbox = this->potential.getBase().getContinuous().at(potential_index).getNbox();
+    double c = (2.0 * mass / hbar / hbar) * (mesh * mesh / 12.0);
     try {
         // Build Numerov f(x) solution from left.
-        for (int i = 2; i <= this->nbox; i++) {
+        for (int i = 2; i <= nbox; i++) {
             double &value = this->wavefunction.at(i);
             double &pot_1 = pot.at(i - 1);
             double &pot_2 = pot.at(i - 2);
@@ -75,11 +77,14 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
     for (int potential_index = 0; potential_index < this->potential.getValues().size(); potential_index++) {
         initialize();
         temp.clear();
+        double mesh = this->potential.getBase().getContinuous().at(potential_index).getMesh();
+        double nbox = this->potential.getBase().getContinuous().at(potential_index).getNbox();
+
         // scan energies to find when the Numerov solution is = 0 at the right extreme of the box.
         for (int n = 0; n < (e_max - e_min) / e_step; n++) {
             double energy = e_min + n * e_step;
             this->functionSolve(energy, potential_index);
-            double &last_wavefunction_value = this->wavefunction.at(this->nbox);
+            double &last_wavefunction_value = this->wavefunction.at(nbox);
 
             if (fabs(last_wavefunction_value - this->wfAtBoundary) < err_thres) {
                 S_INFO("Solution found {}", last_wavefunction_value);
@@ -108,7 +113,7 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
         }
 
         // Evaluation of the norm
-        double norm = trapezoidalRule(0, this->nbox, dx, this->probability);
+        double norm = trapezoidalRule(0, nbox, mesh, this->probability);
 
 		// Normalize wavefunction and probabiliy
         auto norm_fun = [norm](double val) { return val / sqrt(norm); };
@@ -118,8 +123,7 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
         temp.push_back(this->potential.getValues().at(potential_index));
         const std::vector<double>& coords = this->potential.getBase().getContinuous().at(potential_index).getCoords(); 
 
-        states.emplace_back(State{this->wavefunction, this->probability, temp, this->solutionEnergy,
-                             Base(coords), this->nbox});
+        states.emplace_back(State{this->wavefunction, this->probability, temp, this->solutionEnergy, Base(coords)});
 
     }
 
@@ -132,6 +136,8 @@ with the correct boundary conditions (@param wavefunction[0] == @param wavefunct
 0)
 */
 double Numerov::bisection(double e_min, double e_max, int potential_index) {
+    double nbox = this->potential.getBase().getContinuous().at(potential_index).getNbox();
+
     double energy_middle = 0, fx1, fb, fa;
     std::cout.precision(17);
 
@@ -142,10 +148,10 @@ double Numerov::bisection(double e_min, double e_max, int potential_index) {
         energy_middle = (e_max + e_min) / 2.0;
 
         this->functionSolve(energy_middle, potential_index);
-        fx1 = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
+        fx1 = this->wavefunction.at(nbox) - this->wfAtBoundary;
 
         this->functionSolve(e_max, potential_index);
-        fb = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
+        fb = this->wavefunction.at(nbox) - this->wfAtBoundary;
 
         if (std::abs(fx1) < err_thres) {
             return energy_middle;
@@ -155,7 +161,7 @@ double Numerov::bisection(double e_min, double e_max, int potential_index) {
             e_min = energy_middle;
         } else {
             this->functionSolve(e_min, potential_index);
-            fa = this->wavefunction.at(this->nbox) - this->wfAtBoundary;
+            fa = this->wavefunction.at(nbox) - this->wfAtBoundary;
 
             if (fa * fx1 < 0.) {
                 e_max = energy_middle;
