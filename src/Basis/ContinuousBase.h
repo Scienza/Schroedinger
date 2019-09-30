@@ -14,9 +14,8 @@ class ContinuousBase {
     ContinuousBase(double, double, unsigned int);
 
     const std::vector<double>& getCoords() const { return this->coords; }
-    const double& getMesh() const noexcept { return this->mesh; }
-    const double& getNbox() const noexcept { return this->nbox; }
-
+    double getMesh() const noexcept { return this->mesh; }
+    double getNbox() const noexcept { return this->nbox; }
 
   private:
     double start, end, mesh, nbox;
