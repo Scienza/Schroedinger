@@ -2,6 +2,8 @@
 #include "BasisManager.h"
 #include "LogManager.h"
 
+#include <spdlog/fmt/bundled/format.h>
+
 Base::Base(const std::vector<double>& coords) {
     this->dimensions = 1;
     this->continuous.emplace_back(coords);
@@ -14,16 +16,16 @@ Base::Base(basePreset t, int n_dimension, std::vector<ContinuousBase> c_base,
     switch (t) {
         // TODO: add here, for each base type, a control for dimensions
         case Custom:
-            INFO("Initializing custom basis");
+            S_INFO("Initializing custom basis");
             break;
         case Cartesian:
-            INFO("Initializing cartesian basis");
+            S_INFO("Initializing cartesian basis");
             break;
         case Spherical:
-            INFO("Initializing Spherical Basis");
+            S_INFO("Initializing Spherical Basis");
             break;
         case Cylindrical:
-            INFO("Initializing Cylindrical Basis");
+            S_INFO("Initializing Cylindrical Basis");
             break;
         default:
             throw std::invalid_argument("Wrong basis type or initialization meaningless!");
@@ -38,59 +40,77 @@ Base::Base(basePreset t, int n_dimension, std::vector<ContinuousBase> c_base,
     BasisManager::getInstance()->selectBase(*this);
 };
 
-
-std::ostream& operator<<(std::ostream& stream, Base& base) {
-
-    // Print continuous dimension values (if present)
-    if (!base.getContinuous().empty()) {
-        for (int i = 0; i < base.getContinuous().size(); i++) {
-            for (int coord_counter = 0; coord_counter < base.getContinuous().at(i).getCoords().size(); coord_counter++) {
-                stream << base.getContinuous().at(i).getCoords().at(coord_counter) << "; ";
-            }
-        }
+std::string toString(Base& base) {
+    std::vector<std::vector<double>> arr;
+    for (auto& c : base.getContinuous()) {
+        arr.emplace_back(c.getCoords());
     }
 
-    stream << "\n\n";
+	// number of arrays
+    int n = arr.size();
 
-    // Print discrete dimension values (if present)
-    //if (!base.getDiscrete().empty()) {
-    //    for (int i = 0; i < base.getContinuous().size(); i++) {
-    //        for (int coord_counter = 0; coord_counter < base.getDiscrete().at(i).getCoords().size();
-    //             coord_counter++) {
-    //            stream << base.getDiscrete().at(i).getCoords().at(coord_counter) << "; ";
-    //        }
-    //    }
-    //}
+    // to keep track of next element in each of
+    // the n arrays
+    std::vector<int> indices(n, 0);
+    fmt::memory_buffer writer;
 
-    return stream;
+    while (1) {
+        // print current combination
+        for (int i = 0; i < n; i++) format_to(writer, "{} ", arr[i][indices[i]]);
+        format_to(writer, "\n");
+
+        // find the rightmost array that has more
+        // elements left after the current element
+        // in that array
+        int next = n - 1;
+        while (next >= 0 && (indices[next] + 1 >= arr[next].size())) next--;
+
+        // no such array is found so no more
+        // combinations left
+        if (next < 0) break;
+
+        // if found move to next element in that
+        // array
+        indices[next]++;
+
+        // for all arrays to the right of this
+        // array current index again points to
+        // first element
+        for (int i = next + 1; i < n; i++) indices[i] = 0;
+    }
+
+    return to_string(writer);
 }
 
-    const Base operator+(Base& base1, Base& base2) {
-        std::vector<DiscreteBase> discrete_dimension = std::vector<DiscreteBase>();
-        std::vector<ContinuousBase> continuous_dimension = std::vector<ContinuousBase>();
-        
-        for (int i = 0; i < base1.getDiscrete().size(); i++)
-            discrete_dimension.push_back(base1.getDiscrete().at(i));
+const Base operator+(const Base& base1, const Base& base2) {
+    std::vector<DiscreteBase> discrete_dimension{};
+    discrete_dimension.insert(discrete_dimension.begin(), base1.getDiscrete().begin(),
+                              base1.getDiscrete().end());
+    discrete_dimension.insert(discrete_dimension.begin(), base2.getDiscrete().begin(),
+                              base2.getDiscrete().end());
 
-        for (int i = 0; i < base2.getDiscrete().size(); i++)
-            discrete_dimension.push_back(base2.getDiscrete().at(i));
+    std::vector<ContinuousBase> continuous_dimension{};
+    continuous_dimension.insert(continuous_dimension.begin(), base1.getContinuous().begin(),
+                                base1.getContinuous().end());
+    continuous_dimension.insert(continuous_dimension.begin(), base2.getContinuous().begin(),
+                                base2.getContinuous().end());
 
-        for (int i = 0; i < base1.getContinuous().size(); i++)
-            continuous_dimension.push_back(base1.getContinuous().at(i));
+    return {Base::basePreset::Custom, (base1.getDim() + base2.getDim()), continuous_dimension,
+            discrete_dimension};
+}
 
-        for (int i = 0; i < base2.getContinuous().size(); i++)
-            continuous_dimension.push_back(base2.getContinuous().at(i));
+Base& Base::operator+=(const Base& base2) {
+    discrete.insert(discrete.begin(), base2.getDiscrete().begin(), base2.getDiscrete().end());
 
-        const Base& base = Base(Base::basePreset::Custom, 
-                        (base1.getDim() + base2.getDim()), 
-                        continuous_dimension, 
-                        discrete_dimension);
-        return base;
+    continuous.insert(continuous.begin(), base2.getContinuous().begin(),
+                      base2.getContinuous().end());
 
-    }
+    // You have to upload also the dimension HERE
+    return *this;
+}
 
 // This method let you get basis coords when it has only one dimension
-std::vector<double> Base::getCoords() {
+std::vector<double> Base::getCoords() const {
     if (this->getContinuous().size() == 1) {
         std::vector<double> toreturn = this->getContinuous().at(0).getCoords();
         return toreturn;

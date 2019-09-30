@@ -38,8 +38,8 @@ void box_potential_example() {
     wavefunction = state.getWavefunction();
     energy       = state.getEnergy();
 
-    INFO("Energy {}", energy);
-    INFO("Printing state");
+    S_INFO("Energy {}", energy);
+    S_INFO("Printing state");
 
     // This is find being output to console
     std::cout << state;
@@ -49,20 +49,20 @@ void box_potential_example() {
 }
 
 void finite_well_example() {
-    unsigned int nbox = 1000;
-    double mesh       = 0.1;
-    double height     = 5.0;
-    double width      = 7.0;
-    double energy     = 0.0;
-    double e_min      = 0.0;
-    double e_max      = 2.0;
-    double e_step     = 0.01;
-    std::vector<double> wavefunction;
+	unsigned int nbox = 1000;
+	double mesh       = 0.1;
+	double height     = 5.0;
+	double width      = 7.0;
+	double energy     = 0.0;
+	double e_min      = 0.0;
+	double e_max      = 2.0;
+	double e_step     = 0.01;
+	std::vector<double> wavefunction;
 
-    // Initialize the base using a ContinuousInitializer
-    ContinuousInitializer x_ini(mesh, nbox);
-    BasisManager::Builder b;
-    Base base = b.build(x_ini);
+	// Initialize the base using a ContinuousInitializer
+	ContinuousInitializer x_ini(mesh,nbox);
+	BasisManager::Builder b;
+	Base base = b.build(x_ini);
 
     Potential::Builder potentialBuilder(base);
     Potential V = potentialBuilder.setType(Potential::PotentialType::FINITE_WELL_POTENTIAL)
@@ -76,12 +76,12 @@ void finite_well_example() {
     wavefunction = state.getWavefunction();
     energy       = state.getEnergy();
 
-    std::cout << std::endl << energy << std::endl;
+    //std::cout << std::endl << energy << std::endl;
 
-    INFO("Energy {}", energy);
-    INFO("Printing state");
+    S_INFO("Energy {}", energy);
+    S_INFO("Printing state");
 
-    std::cout << state;
+    //std::cout << state;
 
     // Save to file wavefunction and probability
     state.printToFile();
@@ -111,8 +111,8 @@ void harmonic_oscillator_example() {
     wavefunction = state.getWavefunction();
     energy       = state.getEnergy();
 
-    INFO("Energy {}", energy);
-    INFO("Printing state");
+    S_INFO("Energy {}", energy);
+    S_INFO("Printing state");
 
     std::cout << state;
 
@@ -122,8 +122,8 @@ void harmonic_oscillator_example() {
 
 void harmonic_oscillator_2D_example() {
     unsigned int nbox = 1000;
-    double mesh       = 0.1;
-    double k          = 0.5;
+    double mesh       = 0.01;
+    double k          = 1.0;
     double energy     = 0.0;
     double e_min      = 0.0;
     double e_max      = 2.0;
@@ -136,7 +136,6 @@ void harmonic_oscillator_2D_example() {
 
     Potential::Builder potentialBuilder(base);
     Potential V = potentialBuilder.setType(Potential::PotentialType::HARMONIC_OSCILLATOR)
-                      .setSeparable(true)
                       .setK(k)
                       .build();
 
@@ -146,10 +145,12 @@ void harmonic_oscillator_2D_example() {
     wavefunction = state.getWavefunction();
     energy       = state.getEnergy();
 
-    INFO("Energy {}", energy);
+    S_INFO("Energy {}", energy);
 
     // Save to file wavefunction and probability
     state.printToFile();
+    V.printToFile();
+
 }
 
 void custom_workflow() {
@@ -186,19 +187,19 @@ void custom_workflow() {
     basis = manager->getBasisList();
 
     // Print basis values for each dimension
-    std::cout << base;
+    std::cout << toString(base);
 }
 
 int main(int argc, char **argv) {
     LogManager::getInstance().Init();
 
     int c = 0;
-    std::cout << "Choose: " << std::endl;
-    std::cout << "1) Harmonic oscillator (example)" << std::endl;
-    std::cout << "2) Box (example)" << std::endl;
-    std::cout << "3) Finite well1 (example)" << std::endl;
-    std::cout << "4) Custom (step-by-step configuration)" << std::endl;
-    std::cout << "5) 2D Harmonic oscillator (example)" << std::endl;
+    std::cout << "Choose: " << '\n';
+    std::cout << "1) Harmonic oscillator (example)" << '\n';
+    std::cout << "2) Box (example)" << '\n';
+    std::cout << "3) Finite well1 (example)" << '\n';
+    std::cout << "4) Custom (step-by-step configuration)" << '\n';
+    std::cout << "5) 2D Harmonic oscillator (example)" << '\n';
     std::cout << "\nInsert: ";
     std::cin >> c;
 
@@ -213,13 +214,13 @@ int main(int argc, char **argv) {
             finite_well_example();
             break;
         case 4:
-            WARN("Not yet implemented");
+            S_WARN("Not yet implemented");
             break;
         case 5:
             harmonic_oscillator_2D_example();
             break;
         default:
-            ERROR("Not a valid option");
+            S_ERROR("Not a valid option");
             break;
     }
 

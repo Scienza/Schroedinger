@@ -14,16 +14,16 @@
 #include <vector>
 
 #ifndef NDEBUG
-#    define TRACE(...) LogManager::getInstance().Trace(__VA_ARGS__);
-#    define DEBUG(...) LogManager::getInstance().Debug(__VA_ARGS__);
+#    define S_TRACE(...) LogManager::getInstance().Trace(__VA_ARGS__);
+#    define S_DEBUG(...) LogManager::getInstance().Debug(__VA_ARGS__);
 #else
-#    define TRACE(...)
-#    define DEBUG(...)
+#    define S_TRACE(...)
+#    define S_DEBUG(...)
 #endif
-#define CRITICAL(...) LogManager::getInstance().Critical(__VA_ARGS__);
-#define ERROR(...) LogManager::getInstance().Error(__VA_ARGS__);
-#define WARN(...) LogManager::getInstance().Warn(__VA_ARGS__);
-#define INFO(...) LogManager::getInstance().Info(__VA_ARGS__);
+#define S_CRITICAL(...) LogManager::getInstance().Critical(__VA_ARGS__);
+#define S_ERROR(...) LogManager::getInstance().Error(__VA_ARGS__);
+#define S_WARN(...) LogManager::getInstance().Warn(__VA_ARGS__);
+#define S_INFO(...) LogManager::getInstance().Info(__VA_ARGS__);
 
 enum Sink {
     FILE_SINK = 0,

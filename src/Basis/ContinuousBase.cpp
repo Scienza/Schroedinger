@@ -2,7 +2,6 @@
 
 #include <utility>
 
-ContinuousBase::ContinuousBase() = default;
 
 ContinuousBase::ContinuousBase(std::vector<double> coords) { this->coords = std::move(coords); }
 
@@ -50,5 +49,3 @@ std::vector<double> ContinuousBase::evaluate() {
     }
     return coord;
 }
-
-std::vector<double> ContinuousBase::getCoords() { return this->coords; }

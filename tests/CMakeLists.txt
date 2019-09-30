@@ -1,6 +1,6 @@
 add_executable(unit_tests main.cpp basis.cpp potentials.cpp solvers.cpp)
 
-target_link_libraries(unit_tests PRIVATE gtest schroedinger)
+target_link_libraries(unit_tests PRIVATE gtest schroedinger_core g_options g_warnings)
 
 target_include_directories(
   unit_tests

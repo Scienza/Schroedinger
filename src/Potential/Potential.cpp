@@ -2,137 +2,167 @@
 
 #include <utility>
 
-Potential::Potential() = default;
-Potential::Potential(Base base, std::vector<double> potentialValues) {
-    this->base = std::move(base);
-    this->v    = std::move(potentialValues);
-}
+Potential::Potential(Base i_base, std::vector<std::vector<double>> potentialValues)
+    : base(std::move(i_base)), values(std::move(potentialValues)) {}
 
-Potential::Potential(Base base, PotentialType type, double k, double width, double height,
-                     bool separable) {
-    this->base      = base;
-    this->k         = k;
-    this->width     = width;
-    this->height    = height;
-    this->type      = type;
-    this->separable = separable;
+Potential::Potential(Base i_base, PotentialType i_type, double i_k, double i_width, double i_height)
+    : base(std::move(i_base)), type(i_type), k(i_k), width(i_width), height(i_height) {
 
-    // If is not separable, evaluate it
-    if (!this->separable) {
-        switch (type) {
-            case BOX_POTENTIAL:
-                this->box_potential();
-                break;
-            case HARMONIC_OSCILLATOR:
-                this->ho_potential();
-                break;
-            case FINITE_WELL_POTENTIAL:
-                this->finite_well_potential();
-                break;
-            default:
-                throw std::invalid_argument("Wrong potential type or initialization meaningless!");
-        }
+    // Evaluation
+    switch (type) {
+        case BOX_POTENTIAL:
+            this->box_potential();
+            break;
+        case HARMONIC_OSCILLATOR:
+            this->ho_potential();
+            break;
+        case FINITE_WELL_POTENTIAL:
+            this->finite_well_potential();
+            break;
+        default:
+            throw std::invalid_argument("Wrong potential type or initialization meaningless!");
     }
-
-    // If the potential is separable, then n potentials (one for each base's representation)
-    else {
-        for (const ContinuousBase& this_base : base.getContinuous()) {
-
-            std::vector<ContinuousBase> c_base;
-            std::vector<DiscreteBase> d_base;
-
-            // Extract continuous representation from the main base
-            c_base.push_back(this_base);
-
-            // Create new base object with the extracted representation
-            Base monodimensional = Base(Base::basePreset::Custom, 1, c_base, d_base);
-
-            // Create new potential with the new base
-            Potential separated_potential =
-                Potential(monodimensional, this->type, this->k, this->width, this->height, false);
-            // Add the new Potential to the separated potenial vector associated to the main
-            // potential
-            this->separated_potentials.push_back(separated_potential);
-        }
-
-        for (const DiscreteBase& this_base : base.getDiscrete()) {
-            std::vector<ContinuousBase> c_base;
-            std::vector<DiscreteBase> d_base;
-
-            // Extract discrete representation from the main base
-            d_base.push_back(this_base);
-
-            // Create new base object with the extracted representation
-            Base monodimensional = Base(Base::basePreset::Custom, 1, c_base, d_base);
-
-            // Create new potential with the new base
-            Potential separated_potential =
-                Potential(monodimensional, this->type, this->k, this->width, this->height, false);
-
-            // Add the new Potential to the separated potenial vector associated to the main
-            // potential
-            this->separated_potentials.push_back(separated_potential);
-        }
-    }
-    this->printToFile();
 }
 
 void Potential::ho_potential() {
-    std::vector<double> x = this->base.getCoords();
-    this->v               = std::vector<double>(this->base.getCoords().size());
-    std::fill(this->v.begin(), this->v.end(), 0.0);
-    int i = 0;
-    for (double value : x) {
-        this->v[i] = (value * value * this->k);
-        i++;
+
+    for (ContinuousBase b : this->base.getContinuous()) {
+        std::vector<double> x = b.getCoords();
+        std::vector<double> v = std::vector<double>(b.getCoords().size(), 0);
+
+        int i = 0;
+        for (double value : x) {
+            v[i] = (value * value * this->k);
+            i++;
+        }
+
+        this->values.push_back(v);
+    }
+
+    for (DiscreteBase b : this->base.getDiscrete()) {
+        std::vector<int> x = b.getCoords();
+        std::vector<double> v(x.begin(), x.end());
+        std::fill(v.begin(), v.end(), 0.0);
+
+        int i = 0;
+        for (double value : x) {
+            v[i] = (value * value * this->k);
+            i++;
+        }
+
+        this->values.push_back(v);
     }
 }
 
 void Potential::box_potential() {
-    this->v = this->base.getCoords();
-    std::fill(this->v.begin(), this->v.end(), 0.0);
-}
 
-void Potential::finite_well_potential() {
-    std::vector<double> x = this->base.getCoords();
-    this->v               = x;
-    std::fill(this->v.begin(), this->v.end(), 0.0);
+    for (ContinuousBase b : this->base.getContinuous()) {
+        std::vector<double> v = std::vector<double>(b.getCoords().size());
+        std::fill(v.begin(), v.end(), 0.0);
+        this->values.push_back(v);
+    }
 
-    int i = 0;
-    for (double value : x) {
-        this->v[i] = (value > -this->width / 2.0 && value < this->width / 2.0) ? 0.0 : this->height;
-        i++;
+    for (DiscreteBase b : this->base.getDiscrete()) {
+        std::vector<int> x = b.getCoords();
+        std::vector<double> v(x.begin(), x.end());
+        std::fill(v.begin(), v.end(), 0.0);
+        this->values.push_back(v);
     }
 }
 
-bool Potential::isSeparated() { return this->separable; }
+void Potential::finite_well_potential() {
 
-std::vector<Potential> Potential::getSeparatedPotentials() {
-    if (separable && !separated_potentials.empty()) {
-        return separated_potentials;
-    } else {
-        throw std::runtime_error("Cannot get separated potentials from unseparable potentials!");
+    for (ContinuousBase b : this->base.getContinuous()) {
+        std::vector<double> v = std::vector<double>(b.getCoords().size(), 0);
+
+        int i = 0;
+        for (double value : b.getCoords()) {
+            v[i] = (value > -this->width / 2.0 && value < this->width / 2.0) ? 0.0 : this->height;
+            i++;
+        }
+        this->values.push_back(v);
+    }
+
+    for (DiscreteBase b : this->base.getDiscrete()) {
+        std::vector<int> x = b.getCoords();
+        std::vector<double> v(x.begin(), x.end());
+        std::fill(v.begin(), v.end(), 0.0);
+        int i = 0;
+        for (double value : x) {
+            v[i] = (value > -this->width / 2.0 && value < this->width / 2.0) ? 0.0 : this->height;
+            i++;
+        }
+        this->values.push_back(v);
     }
 }
 
 void Potential::printToFile() {
     std::ofstream myfile("potential.dat");
     if (myfile.is_open()) {
-        std::vector<double> base_coords = this->base.getCoords();
-
-        for (int i = 0; i < base_coords.size(); i++) {
-            myfile << base_coords[i] << " " << this->v.at(i) << std::endl;
-        }
+        myfile << *this;
         myfile.close();
     }
 }
 
 std::ostream& operator<<(std::ostream& stream, Potential& potential) {
-    for (double val : potential.getValues()) {
-        stream << val << std::endl;
+    std::vector<std::vector<double>> arr = potential.getValues();
+    // number of arrays
+    int n = arr.size();
+
+    // to keep track of next element in each of
+    // the n arrays
+    int* indices = new int[n];
+
+    // initialize with first element's index
+    for (int i = 0; i < n; i++) indices[i] = 0;
+
+    while (1) {
+
+        // print current combination
+        double sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum += arr[i][indices[i]];
+        }
+        stream << sum << " " << '\n';
+
+        // find the rightmost array that has more
+        // elements left after the current element
+        // in that array
+        int next = n - 1;
+        while (next >= 0 && (indices[next] + 1 >= arr[next].size())) next--;
+
+        // no such array is found so no more
+        // combinations left
+        if (next < 0) break;
+
+        // if found move to next element in that
+        // array
+        indices[next]++;
+
+        // for all arrays to the right of this
+        // array current index again points to
+        // first element
+        for (int i = next + 1; i < n; i++) indices[i] = 0;
     }
 
     return stream;
 }
 
-Base Potential::getBase() { return this->base; }
+// Create a potential having all vectors of both potentials
+const Potential operator+(const Potential& potential1, const Potential& potential2) {
+    std::vector<std::vector<double>> potential_values{};
+
+    for (std::vector<double> dimensions : potential1.getValues())
+        potential_values.push_back(dimensions);
+
+    for (std::vector<double> dimensions : potential2.getValues())
+        potential_values.push_back(dimensions);
+
+    return {potential1.getBase() + potential2.getBase(), potential_values};
+}
+
+Potential& Potential::operator+=(const Potential& potential2) {
+    for (std::vector<double> vals : potential2.getValues()) this->values.push_back(vals);
+
+    return *this;
+}

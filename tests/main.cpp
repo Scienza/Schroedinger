@@ -16,7 +16,7 @@ TEST(NumTest, Hermite) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
-    std::cout.rdbuf(nullptr);
-    std::cerr.rdbuf(nullptr);
+    std::cout.rdbuf(NULL);
+    std::cerr.rdbuf(NULL);
     return RUN_ALL_TESTS();
 }

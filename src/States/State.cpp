@@ -1,45 +1,80 @@
 #include "State.h"
 
+#include <functional>
+#include <numeric>
 #include <utility>
+#include <vector>
+#include <spdlog/fmt/bundled/format.h>
 
-State::State(std::vector<double> wavefunction, Potential potential, double energy, Base base, int nbox) {
+State makeStateFromVector(std::vector<State> states) {
+    std::vector<Base> bases;
+    std::vector<Potential> potentials;
+    std::vector<double> energies;
+    std::vector<std::vector<double>> wavefunctions;
+    std::vector<std::vector<double>> probabilities;
 
-        double norm = 0.0;
-        this->potential = potential;
-        this->nbox = nbox;
+    for (State &local_state : states) {
+        bases.push_back(std::move(local_state.getBase()));
+        wavefunctions.push_back(std::move(local_state.getWavefunction()));
+        potentials.push_back(std::move(local_state.getPotential()));
+        probabilities.push_back(std::move(local_state.getProbability()));
+        energies.push_back(std::move(local_state.getEnergy()));
+    }
 
-        this->probability = std::vector<double>(nbox + 1);
+    Base b = std::accumulate(std::next(bases.begin()), bases.end(), bases.at(0));
+    Potential p =
+        std::accumulate(std::next(potentials.begin()), potentials.end(), potentials.at(0));
+    double en = std::accumulate(energies.begin(), energies.end(), 0.0);
 
-        // Evaluation of the probability
-        for (int i = 0; i <= nbox; i++) {
-            double &value      = wavefunction[i];
-            double &prob_value = probability[i];
-            prob_value         = value * value;
+    // Save W(a, ..., z) = W(a) * ... * W(z)
+    size_t n = wavefunctions.size();
+    std::vector<size_t> indices(n, 0);
+
+    std::vector<double> wavefunction;
+    std::vector<double> probability;
+
+    while (1) {
+
+        // print current combination
+        double sum = 1.0;
+        for (int i = 0; i < n; i++) {
+            sum *= wavefunctions[i][indices[i]];
         }
 
-        // Evaluation of the norm
-        norm = trapezoidalRule(0, nbox, dx, probability);
+        wavefunction.push_back(sum);
 
-        // Normalization of the wavefunction
-        for (int i = 0; i <= nbox; i++) {
-            double &value = wavefunction[i];
-            value /= sqrt(norm);
-        }
+        int next = n - 1;
+        while (next >= 0 && (indices[next] + 1 >= wavefunctions[next].size())) next--;
 
-        // Normalization of the potential
-        for (int i = 0; i <= nbox; i++) {
-            double &value = probability[i];
-            value /= norm;
-        }
-    this->wavefunction = std::move(wavefunction);
-    this->probability  = std::move(probability);
-    this->base         = std::move(base);
-    this->energy       = energy;
+        if (next < 0) break;
+
+        indices[next]++;
+        for (int i = next + 1; i < n; i++) indices[i] = 0;
+    }
+
+    // Maybe we should check probability here
+    probability = probabilities.at(0);
+
+    return {wavefunction, probability, p, en, b, 0};
 }
 
-const std::vector<double> &State::getWavefunction() { return this->wavefunction; }
-const std::vector<double> &State::getProbability() { return this->probability; }
-const double &State::getEnergy() { return this->energy; }
+State::State(std::vector<double> i_wavefunction, std::vector<double> i_probability,
+             std::vector<std::vector<double>> i_potential, double i_energy, Base i_base, int i_nbox)
+    : potential(std::move(Potential(base, i_potential))),
+      nbox(i_nbox),
+      probability(std::move(i_probability)),
+      wavefunction(std::move(i_wavefunction)),
+      base(std::move(i_base)),
+      energy(i_energy) {}
+
+State::State(std::vector<double> i_wavefunction, std::vector<double> i_probability,
+             Potential i_potential, double i_energy, Base i_base, int i_nbox)
+    : potential(i_potential),
+      nbox(i_nbox),
+      probability(std::move(i_probability)),
+      wavefunction(std::move(i_wavefunction)),
+      base(std::move(i_base)),
+      energy(i_energy) {}
 
 void State::printToFile() {
     std::ofstream basefile("base.dat");
@@ -47,19 +82,19 @@ void State::printToFile() {
     std::ofstream probabilityfile("probability.dat");
 
     if (wavefunctionfile.is_open() && probabilityfile.is_open() && basefile.is_open()) {
-        std::vector<double> base_coords = this->base.getCoords();
+        fmt::memory_buffer writer;
 
-        for (double wavefunction_element : wavefunction)
-            wavefunctionfile << wavefunction_element << std::endl;
-        
-        for (double probability_element : probability)
-            probabilityfile << probability_element << std::endl;
+        std::for_each(wavefunction.begin(), wavefunction.end(),
+                      [&writer](const auto value) { format_to(writer, "{}\n", value); });
+        wavefunctionfile << to_string(writer);
 
-        basefile << base;
+		writer.clear();
 
-        wavefunctionfile.close();
-        probabilityfile.close();
-        basefile.close();
+        std::for_each(probability.begin(), probability.end(),
+                      [&writer](const auto value) { format_to(writer, "{}\n", value); });
+        probabilityfile << to_string(writer);
+
+        basefile << toString(base);
     }
 }
 
@@ -68,49 +103,19 @@ std::ostream &operator<<(std::ostream &stream, const State &st) {
 
     stream << std::setw(20) << std::right << "Basis coordinates";
     stream << std::setw(20) << std::right << "Wavefunction";
-    stream << std::setw(20) << std::right << "Probability" << std::endl;
+    stream << std::setw(20) << std::right << "Probability" << '\n';
 
     for (int i = 0; i < base_coords.size(); i++) {
 
         // Printing coord
-        stream << std::setprecision(3) << std::setw(20) << std::right << base_coords[i];
+        stream << toString(const_cast<Base&>(st.getBase()));
 
         // Printing wavefunction
         stream << std::setprecision(3) << std::setw(20) << std::right << st.wavefunction[i];
 
         // Printing probability
-        stream << std::setprecision(3) << std::setw(20) << std::right << st.probability[i]
-               << std::endl;
+        stream << std::setprecision(3) << std::setw(20) << std::right << st.probability[i] << '\n';
     }
 
     return stream;
 }
-
-State operator^ (State& state_1, State& state_2) {
-        Base base_1 = state_1.getBase();
-        Base base_2 = state_2.getBase();
-        Base base = base_1 + base_2;
-
-        std::vector<double> wavefunction = std::vector<double>(
-                                                state_1.wavefunction.size() * state_2.wavefunction.size()
-                                            );
-
-        std::vector<double> potential = std::vector<double>(
-                                                state_1.potential.getValues().size() * state_2.potential.getValues().size()
-        );
-        
-        for (int i = 0; i < state_1.wavefunction.size(); i++)
-            for (int j = 0; j < state_2.wavefunction.size(); j++)
-                wavefunction.push_back(state_1.wavefunction.at(i) * state_2.wavefunction.at(j));
-
-        for (int i = 0; i < state_1.potential.getValues().size(); i++)
-            for (int j = 0; j < state_2.potential.getValues().size(); j++)
-                potential.push_back(state_1.potential.getValues().at(i) + state_2.potential.getValues().at(j));
-
-        double energy = state_1.getEnergy() + state_2.getEnergy();
-        
-        Potential final_potential = Potential(base, potential);
-        return State(wavefunction, final_potential, energy, base, state_1.nbox);
-};
-
-
