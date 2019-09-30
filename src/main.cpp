@@ -186,7 +186,7 @@ void custom_workflow() {
     basis = manager->getBasisList();
 
     // Print basis values for each dimension
-    std::cout << toString(base);
+    std::cout << base.toString();
 }
 
 int main(int argc, char **argv) {
