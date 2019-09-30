@@ -120,9 +120,10 @@ void harmonic_oscillator_example() {
     state.printToFile();
 }
 
+
 void harmonic_oscillator_2D_example() {
-    unsigned int nbox = 1000;
-    double mesh       = 0.01;
+    unsigned int nbox = 300;
+    double mesh       = 0.03;
     double k          = 1.0;
     double energy     = 0.0;
     double e_min      = 0.0;
