@@ -1,6 +1,7 @@
 #include "Potential.h"
 
 #include <utility>
+#include <spdlog/fmt/bundled/format.h>
 
 Potential::Potential(Base i_base, std::vector<std::vector<double>> potentialValues)
     : base(std::move(i_base)), values(std::move(potentialValues)) {}
@@ -99,22 +100,19 @@ void Potential::finite_well_potential() {
 void Potential::printToFile() {
     std::ofstream myfile("potential.dat");
     if (myfile.is_open()) {
-        myfile << *this;
-        myfile.close();
+        myfile << toString(*this);
     }
 }
 
-std::ostream& operator<<(std::ostream& stream, Potential& potential) {
+std::string Potential::toString(const Potential& potential) const {
     std::vector<std::vector<double>> arr = potential.getValues();
     // number of arrays
     int n = arr.size();
 
     // to keep track of next element in each of
     // the n arrays
-    int* indices = new int[n];
-
-    // initialize with first element's index
-    for (int i = 0; i < n; i++) indices[i] = 0;
+    std::vector<int> indices(n, 0);
+    fmt::memory_buffer writer;
 
     while (1) {
 
@@ -123,7 +121,7 @@ std::ostream& operator<<(std::ostream& stream, Potential& potential) {
         for (int i = 0; i < n; i++) {
             sum += arr[i][indices[i]];
         }
-        stream << sum << " " << '\n';
+        format_to(writer, "{} \n", sum);
 
         // find the rightmost array that has more
         // elements left after the current element
@@ -145,7 +143,7 @@ std::ostream& operator<<(std::ostream& stream, Potential& potential) {
         for (int i = next + 1; i < n; i++) indices[i] = 0;
     }
 
-    return stream;
+    return to_string(writer);
 }
 
 // Create a potential having all vectors of both potentials

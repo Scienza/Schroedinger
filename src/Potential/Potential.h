@@ -49,12 +49,11 @@ class Potential {
     const Base& getBase() const noexcept { return base; };
 
 	void printToFile();
+    std::string toString(const Potential& potential) const;
 
     //bool isSeparated(); assuming always separable potentials
-    friend std::ostream& operator<<(std::ostream& stream, Potential& potential);
     friend const Potential operator+(const Potential& potential1, const Potential& potential2);
     Potential& operator+=(const Potential& potential2);
-
 
     class Builder {
       private:
