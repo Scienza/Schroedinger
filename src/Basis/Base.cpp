@@ -40,13 +40,13 @@ Base::Base(basePreset t, int n_dimension, std::vector<ContinuousBase> c_base,
     BasisManager::getInstance()->selectBase(*this);
 };
 
-std::string toString(Base& base) {
+std::string Base::toString() const {
     std::vector<std::vector<double>> arr;
-    for (auto& c : base.getContinuous()) {
+    for (auto& c : getContinuous()) {
         arr.emplace_back(c.getCoords());
     }
 
-	// number of arrays
+    // number of arrays
     int n = arr.size();
 
     // to keep track of next element in each of

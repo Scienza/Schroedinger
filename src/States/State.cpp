@@ -93,7 +93,7 @@ void State::printToFile() {
                       [&writer](const auto value) { format_to(writer, "{}\n", value); });
         probabilityfile << to_string(writer);
 
-        basefile << toString(base);
+        basefile << base.toString();
         potentialfile << potential.toString();
 
         basefile.close();
@@ -114,7 +114,7 @@ std::ostream &operator<<(std::ostream &stream, const State &st) {
     for (int i = 0; i < base_coords.size(); i++) {
 
         // Printing coord
-        stream << toString(const_cast<Base&>(st.getBase()));
+        stream << st.getBase().toString();
 
         // Printing wavefunction
         stream << std::setprecision(3) << std::setw(20) << std::right << st.wavefunction[i];

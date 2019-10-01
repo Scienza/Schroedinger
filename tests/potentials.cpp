@@ -26,8 +26,6 @@ TEST(Potentials, createAndReadFromFile) {
     Potential::Builder potentialBuilder(base);
     Potential V =
         potentialBuilder.setType(Potential::PotentialType::HARMONIC_OSCILLATOR).setK(k).build();
-    
-    V.printToFile();
 
     V.printToFile();
 
@@ -55,7 +53,7 @@ TEST(Potentials, PotentialsConcatenation) {
     int dimension     = 1;
 
     BasisManager::Builder baseBuilder;
-    Base base = baseBuilder.addContinuous(mesh, nbox).build(dimension);
+    Base base  = baseBuilder.addContinuous(mesh, nbox).build(dimension);
     Base base2 = baseBuilder.addContinuous(mesh, nbox).build(dimension);
 
     Potential::Builder potentialBuilder(base);
@@ -67,11 +65,10 @@ TEST(Potentials, PotentialsConcatenation) {
 
     Potential V3 = V1 + V2;
 
-    std::vector<double> firstPotentialValues = V1.getValues().at(0);
+    std::vector<double> firstPotentialValues  = V1.getValues().at(0);
     std::vector<double> secondPotentialValues = V2.getValues().at(0);
 
-    if (V3.getValues().size() != 2)
-        FAIL() << "Size of final values vector is not corresponding";
+    if (V3.getValues().size() != 2) FAIL() << "Size of final values vector is not corresponding";
 
     // Check if the values matches
     for (int i = 0; i < V3.getValues().at(0).size(); i++) {
@@ -81,7 +78,6 @@ TEST(Potentials, PotentialsConcatenation) {
     for (int i = 0; i < V3.getValues().at(1).size(); i++) {
         ASSERT_NEAR(secondPotentialValues[i], V3.getValues().at(1).at(i), err_thres);
     }
-
 }
 TEST(Potentials, PotentialsConcatenationAndAssignment) {
     unsigned int nbox = 1000;
@@ -90,7 +86,7 @@ TEST(Potentials, PotentialsConcatenationAndAssignment) {
     int dimension     = 1;
 
     BasisManager::Builder baseBuilder;
-    Base base = baseBuilder.addContinuous(mesh, nbox).build(dimension);
+    Base base  = baseBuilder.addContinuous(mesh, nbox).build(dimension);
     Base base2 = baseBuilder.addContinuous(mesh, nbox).build(dimension);
 
     Potential::Builder potentialBuilder(base);
@@ -104,9 +100,7 @@ TEST(Potentials, PotentialsConcatenationAndAssignment) {
 
     V1 += V2;
 
-
-    if (V1.getValues().size() != 2)
-        FAIL() << "Size of final values vector is not corresponding";
+    if (V1.getValues().size() != 2) FAIL() << "Size of final values vector is not corresponding";
 
     // Check if the values matches
     for (int i = 0; i < V1.getValues().at(0).size(); i++) {
@@ -116,5 +110,4 @@ TEST(Potentials, PotentialsConcatenationAndAssignment) {
     for (int i = 0; i < V1.getValues().at(1).size(); i++) {
         ASSERT_NEAR(secondPotentialValues[i], V1.getValues().at(1).at(i), err_thres);
     }
-    
 }
