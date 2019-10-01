@@ -36,17 +36,11 @@ void Numerov::functionSolve(double energy, int potential_index) {
     try {
         // Build Numerov f(x) solution from left.
         for (int i = 2; i <= nbox; i++) {
-            double &value = this->wavefunction.at(i);
-            double &pot_1 = pot.at(i - 1);
-            double &pot_2 = pot.at(i - 2);
-            double &pot_a = pot.at(i);
-
-            double &wave_1 = this->wavefunction.at(i - 1);
-            double &wave_2 = this->wavefunction.at(i - 2);
-
-            value = 2 * (1.0 - (5 * c) * (energy - pot_1)) * wave_1 -
-                    (1.0 + (c) * (energy - pot_2)) * wave_2;
-            value /= (1.0 + (c) * (energy - pot_a));
+            this->wavefunction.at(i) = 
+                (2 * (1.0 - (5 * c) * (energy - pot.at(i - 1))) * this->wavefunction.at(i - 1) -
+                    (1.0 + (c) * (energy - pot.at(i - 2))) * this->wavefunction.at(i - 2))
+                /
+                (1.0 + (c) * (energy - pot.at(i)));
         }
     } catch (const std::out_of_range &ex) {
         S_ERROR("Out of range exception caught, {}", ex.what());
@@ -84,34 +78,31 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
         for (int n = 0; n < (e_max - e_min) / e_step; n++) {
             double energy = e_min + n * e_step;
             this->functionSolve(energy, potential_index);
-            double &last_wavefunction_value = this->wavefunction.at(nbox);
 
-            if (fabs(last_wavefunction_value - this->wfAtBoundary) < err_thres) {
-                S_INFO("Solution found {}", last_wavefunction_value);
+            // Update the sign at the first iteration
+            if (n == 0) {
+                sign = (this->wavefunction.at(nbox) - this->wfAtBoundary > 0) ? 1 : -1;
+            }
+
+            if (fabs(this->wavefunction.at(nbox) - this->wfAtBoundary) < err_thres) {
+                S_INFO("Solution found {}", this->wavefunction.at(nbox));
                 this->solutionEnergy = energy;
                 break;
             }
 
-            if (n == 0) {
-                sign = (last_wavefunction_value - this->wfAtBoundary > 0) ? 1 : -1;
-            }
-
             // when the sign changes, means that the solution for f[nbox]=0 is in in the middle, thus
             // calls bisection rule.
-            if (sign * (last_wavefunction_value - this->wfAtBoundary) < 0) {
-                S_INFO("Bisection {}", last_wavefunction_value);
+            if (sign * (this->wavefunction.at(nbox) - this->wfAtBoundary) < 0) {
+                S_INFO("Bisection {}", this->wavefunction.at(nbox));
                 this->solutionEnergy = this->bisection(energy - e_step, energy + e_step, potential_index);
                 break;
             }
         }
 
         // Evaluation of the probability
-        for (int i = 0; i <= nbox; i++) {
-            double &value      = this->wavefunction[i];
-            double &prob_value = this->probability[i];
-            prob_value         = value * value;
-        }
-
+        auto prob_fun = [](double val) { return val*val; };
+        std::transform(wavefunction.begin(), wavefunction.end(), probability.begin(), prob_fun);
+        
         // Evaluation of the norm
         double norm = trapezoidalRule(0, nbox, mesh, this->probability);
 
@@ -121,9 +112,12 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
         std::transform(probability.begin(), probability.end(), probability.begin(), norm_fun);
 
         temp.push_back(this->potential.getValues().at(potential_index));
-        const std::vector<double>& coords = this->potential.getBase().getContinuous().at(potential_index).getCoords(); 
-
-        states.emplace_back(State{this->wavefunction, this->probability, temp, this->solutionEnergy, Base(coords)});
+        states.emplace_back(State{this->wavefunction, 
+                                  this->probability, 
+                                  temp, 
+                                  this->solutionEnergy, 
+                                  Base(this->potential.getBase().getContinuous().at(potential_index).getCoords())
+                                  });
 
     }
 
@@ -138,8 +132,19 @@ with the correct boundary conditions (@param wavefunction[0] == @param wavefunct
 double Numerov::bisection(double e_min, double e_max, int potential_index) {
     double nbox = this->potential.getBase().getContinuous().at(potential_index).getNbox();
 
-    double energy_middle = 0, fx1, fb, fa;
+    double energy_middle = 0, fx1;
+    std::vector<double> temp_wavefunction = this->wavefunction;
+    this->functionSolve(e_max, potential_index);
+    double fb = this->wavefunction.at(nbox) - this->wfAtBoundary;
+    this->functionSolve(e_min, potential_index);
+    double fa = this->wavefunction.at(nbox) - this->wfAtBoundary;
+    this->functionSolve(energy_middle, potential_index);
+    fx1 = this->wavefunction.at(nbox) - this->wfAtBoundary;
     std::cout.precision(17);
+    this->wavefunction = temp_wavefunction;
+
+    if (fa*fb > 0)
+        S_WARN("[Bisection method] f(a) * f(b) > 0! ( f(a):{}, f(b):{})", fa, fb);
 
     // The number of iterations that the bisection routine needs can be evaluated in advance
     int itmax = static_cast<int>(ceil(log2(e_max - e_min) - log2(err_thres)) - 1);
@@ -149,7 +154,6 @@ double Numerov::bisection(double e_min, double e_max, int potential_index) {
 
         this->functionSolve(energy_middle, potential_index);
         fx1 = this->wavefunction.at(nbox) - this->wfAtBoundary;
-
         this->functionSolve(e_max, potential_index);
         fb = this->wavefunction.at(nbox) - this->wfAtBoundary;
 
@@ -157,13 +161,13 @@ double Numerov::bisection(double e_min, double e_max, int potential_index) {
             return energy_middle;
         }
 
-        if (fb * fx1 < 0.) {
+        if (fb * fx1 < 0.0) {
             e_min = energy_middle;
         } else {
             this->functionSolve(e_min, potential_index);
             fa = this->wavefunction.at(nbox) - this->wfAtBoundary;
 
-            if (fa * fx1 < 0.) {
+            if (fa * fx1 < 0.0) {
                 e_max = energy_middle;
             }
         }
