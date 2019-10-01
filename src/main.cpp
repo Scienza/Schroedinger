@@ -74,6 +74,11 @@ void finite_well_example() {
                       .setWidth(width)
                       .build();
 
+    std::ofstream basefile("base.dat");
+    std::ofstream potentialfile("potential.dat");
+    basefile << base.toString();
+    potentialfile << V.toString();
+
     Numerov solver = Numerov(V, nbox);
     State state    = solver.solve(e_min, e_max, e_step);
 

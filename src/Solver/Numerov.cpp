@@ -42,6 +42,8 @@ void Numerov::functionSolve(double energy, int potential_index) {
                 /
                 (1.0 + (c) * (energy - pot.at(i)));
         }
+
+
     } catch (const std::out_of_range &ex) {
         S_ERROR("Out of range exception caught, {}", ex.what());
     }
@@ -99,17 +101,7 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
             }
         }
 
-        // Evaluation of the probability
-        auto prob_fun = [](double val) { return val*val; };
-        std::transform(wavefunction.begin(), wavefunction.end(), probability.begin(), prob_fun);
-        
-        // Evaluation of the norm
-        double norm = trapezoidalRule(0, nbox, mesh, this->probability);
-
-		// Normalize wavefunction and probabiliy
-        auto norm_fun = [norm](double val) { return val / sqrt(norm); };
-        std::transform(wavefunction.begin(), wavefunction.end(), wavefunction.begin(), norm_fun);
-        std::transform(probability.begin(), probability.end(), probability.begin(), norm_fun);
+        normalize(potential_index);
 
         temp.push_back(this->potential.getValues().at(potential_index));
         states.emplace_back(State{this->wavefunction, 
@@ -118,10 +110,26 @@ State Numerov::solve(double e_min, double e_max, double e_step) {
                                   this->solutionEnergy, 
                                   Base(this->potential.getBase().getContinuous().at(potential_index).getCoords())
                                   });
-
     }
 
     return makeStateFromVector(states);
+}
+
+void Numerov::normalize(int potential_index) {
+        double mesh = this->potential.getBase().getContinuous().at(potential_index).getMesh();
+        double nbox = this->potential.getBase().getContinuous().at(potential_index).getNbox();
+
+        // Evaluation of the probability
+        auto prob_fun = [](double val) { return val*val; };
+        std::transform(this->wavefunction.begin(), this->wavefunction.end(), this->probability.begin(), prob_fun);
+        
+        // Evaluation of the norm
+        double norm = trapezoidalRule(0, nbox, mesh, this->probability);
+
+		// Normalize wavefunction and probabiliy
+        auto norm_fun = [norm](double val) { return val / sqrt(norm); };
+        std::transform(wavefunction.begin(), wavefunction.end(), wavefunction.begin(), norm_fun);
+        std::transform(probability.begin(), probability.end(), probability.begin(), norm_fun);
 }
 
 /*! Applies a bisection algorith to the numerov method to find
@@ -171,9 +179,24 @@ double Numerov::bisection(double e_min, double e_max, int potential_index) {
                 e_max = energy_middle;
             }
         }
+
+        std::ofstream wavefunctionfile("wavefunctions/"+std::to_string(wavefunction_print_count++) +".dat");
+        normalize(potential_index);
+        wavefunctionfile << wavefunctionToString();
     }
+
 
     S_WARN("Failed to find solution using bisection method, {} > {}", wavefunction.at(nbox),
          err_thres);
     return energy_middle;
+}
+
+
+std::string Numerov::wavefunctionToString() const {
+    fmt::memory_buffer writer;
+
+    for (double val : this->wavefunction) {
+        format_to(writer, "{} \n", val);
+    }
+    return to_string(writer);
 }
