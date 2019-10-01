@@ -7,6 +7,7 @@
 #include "Numerov.h"
 #include "Potential.h"
 #include "State.h"
+#include "../tests/analytical.h"
 
 void box_potential_example() {
     unsigned int nbox = 500;
@@ -50,7 +51,7 @@ void box_potential_example() {
 
 void finite_well_example() {
     unsigned int nbox = 1000;
-    double mesh       = 0.1;
+    double mesh       = 0.01;
     double height     = 5.0;
     double width      = 7.0;
     double energy     = 0.0;
@@ -58,6 +59,9 @@ void finite_well_example() {
     double e_max      = 2.0;
     double e_step     = 0.01;
     std::vector<double> wavefunction;
+
+    // double anal_energy;
+    // std::vector<double> anal_wf;
 
     // Initialize the base using a ContinuousInitializer
     ContinuousInitializer x_ini(mesh, nbox);
@@ -77,12 +81,21 @@ void finite_well_example() {
     energy       = state.getEnergy();
 
     // std::cout << std::endl << energy << std::endl;
+    auto [anal_wf, anal_energy] = finite_well_wf(1, nbox, width, height, mesh);
 
-    S_INFO("Energy {}", energy);
+    std::ofstream myfile("analitical.dat");
+
+    for (std::vector<int>::size_type i = 0; i < anal_wf.size(); i++) 
+	    myfile << anal_wf.at(i) << '\n';
+    myfile << std::endl;
+
+    S_INFO("Energy {}", energy, anal_energy);
     S_INFO("Printing state");
 
     // Save to file wavefunction and probability
     state.printToFile();
+    V.printToFile();
+
 }
 
 void harmonic_oscillator_example() {
