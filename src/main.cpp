@@ -137,7 +137,7 @@ void harmonic_oscillator_example() {
 }
 
 void harmonic_oscillator_2D_example() {
-    unsigned int nbox = 300;
+    unsigned int nbox = 100;
     double mesh       = 0.03;
     double k          = 1.0;
     double energy     = 0.0;
@@ -158,6 +158,71 @@ void harmonic_oscillator_2D_example() {
     State state    = solver.solve(e_min, e_max, e_step);
 
     wavefunction = state.getWavefunction();
+    energy       = state.getEnergy();
+
+    S_INFO("Energy {}", energy);
+
+    // Save to file wavefunction and probability
+    state.printToFile();
+    V.printToFile();
+}
+
+void finite_well_2D_example() {
+    unsigned int nbox = 1000;
+    double mesh       = 0.01;
+    double height     = 5.0;
+    double width      = 7.0;
+    double energy     = 0.0;
+    double e_min      = 0.0;
+    double e_max      = 2.0;
+    double e_step     = 0.01;
+
+    BasisManager::Builder b;
+    Base base = b.build(Base::basePreset::Cartesian, 2, mesh, nbox);
+
+    Potential::Builder potentialBuilder(base);
+    Potential V = potentialBuilder.setType(Potential::PotentialType::FINITE_WELL_POTENTIAL)
+                      .setHeight(height)
+                      .setWidth(width)
+                      .build();
+
+    Numerov solver = Numerov(V, nbox);
+    State state    = solver.solve(e_min, e_max, e_step);
+
+    std::vector<double> wavefunction = state.getWavefunction();
+    energy       = state.getEnergy();
+
+    S_INFO("Energy {}", energy);
+
+    // Save to file wavefunction and probability
+    state.printToFile();
+    V.printToFile();
+}
+
+void box_2D_example() {
+    unsigned int nbox = 500;
+    double mesh       = 0.01;
+    double k          = 0.0;
+    double height     = 0.0;
+    double width      = 0.0;
+    double energy     = 0.0;
+    double e_min      = 0.0;
+    double e_max      = 2.0;
+    double e_step     = 0.01;
+
+    BasisManager::Builder b;
+    Base base = b.build(Base::basePreset::Cartesian, 2, mesh, nbox);
+
+    Potential::Builder potentialBuilder(base);
+    Potential V = potentialBuilder.setType(Potential::PotentialType::BOX_POTENTIAL) 
+                    .setK(k)
+                    .setHeight(height)
+                    .setWidth(width).build();
+
+    Numerov solver = Numerov(V, nbox);
+    State state    = solver.solve(e_min, e_max, e_step);
+
+    std::vector<double> wavefunction = state.getWavefunction();
     energy       = state.getEnergy();
 
     S_INFO("Energy {}", energy);
@@ -209,11 +274,13 @@ int main(int argc, char **argv) {
 
     int c = 0;
     std::cout << "Choose: " << '\n';
-    std::cout << "1) Harmonic oscillator (example)" << '\n';
-    std::cout << "2) Box (example)" << '\n';
-    std::cout << "3) Finite well1 (example)" << '\n';
-    std::cout << "4) Custom (step-by-step configuration)" << '\n';
-    std::cout << "5) 2D Harmonic oscillator (example)" << '\n';
+    std::cout << "1) 1D Hamonic oscillator (example)" << '\n';
+    std::cout << "2) 1D Box (example)" << '\n';
+    std::cout << "3) 1D Finite well (example)" << '\n';
+    std::cout << "4) 2D Harmonic oscillator (example)" << '\n';
+    std::cout << "5) 2D Box (example)" << '\n';
+    std::cout << "6) 2D Finite well (example)" << '\n';
+
     std::cout << "\nInsert: ";
     std::cin >> c;
 
@@ -228,11 +295,15 @@ int main(int argc, char **argv) {
             finite_well_example();
             break;
         case 4:
-            S_WARN("Not yet implemented");
-            break;
-        case 5:
             harmonic_oscillator_2D_example();
             break;
+        case 5:
+            box_2D_example();
+            break;
+        case 6:
+            finite_well_2D_example();
+            break;
+            
         default:
             S_ERROR("Not a valid option");
             break;
