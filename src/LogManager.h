@@ -10,7 +10,10 @@
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
+#include <fstream>
 #include <memory>
+#include <optional>
+#include <string>
 #include <vector>
 
 #ifndef NDEBUG
@@ -24,6 +27,17 @@
 #define S_ERROR(...) LogManager::getInstance().Error(__VA_ARGS__);
 #define S_WARN(...) LogManager::getInstance().Warn(__VA_ARGS__);
 #define S_INFO(...) LogManager::getInstance().Info(__VA_ARGS__);
+#define S_WF(x) LogManager::getInstance().DumpWavefunction((x));
+
+template <typename T, typename = std::enable_if<std::is_arithmetic<T>::value>>
+std::string vectorToString(const std::vector<T> &values) {
+    fmt::memory_buffer writer;
+
+    for (auto val : values) {
+        format_to(writer, "{} \n", val);
+    }
+    return to_string(writer);
+}
 
 enum Sink {
     FILE_SINK = 0,
@@ -45,11 +59,18 @@ class LogManager {
     LogManager &operator=(const LogManager &) = delete;
     LogManager &operator=(LogManager &&) = delete;
 
-    void Init(void) { RegisterLoggers(); }
+    void Init(bool wfdump = false) {
+        RegisterLoggers();
+        wf_dump = wfdump;
+    }
 
     void SetLogLevel(spdlog::level::level_enum log_level, Sink logger) {
         loggers.at(logger)->set_level(log_level);
     }
+
+	void EnableWavefunctionDump(bool val) { wf_dump = val; }
+    bool WavefunctionDumpEnabled() const { return wf_dump; }
+    void SetWavefunctionDumpPath(std::string val) { wf_path = val; }
 
     spdlog::level::level_enum GetLogLevel(Sink logger) const { return loggers.at(logger)->level(); }
 
@@ -95,13 +116,27 @@ class LogManager {
         }
     }
 
+    void DumpWavefunction(const std::vector<double> &wf,
+                          std::optional<std::string> name = std::nullopt) {
+        if (wf_dump) {
+            static int wf_id = 0;
+            std::ofstream wf_out("wf_" + name.value_or(std::to_string(wf_id++)) + ".dat");
+            if (wf_out) {
+                wf_out << vectorToString<double>(wf);
+            }
+        }
+    }
+
   private:
     std::array<std::shared_ptr<spdlog::logger>, Sink::SINKS_NO> loggers;
     std::shared_ptr<spdlog::logger> log_console, log_file;
 
-    size_t const maxsize   = 4194304;  // 4MB
-    size_t const maxfiles  = 4;
-    std::string const path = "./schroedinger.log";
+    size_t const maxsize      = 4194304;  // 4MB
+    size_t const maxfiles     = 4;
+    std::string const logpath = "./schroedinger.log";
+
+    std::string wf_path = "./wavefuntions/";
+    bool wf_dump        = false;
 
     void RegisterLoggers() {
         /* Console is for the important stuff */
@@ -109,7 +144,7 @@ class LogManager {
         log_console->set_level(spdlog::level::warn);
 
         /* File is for debugging so let's get everything in there */
-        log_file = spdlog::rotating_logger_mt("file", path, maxsize, maxfiles);
+        log_file = spdlog::rotating_logger_mt("file", logpath, maxsize, maxfiles);
         log_file->set_level(spdlog::level::trace);
 
         loggers.at(Sink::CONSOLE_SINK) = log_console;

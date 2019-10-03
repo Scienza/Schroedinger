@@ -45,7 +45,7 @@ class Numerov : public Solver {
     void initialize();
     void normalize(int potential_index);
     std::string wavefunctionToString() const;
-    int wavefunction_print_count = 0;
+
 };
 
 #endif

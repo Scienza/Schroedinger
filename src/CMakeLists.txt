@@ -1,9 +1,15 @@
 file(GLOB_RECURSE SCH_SOURCES
                   ${CMAKE_CURRENT_SOURCE_DIR}/Basis/*.cpp
+				  ${CMAKE_CURRENT_SOURCE_DIR}/Basis/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/Potential/*.cpp
+				  ${CMAKE_CURRENT_SOURCE_DIR}/Potential/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/Solver/*.cpp
+				  ${CMAKE_CURRENT_SOURCE_DIR}/Solver/*.h
                   ${CMAKE_CURRENT_SOURCE_DIR}/World/*.cpp
-                  ${CMAKE_CURRENT_SOURCE_DIR}/States/*.cpp)
+				  ${CMAKE_CURRENT_SOURCE_DIR}/World/*.h
+                  ${CMAKE_CURRENT_SOURCE_DIR}/States/*.cpp
+				  ${CMAKE_CURRENT_SOURCE_DIR}/States/*.h
+				  ${CMAKE_CURRENT_SOURCE_DIR}/LogManager.h)
 
 add_library(schroedinger_core OBJECT ${SCH_SOURCES})
 target_link_libraries(schroedinger_core PRIVATE g_options g_warnings)
