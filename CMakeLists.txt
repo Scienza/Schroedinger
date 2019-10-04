@@ -69,7 +69,6 @@ else()
   endif()
 endif()
 
-
 if(ENABLE_TESTS)
   message(STATUS "Using bundled GTest")
   add_subdirectory(external/googletest EXCLUDE_FROM_ALL)

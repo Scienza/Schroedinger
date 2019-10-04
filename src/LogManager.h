@@ -15,6 +15,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <filesystem>
 
 #ifndef NDEBUG
 #    define S_TRACE(...) LogManager::getInstance().Trace(__VA_ARGS__);
@@ -61,7 +62,11 @@ class LogManager {
 
     void Init(bool wfdump = false) {
         RegisterLoggers();
-        wf_dump = wfdump;
+        this->wf_dump = wfdump;
+
+        if(wfdump){
+            std::filesystem::create_directory(this->wf_path);
+        }
     }
 
     void SetLogLevel(spdlog::level::level_enum log_level, Sink logger) {
@@ -118,7 +123,7 @@ class LogManager {
 
     void DumpWavefunction(const std::vector<double> &wf,
                           std::optional<std::string> name = std::nullopt) {
-        if (wf_dump) {
+        if (this->wf_dump) {
             static int wf_id = 0;
             std::ofstream wf_out(this->wf_path + "wf_" + name.value_or(std::to_string(wf_id++)) + ".dat");
             if (wf_out) {
@@ -136,6 +141,7 @@ class LogManager {
     std::string const logpath = "./schroedinger.log";
 
     std::string wf_path = "./wavefunctions/";
+    
     bool wf_dump        = false;
 
     void RegisterLoggers() {
