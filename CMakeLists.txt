@@ -29,7 +29,10 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 # Build options
 option(ENABLE_ASAN "Enable address sanitizer" OFF)
 option(ENABLE_TESTS "Enable unit testing" ON)
-option(LIBCPP "Use libc++" OFF)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
+  message(FATAL_ERROR "Schroedinger requires gcc 8.0 (found ${CMAKE_CXX_COMPILER_VERSION})")
+endif()
 
 # Set the standard to c++17
 target_compile_features(g_options INTERFACE cxx_std_17)
@@ -69,15 +72,7 @@ else()
                                      -Wnull-dereference)
   endif()
 
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    target_link_libraries(g_options INTERFACE stdc++fs)
-  else()
-    if(LIBCPP)
-      target_compile_options(g_options INTERFACE -stdlib=libc++)
-    else()
-      target_link_libraries(g_options INTERFACE stdc++fs)
-    endif()
-  endif()
+  target_link_libraries(g_options INTERFACE stdc++fs)
 endif()
 
 if(ENABLE_TESTS)
