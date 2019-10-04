@@ -270,7 +270,9 @@ void custom_workflow() {
 }
 
 int main(int argc, char **argv) {
-    LogManager::getInstance().Init();
+    bool debug = true;
+
+    LogManager::getInstance().Init(debug);
 
     int c = 0;
     std::cout << "Choose: " << '\n';

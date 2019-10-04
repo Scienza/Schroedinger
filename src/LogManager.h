@@ -120,7 +120,7 @@ class LogManager {
                           std::optional<std::string> name = std::nullopt) {
         if (wf_dump) {
             static int wf_id = 0;
-            std::ofstream wf_out("wf_" + name.value_or(std::to_string(wf_id++)) + ".dat");
+            std::ofstream wf_out(this->wf_path + "wf_" + name.value_or(std::to_string(wf_id++)) + ".dat");
             if (wf_out) {
                 wf_out << vectorToString<double>(wf);
             }
@@ -135,7 +135,7 @@ class LogManager {
     size_t const maxfiles     = 4;
     std::string const logpath = "./schroedinger.log";
 
-    std::string wf_path = "./wavefuntions/";
+    std::string wf_path = "./wavefunctions/";
     bool wf_dump        = false;
 
     void RegisterLoggers() {
