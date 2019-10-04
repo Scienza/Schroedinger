@@ -3,6 +3,8 @@
 cmake_minimum_required(VERSION 3.12)
 project(Schroedinger)
 
+set(USE_FOLDERS ON)
+
 add_library(g_options INTERFACE)
 add_library(g_warnings INTERFACE)
 
@@ -11,6 +13,13 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE
       "Release"
       CACHE STRING "Build type (Release/Debug/RelWithDebInfo/MinSizeRel)" FORCE)
+endif()
+
+# Use ccache if present on the system
+find_program(CCACHE ccache)
+if(CCACHE)
+  set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
+  message(STATUS "Will use ccache")
 endif()
 
 message(STATUS "Will build in ${CMAKE_BUILD_TYPE} mode")
@@ -22,14 +31,10 @@ option(ENABLE_ASAN "Enable address sanitizer" OFF)
 option(ENABLE_TESTS "Enable unit testing" ON)
 option(LIBCPP "Use libc++" OFF)
 
-# Use ccache if present on the system
-find_program(CCACHE ccache)
-if(CCACHE)
-  set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
-endif()
-
 # Set the standard to c++17
 target_compile_features(g_options INTERFACE cxx_std_17)
+
+# Hack to eventually get rid of..
 target_compile_definitions(g_options INTERFACE -DFMT_HEADER_ONLY)
 
 if(MSVC)
@@ -64,8 +69,14 @@ else()
                                      -Wnull-dereference)
   endif()
 
-  if(LIBCPP)
-    target_compile_options(g_options INTERFACE -stdlib=libc++)
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    target_link_libraries(g_options INTERFACE stdc++fs)
+  else()
+    if(LIBCPP)
+      target_compile_options(g_options INTERFACE -stdlib=libc++)
+    else()
+      target_link_libraries(g_options INTERFACE stdc++fs)
+    endif()
   endif()
 endif()
 

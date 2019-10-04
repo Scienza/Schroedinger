@@ -126,7 +126,7 @@ class LogManager {
                           std::optional<std::string> name = std::nullopt) {
         if (this->wf_dump) {
             static int wf_id = 0;
-            std::ofstream wf_out(this->wf_path.string() + "wf_" + name.value_or(std::to_string(wf_id++)) + ".dat");
+            std::ofstream wf_out(this->wf_path.string() + name.value_or("wf_" + std::to_string(wf_id++)) + ".dat");
             if (wf_out) {
                 wf_out << vectorToString<double>(wf);
             }
