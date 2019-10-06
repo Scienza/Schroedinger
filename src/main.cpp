@@ -1,13 +1,13 @@
 #include <iostream>
 #include <string>
 
+#include "../tests/analytical.h"
 #include "Base.h"
 #include "BasisManager.h"
 #include "LogManager.h"
 #include "Numerov.h"
 #include "Potential.h"
 #include "State.h"
-#include "../tests/analytical.h"
 
 void box_potential_example() {
     unsigned int nbox = 500;
@@ -90,8 +90,8 @@ void finite_well_example() {
 
     std::ofstream myfile("analitical.dat");
 
-    for (std::vector<int>::size_type i = 0; i < anal_wf.size(); i++) 
-	    myfile << anal_wf.at(i) << '\n';
+    for (std::vector<int>::size_type i = 0; i < anal_wf.size(); i++)
+        myfile << anal_wf.at(i) << '\n';
     myfile << std::endl;
 
     S_INFO("Energy {}", energy, anal_energy);
@@ -100,7 +100,6 @@ void finite_well_example() {
     // Save to file wavefunction and probability
     state.printToFile();
     V.printToFile();
-
 }
 
 void harmonic_oscillator_example() {
@@ -190,7 +189,7 @@ void finite_well_2D_example() {
     State state    = solver.solve(e_min, e_max, e_step);
 
     std::vector<double> wavefunction = state.getWavefunction();
-    energy       = state.getEnergy();
+    energy                           = state.getEnergy();
 
     S_INFO("Energy {}", energy);
 
@@ -214,16 +213,17 @@ void box_2D_example() {
     Base base = b.build(Base::basePreset::Cartesian, 2, mesh, nbox);
 
     Potential::Builder potentialBuilder(base);
-    Potential V = potentialBuilder.setType(Potential::PotentialType::BOX_POTENTIAL) 
-                    .setK(k)
-                    .setHeight(height)
-                    .setWidth(width).build();
+    Potential V = potentialBuilder.setType(Potential::PotentialType::BOX_POTENTIAL)
+                      .setK(k)
+                      .setHeight(height)
+                      .setWidth(width)
+                      .build();
 
     Numerov solver = Numerov(V, nbox);
     State state    = solver.solve(e_min, e_max, e_step);
 
     std::vector<double> wavefunction = state.getWavefunction();
-    energy       = state.getEnergy();
+    energy                           = state.getEnergy();
 
     S_INFO("Energy {}", energy);
 
@@ -303,7 +303,7 @@ int main(int argc, char **argv) {
         case 6:
             finite_well_2D_example();
             break;
-            
+
         default:
             S_ERROR("Not a valid option");
             break;

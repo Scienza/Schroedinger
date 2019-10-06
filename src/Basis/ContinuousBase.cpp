@@ -2,7 +2,6 @@
 
 #include <utility>
 
-
 ContinuousBase::ContinuousBase(std::vector<double> coords) { this->coords = std::move(coords); }
 
 ContinuousBase::ContinuousBase(double mesh, unsigned int nbox) {

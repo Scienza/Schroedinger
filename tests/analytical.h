@@ -63,8 +63,7 @@ std::pair<std::vector<double>, double> finite_well_wf(int nlevel, int nbox, doub
         exit(-1);
     } else {
         E_n = 2. * hbar * hbar * eta * eta / pot_width / pot_width / mass;
-        std::cout << "#" << nlevel << " solution for eta = " << eta << "  E_n =" << E_n
-                  << '\n';
+        std::cout << "#" << nlevel << " solution for eta = " << eta << "  E_n =" << E_n << '\n';
     }
 
     if (nlevel % 2 == 0) {  // looking for solution has n even, thus is antisymmetric
@@ -126,10 +125,11 @@ inline int factorial(int x, int result = 1) {
         return factorial(x - 1, x * result);
 }
 
-std::pair <std::vector<double> , double> harmonic_wf(int nlevel, int nbox, double omega, double mesh) {
+std::pair<std::vector<double>, double> harmonic_wf(int nlevel, int nbox, double omega,
+                                                   double mesh) {
     std::vector<double> wavefunction(nbox + 1);
-    double c     = mass * omega / hbar;
-    double E_n   = hbar * omega * (nlevel + 0.5);
+    double c   = mass * omega / hbar;
+    double E_n = hbar * omega * (nlevel + 0.5);
 
     for (int i = 0; i < nbox; i++) {
         double &wavefunction_value = wavefunction.at(i);

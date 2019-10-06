@@ -1,7 +1,7 @@
 #include "Potential.h"
 
-#include <utility>
 #include <spdlog/fmt/bundled/format.h>
+#include <utility>
 
 Potential::Potential(Base i_base, std::vector<std::vector<double>> potentialValues)
     : base(std::move(i_base)), values(std::move(potentialValues)) {}
