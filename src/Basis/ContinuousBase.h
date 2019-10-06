@@ -1,3 +1,8 @@
+/*
+ * Schroedinger - Scienza (c) 2019
+ * Released under the GNU LGPL2.1
+ * See the included LICENSE for details
+ */
 #ifndef CONTINUOUSBASE_H
 #define CONTINUOUSBASE_H
 

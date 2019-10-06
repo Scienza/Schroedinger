@@ -1,3 +1,8 @@
+/*
+ * Schroedinger - Scienza (c) 2019
+ * Released under the GNU LGPL2.1
+ * See the included LICENSE for details
+ */
 #define __STDCPP_WANT_MATH_SPEC_FUNCS__ 1
 
 #include <gtest/gtest.h>
